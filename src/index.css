@@ -6,51 +6,51 @@
 
 @layer base {
   :root {
-    --background: 230 25% 5%;
-    --foreground: 210 40% 95%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
 
-    --card: 230 25% 8%;
-    --card-foreground: 210 40% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
 
-    --popover: 230 25% 8%;
-    --popover-foreground: 210 40% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 270 60% 60%;
+    --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 230 25% 14%;
-    --secondary-foreground: 210 40% 95%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 230 20% 15%;
-    --muted-foreground: 220 15% 55%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 20%;
 
-    --accent: 180 70% 45%;
+    --accent: 0 0% 0%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 0% 85%;
+    --destructive-foreground: 0 0% 0%;
 
-    --border: 230 20% 18%;
-    --input: 230 20% 18%;
-    --ring: 270 60% 60%;
+    --border: 0 0% 80%;
+    --input: 0 0% 80%;
+    --ring: 0 0% 0%;
 
     --radius: 0.75rem;
 
-    --cosmic-purple: 270 60% 60%;
-    --cosmic-purple-glow: 270 80% 70%;
-    --cosmic-teal: 180 70% 45%;
-    --cosmic-teal-glow: 180 90% 55%;
-    --cosmic-navy: 230 25% 5%;
-    --cosmic-navy-light: 230 25% 12%;
+    --cosmic-purple: 0 0% 0%;
+    --cosmic-purple-glow: 0 0% 0%;
+    --cosmic-teal: 0 0% 0%;
+    --cosmic-teal-glow: 0 0% 0%;
+    --cosmic-navy: 0 0% 100%;
+    --cosmic-navy-light: 0 0% 95%;
 
-    --sidebar-background: 230 25% 8%;
-    --sidebar-foreground: 210 40% 95%;
-    --sidebar-primary: 270 60% 60%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: 0 0% 0%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 230 25% 14%;
-    --sidebar-accent-foreground: 210 40% 95%;
-    --sidebar-border: 230 20% 18%;
-    --sidebar-ring: 270 60% 60%;
+    --sidebar-accent: 0 0% 90%;
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: 0 0% 80%;
+    --sidebar-ring: 0 0% 0%;
   }
 }
 
@@ -69,7 +69,7 @@
   }
 }
 
-/* Star field background */
+/* Star field background - now black stars on white */
 @keyframes twinkle {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 1; }
@@ -86,8 +86,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 40px 10px hsl(270 60% 60% / 0.3), 0 0 80px 30px hsl(180 70% 45% / 0.15); }
-  50% { box-shadow: 0 0 60px 20px hsl(270 60% 60% / 0.5), 0 0 120px 50px hsl(180 70% 45% / 0.25); }
+  0%, 100% { box-shadow: 0 0 40px 10px hsl(0 0% 0% / 0.1), 0 0 80px 30px hsl(0 0% 0% / 0.05); }
+  50% { box-shadow: 0 0 60px 20px hsl(0 0% 0% / 0.2), 0 0 120px 50px hsl(0 0% 0% / 0.1); }
 }
 
 @keyframes orbit {
@@ -113,25 +113,25 @@
 
 .star-field {
   background-image:
-    radial-gradient(1px 1px at 10% 20%, hsl(0 0% 100% / 0.6), transparent),
-    radial-gradient(1px 1px at 30% 60%, hsl(0 0% 100% / 0.4), transparent),
-    radial-gradient(1.5px 1.5px at 50% 10%, hsl(0 0% 100% / 0.7), transparent),
-    radial-gradient(1px 1px at 70% 40%, hsl(0 0% 100% / 0.5), transparent),
-    radial-gradient(1px 1px at 90% 80%, hsl(0 0% 100% / 0.3), transparent),
-    radial-gradient(1.5px 1.5px at 15% 85%, hsl(0 0% 100% / 0.6), transparent),
-    radial-gradient(1px 1px at 45% 45%, hsl(0 0% 100% / 0.4), transparent),
-    radial-gradient(1px 1px at 80% 15%, hsl(0 0% 100% / 0.5), transparent),
-    radial-gradient(1.5px 1.5px at 25% 35%, hsl(0 0% 100% / 0.3), transparent),
-    radial-gradient(1px 1px at 65% 75%, hsl(0 0% 100% / 0.6), transparent),
-    radial-gradient(1px 1px at 5% 55%, hsl(0 0% 100% / 0.4), transparent),
-    radial-gradient(1.5px 1.5px at 85% 55%, hsl(0 0% 100% / 0.5), transparent),
-    radial-gradient(1px 1px at 55% 90%, hsl(0 0% 100% / 0.3), transparent),
-    radial-gradient(1px 1px at 35% 5%, hsl(0 0% 100% / 0.6), transparent),
-    radial-gradient(1px 1px at 95% 35%, hsl(0 0% 100% / 0.4), transparent);
+    radial-gradient(1px 1px at 10% 20%, hsl(0 0% 0% / 0.6), transparent),
+    radial-gradient(1px 1px at 30% 60%, hsl(0 0% 0% / 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 50% 10%, hsl(0 0% 0% / 0.7), transparent),
+    radial-gradient(1px 1px at 70% 40%, hsl(0 0% 0% / 0.5), transparent),
+    radial-gradient(1px 1px at 90% 80%, hsl(0 0% 0% / 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 15% 85%, hsl(0 0% 0% / 0.6), transparent),
+    radial-gradient(1px 1px at 45% 45%, hsl(0 0% 0% / 0.4), transparent),
+    radial-gradient(1px 1px at 80% 15%, hsl(0 0% 0% / 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 25% 35%, hsl(0 0% 0% / 0.3), transparent),
+    radial-gradient(1px 1px at 65% 75%, hsl(0 0% 0% / 0.6), transparent),
+    radial-gradient(1px 1px at 5% 55%, hsl(0 0% 0% / 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 85% 55%, hsl(0 0% 0% / 0.5), transparent),
+    radial-gradient(1px 1px at 55% 90%, hsl(0 0% 0% / 0.3), transparent),
+    radial-gradient(1px 1px at 35% 5%, hsl(0 0% 0% / 0.6), transparent),
+    radial-gradient(1px 1px at 95% 35%, hsl(0 0% 0% / 0.4), transparent);
 }
 
 .glass-card {
-  background: hsl(230 25% 8% / 0.6);
+  background: hsl(0 0% 100% / 0.8);
   backdrop-filter: blur(20px);
-  border: 1px solid hsl(230 20% 18% / 0.5);
+  border: 1px solid hsl(0 0% 70% / 0.5);
 }
