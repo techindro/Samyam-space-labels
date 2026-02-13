@@ -1,18 +1,22 @@
 import { motion } from "framer-motion";
 import { Shield, BarChart3 } from "lucide-react";
+import agenticDefense from "@/assets/agentic-defense.jpg";
+import agenticEnterprise from "@/assets/agentic-enterprise.jpg";
 
 const cards = [
   {
     icon: Shield,
     title: "Space & Defense",
     desc: "AI agents for mission planning, orbital analysis, threat detection, and space domain awareness. Built for classified and unclassified environments.",
-    gradient: "from-cosmic-purple/20 to-cosmic-navy-light",
+    image: agenticDefense,
+    stats: ["50+ missions supported", "24/7 real-time monitoring", "ITAR & FedRAMP compliant"],
   },
   {
     icon: BarChart3,
     title: "Enterprise",
     desc: "AI agents for commercial satellite analytics, earth observation insights, crop monitoring, and infrastructure assessment at global scale.",
-    gradient: "from-cosmic-teal/20 to-cosmic-navy-light",
+    image: agenticEnterprise,
+    stats: ["200TB+ data processed/month", "40+ enterprise clients", "Sub-meter resolution"],
   },
 ];
 
@@ -45,15 +49,32 @@ const AgenticSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
-              className={`glass-card rounded-2xl overflow-hidden group hover:border-cosmic-purple/40 transition-all`}
+              className="glass-card rounded-2xl overflow-hidden group hover:border-cosmic-purple/40 transition-all"
             >
-              <div className={`h-48 bg-gradient-to-br ${card.gradient} flex items-center justify-center relative`}>
-                <div className="absolute inset-0 star-field opacity-30" />
-                <card.icon className="h-16 w-16 text-foreground/30 group-hover:text-foreground/50 transition-colors" />
+              <div className="h-52 relative overflow-hidden">
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
               </div>
               <div className="p-8">
-                <h3 className="font-display text-2xl font-semibold mb-3">{card.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{card.desc}</p>
+                <div className="flex items-center gap-3 mb-3">
+                  <card.icon className="h-6 w-6 text-cosmic-teal" />
+                  <h3 className="font-display text-2xl font-semibold">{card.title}</h3>
+                </div>
+                <p className="text-muted-foreground leading-relaxed mb-4">{card.desc}</p>
+                <div className="flex flex-wrap gap-2">
+                  {card.stats.map((stat) => (
+                    <span
+                      key={stat}
+                      className="text-xs px-3 py-1 rounded-full border border-border/50 bg-secondary/30 text-muted-foreground"
+                    >
+                      {stat}
+                    </span>
+                  ))}
+                </div>
               </div>
             </motion.div>
           ))}

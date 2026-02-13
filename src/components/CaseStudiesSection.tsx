@@ -1,22 +1,31 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import caseMonitoring from "@/assets/case-satellite-monitoring.jpg";
+import caseDebris from "@/assets/case-debris-tracking.jpg";
+import caseLabeled from "@/assets/case-labeled-images.jpg";
 
 const cases = [
   {
     tag: "Monitoring",
     title: "ChAi Powers Satellite Constellation Monitoring",
-    desc: "How a leading constellation operator achieved 99.7% uptime with AI-driven monitoring.",
+    desc: "How a leading constellation operator achieved 99.7% uptime with AI-driven monitoring across 1,400+ LEO satellites.",
+    image: caseMonitoring,
+    stats: "1,400+ satellites monitored",
   },
   {
     tag: "Defense",
     title: "AI-Driven Debris Tracking with ChAi",
-    desc: "Tracking 30,000+ orbital objects in real time to protect critical space assets.",
+    desc: "Tracking 30,000+ orbital objects in real time to protect critical space assets and prevent catastrophic collisions.",
+    image: caseDebris,
+    stats: "30,000+ objects tracked",
   },
   {
     tag: "Scale",
     title: "How ChAi Labeled 10M Satellite Images",
-    desc: "Delivering labeled satellite data at scale for the world's largest earth observation program.",
+    desc: "Delivering labeled satellite data at scale for the world's largest earth observation program with 99.4% annotation accuracy.",
+    image: caseLabeled,
+    stats: "10M+ images labeled",
   },
 ];
 
@@ -49,8 +58,16 @@ const CaseStudiesSection = () => {
               transition={{ delay: i * 0.1 }}
               className="glass-card rounded-xl overflow-hidden group cursor-pointer hover:border-cosmic-teal/40 transition-all"
             >
-              <div className="h-40 bg-gradient-to-br from-cosmic-navy-light to-cosmic-purple/10 relative star-field">
-                <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+              <div className="h-44 relative overflow-hidden">
+                <img
+                  src={c.image}
+                  alt={c.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+                <span className="absolute bottom-3 left-4 text-xs font-semibold text-cosmic-teal bg-background/70 px-2 py-1 rounded">
+                  {c.stats}
+                </span>
               </div>
               <div className="p-6">
                 <Badge variant="outline" className="mb-3 text-cosmic-teal border-cosmic-teal/30 text-xs">
