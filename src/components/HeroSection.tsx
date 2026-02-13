@@ -53,7 +53,7 @@ const HeroSection = () => {
         >
           <div className="relative w-72 h-72 sm:w-96 sm:h-96">
             {/* Main orb */}
-            <div className="absolute inset-8 rounded-full bg-gradient-to-br from-cosmic-purple via-cosmic-navy-light to-cosmic-teal animate-pulse-glow" />
+            <div className="absolute inset-8 rounded-full bg-gradient-to-br from-cosmic-purple via-cosmic-navy-light to-cosmic-teal animate-pulse-glow border-2 border-foreground" />
             <div className="absolute inset-12 rounded-full bg-gradient-to-tr from-cosmic-teal/30 via-transparent to-cosmic-purple/40 backdrop-blur-sm" />
             <div className="absolute inset-16 rounded-full bg-gradient-to-b from-foreground/5 to-transparent" />
             {/* Orbit ring */}
