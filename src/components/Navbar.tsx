@@ -60,10 +60,10 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                <span className="text-sm text-muted-foreground flex items-center gap-1">
+                <a href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
                   <User className="h-4 w-4" />
                   {user.user_metadata?.username || user.email}
-                </span>
+                </a>
                 <Button size="sm" variant="outline" onClick={handleLogout} className="gap-1">
                   <LogOut className="h-3 w-3" /> Sign Out
                 </Button>
