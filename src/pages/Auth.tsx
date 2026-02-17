@@ -144,6 +144,7 @@ const Auth = () => {
               <CaptchaField captcha={captcha} captchaAnswer={captchaAnswer} setCaptchaAnswer={setCaptchaAnswer} refreshCaptcha={refreshCaptcha} />
               <Button type="submit" className="w-full" disabled={loading}>{loading ? "Signing in..." : "Sign In"}</Button>
               <div className="text-center text-sm space-y-1 pt-2">
+                <p className="text-muted-foreground"><a href="/forgot-password" className="text-foreground font-medium underline underline-offset-4 hover:opacity-80">Forgot password?</a></p>
                 <p className="text-muted-foreground">Don't have an account? <button type="button" onClick={() => { setMode("signup"); refreshCaptcha(); setCaptchaAnswer(""); }} className="text-foreground font-medium underline underline-offset-4 hover:opacity-80">Sign Up</button></p>
                 <p className="text-muted-foreground">Or <button type="button" onClick={() => { setMode("otp-request"); refreshCaptcha(); setCaptchaAnswer(""); }} className="text-foreground font-medium underline underline-offset-4 hover:opacity-80">Login with OTP</button></p>
               </div>
