@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { Linkedin, Instagram, Facebook, Youtube } from "lucide-react";
 
 const footerLinks = {
   Products: ["Orbital Data Labeling", "Terrain Classification", "Anomaly Detection", "Mission Analytics", "Space Data Engine"],
@@ -45,9 +45,14 @@ const Footer = () => {
             © 2026 ChAi. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            {["Twitter", "LinkedIn", "GitHub"].map((social) => (
-              <a key={social} href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {social}
+            {[
+              { icon: Linkedin, label: "LinkedIn", href: "#" },
+              { icon: Instagram, label: "Instagram", href: "#" },
+              { icon: Facebook, label: "Facebook", href: "#" },
+              { icon: Youtube, label: "YouTube", href: "#" },
+            ].map(({ icon: Icon, label, href }) => (
+              <a key={label} href={href} aria-label={label} className="text-muted-foreground hover:text-foreground transition-colors">
+                <Icon size={20} />
               </a>
             ))}
           </div>
