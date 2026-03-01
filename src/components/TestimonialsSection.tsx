@@ -69,6 +69,32 @@ const TestimonialsSection = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Founder Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16 max-w-2xl mx-auto text-center"
+        >
+          <div className="glass-card rounded-2xl p-10 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-cosmic-purple/10 to-cosmic-teal/10 pointer-events-none" />
+            <div className="relative z-10 flex flex-col items-center gap-4">
+              <Avatar className="h-20 w-20 border-2 border-cosmic-teal/40">
+                <AvatarFallback className="bg-gradient-to-br from-cosmic-purple/40 to-cosmic-teal/40 text-foreground text-xl font-bold">
+                  SP
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h3 className="text-xl font-bold font-display">Shubham Patel</h3>
+                <p className="text-sm text-cosmic-teal font-medium">Founder & CEO</p>
+              </div>
+              <p className="text-foreground/70 text-sm leading-relaxed max-w-lg">
+                Visionary leader driving ChAi's mission to revolutionize space data intelligence. With deep expertise in AI and aerospace, Shubham founded ChAi to bridge the gap between cutting-edge machine learning and mission-critical space operations.
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
