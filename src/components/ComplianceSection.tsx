@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import { ShieldCheck } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const badges = ["SOC 2 Type II", "ISO 27001", "FedRAMP Ready", "ITAR Compliant", "NIST 800-171"];
 
 const ComplianceSection = () => {
   return (
-    <section className="py-16 border-y border-border/30">
-      <div className="container mx-auto px-4 text-center">
+    <section className="py-16 border-y border-border/30 relative overflow-hidden">
+      <ParallelWebBg />
+      <div className="container mx-auto px-4 text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

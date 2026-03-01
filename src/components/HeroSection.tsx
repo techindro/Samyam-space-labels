@@ -2,10 +2,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const HeroSection = () => {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden star-field">
+      <ParallelWebBg />
       {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-cosmic-purple/10 via-transparent to-background pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cosmic-purple/5 rounded-full blur-[120px]" />

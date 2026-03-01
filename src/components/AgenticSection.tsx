@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Shield, BarChart3 } from "lucide-react";
 import agenticDefense from "@/assets/agentic-defense.jpg";
 import agenticEnterprise from "@/assets/agentic-enterprise.jpg";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const cards = [
   {
@@ -22,8 +23,9 @@ const cards = [
 
 const AgenticSection = () => {
   return (
-    <section className="py-24">
-      <div className="container mx-auto px-4">
+    <section className="py-24 relative overflow-hidden">
+      <ParallelWebBg />
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

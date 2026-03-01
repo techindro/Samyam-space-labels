@@ -7,6 +7,7 @@ import lockheedLogo from "@/assets/logos/lockheed.svg";
 import northropLogo from "@/assets/logos/northrop.svg";
 import blueOriginLogo from "@/assets/logos/blueorigin.svg";
 import planetLabsLogo from "@/assets/logos/planetlabs.svg";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const logos = [
   { name: "ISRO", src: isroLogo },
@@ -22,8 +23,9 @@ const logos = [
 
 const TrustedBy = () => {
   return (
-    <section className="py-16 border-y border-border/30">
-      <div className="container mx-auto px-4">
+    <section className="py-16 border-y border-border/30 relative overflow-hidden">
+      <ParallelWebBg />
+      <div className="container mx-auto px-4 relative z-10">
         <p className="text-center text-sm text-muted-foreground uppercase tracking-widest mb-10">
           Trusted by the world's leading space & defense organizations
         </p>

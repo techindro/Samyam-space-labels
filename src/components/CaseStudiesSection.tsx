@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import caseMonitoring from "@/assets/case-satellite-monitoring.jpg";
 import caseDebris from "@/assets/case-debris-tracking.jpg";
 import caseLabeled from "@/assets/case-labeled-images.jpg";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const cases = [
   {
@@ -31,7 +32,8 @@ const cases = [
 
 const CaseStudiesSection = () => {
   return (
-    <section className="py-24 relative">
+    <section className="py-24 relative overflow-hidden">
+      <ParallelWebBg />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/3 to-transparent pointer-events-none" />
       <div className="container mx-auto px-4 relative z-10">
         <motion.div

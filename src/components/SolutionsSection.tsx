@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Satellite, Brain, Database } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const layers = [
   {
@@ -24,7 +25,8 @@ const layers = [
 
 const SolutionsSection = () => {
   return (
-    <section className="py-24 relative">
+    <section className="py-24 relative overflow-hidden">
+      <ParallelWebBg />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
