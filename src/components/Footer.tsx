@@ -1,4 +1,5 @@
 import { Linkedin, Instagram, Facebook, Youtube } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const footerLinks = {
   Products: ["Orbital Data Labeling", "Terrain Classification", "Anomaly Detection", "Mission Analytics", "Space Data Engine"],
@@ -9,8 +10,9 @@ const footerLinks = {
 
 const Footer = () => {
   return (
-    <footer className="py-16 bg-card/50">
-      <div className="container mx-auto px-4">
+    <footer className="py-16 bg-card/50 relative overflow-hidden">
+      <ParallelWebBg />
+      <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">

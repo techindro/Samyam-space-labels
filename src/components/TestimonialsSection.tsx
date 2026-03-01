@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Quote } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const testimonials = [
   {
@@ -26,28 +27,7 @@ const testimonials = [
 const TestimonialsSection = () => {
   return (
     <section className="py-24 relative overflow-hidden">
-      {/* Parallel Web Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Horizontal + vertical grid */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            repeating-linear-gradient(0deg, transparent, transparent 59px, hsl(var(--cosmic-purple) / 0.08) 59px, hsl(var(--cosmic-purple) / 0.08) 60px),
-            repeating-linear-gradient(90deg, transparent, transparent 59px, hsl(var(--cosmic-teal) / 0.08) 59px, hsl(var(--cosmic-teal) / 0.08) 60px)
-          `,
-        }} />
-        {/* Diagonal cross lines */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            repeating-linear-gradient(45deg, transparent, transparent 79px, hsl(var(--cosmic-purple) / 0.05) 79px, hsl(var(--cosmic-purple) / 0.05) 80px),
-            repeating-linear-gradient(-45deg, transparent, transparent 79px, hsl(var(--cosmic-teal) / 0.05) 79px, hsl(var(--cosmic-teal) / 0.05) 80px)
-          `,
-        }} />
-        {/* Intersection glow dots */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle 1.5px, hsl(var(--cosmic-teal) / 0.18) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-        }} />
-      </div>
+      <ParallelWebBg />
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
