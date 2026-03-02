@@ -48,7 +48,7 @@ const Footer = () => {
           </p>
           <div className="flex items-center gap-6">
             {[
-              { icon: Linkedin, label: "LinkedIn", href: "#" },
+              { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/tech-indro" },
               { icon: Instagram, label: "Instagram", href: "#" },
               { icon: Facebook, label: "Facebook", href: "#" },
               { icon: Youtube, label: "YouTube", href: "#" },

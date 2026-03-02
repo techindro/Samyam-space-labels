@@ -92,10 +92,10 @@ const TestimonialsSection = () => {
                 <h3 className="text-xl font-bold font-display">Shubham Patel</h3>
                 <p className="text-sm text-cosmic-teal font-medium">Founder & CEO, Tech Intro</p>
                 <div className="flex gap-3 mt-2 justify-center">
-                  <a href="https://www.linkedin.com/in/shubham-patel" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-background border border-border/50 text-muted-foreground hover:text-cosmic-teal transition-colors">
+                  <a href="https://www.linkedin.com/in/shubham-patel-techindro/" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-background border border-border/50 text-muted-foreground hover:text-cosmic-teal transition-colors">
                     <Linkedin className="h-4 w-4" />
                   </a>
-                  <a href="https://twitter.com/shubhampatel" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-background border border-border/50 text-muted-foreground hover:text-cosmic-teal transition-colors">
+                  <a href="https://x.com/tech_indro" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-background border border-border/50 text-muted-foreground hover:text-cosmic-teal transition-colors">
                     <Twitter className="h-4 w-4" />
                   </a>
                   <a href="https://instagram.com/shubhampatel" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-background border border-border/50 text-muted-foreground hover:text-cosmic-teal transition-colors">
