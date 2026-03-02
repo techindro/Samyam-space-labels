@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Quote } from "lucide-react";
+import { Quote, Linkedin, Twitter } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import shubhamPhoto from "@/assets/shubham.jpeg";
 
@@ -92,6 +92,14 @@ const TestimonialsSection = () => {
               <div>
                 <h3 className="text-xl font-bold font-display">Shubham Patel</h3>
                 <p className="text-sm text-cosmic-teal font-medium">Founder & CEO</p>
+                <div className="flex gap-3 mt-1">
+                  <a href="https://www.linkedin.com/in/shubham-patel" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-cosmic-teal transition-colors">
+                    <Linkedin className="h-5 w-5" />
+                  </a>
+                  <a href="https://twitter.com/shubhampatel" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-cosmic-teal transition-colors">
+                    <Twitter className="h-5 w-5" />
+                  </a>
+                </div>
               </div>
               <Quote className="h-8 w-8 text-cosmic-purple/30" />
               <p className="text-foreground/80 text-sm leading-relaxed max-w-lg italic">
