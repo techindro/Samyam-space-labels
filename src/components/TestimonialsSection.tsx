@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Quote } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
+import shubhamPhoto from "@/assets/shubham.jpeg";
 
 const testimonials = [
   {
@@ -82,7 +83,8 @@ const TestimonialsSection = () => {
           <div className="glass-card rounded-2xl p-10 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-cosmic-purple/10 to-cosmic-teal/10 pointer-events-none" />
             <div className="relative z-10 flex flex-col items-center gap-4">
-              <Avatar className="h-20 w-20 border-2 border-cosmic-teal/40">
+              <Avatar className="h-24 w-24 border-2 border-cosmic-teal/40">
+                <AvatarImage src={shubhamPhoto} alt="Shubham Patel" className="object-cover" />
                 <AvatarFallback className="bg-gradient-to-br from-cosmic-purple/40 to-cosmic-teal/40 text-foreground text-xl font-bold">
                   SP
                 </AvatarFallback>
@@ -91,8 +93,9 @@ const TestimonialsSection = () => {
                 <h3 className="text-xl font-bold font-display">Shubham Patel</h3>
                 <p className="text-sm text-cosmic-teal font-medium">Founder & CEO</p>
               </div>
-              <p className="text-foreground/70 text-sm leading-relaxed max-w-lg">
-                Visionary leader driving ChAi's mission to revolutionize space data intelligence. With deep expertise in AI and aerospace, Shubham founded ChAi to bridge the gap between cutting-edge machine learning and mission-critical space operations.
+              <Quote className="h-8 w-8 text-cosmic-purple/30" />
+              <p className="text-foreground/80 text-sm leading-relaxed max-w-lg italic">
+                "We don't just build AI; we build oxygen. In this 'sustaining' era, data is no longer a commodity to be sold—it is the vital force that turns a silent satellite into a protector of our world. That is why we do what we do."
               </p>
             </div>
           </div>
