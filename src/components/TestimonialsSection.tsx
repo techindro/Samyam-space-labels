@@ -80,8 +80,7 @@ const TestimonialsSection = () => {
           viewport={{ once: true }}
           className="mt-16 max-w-2xl mx-auto text-center"
         >
-          <div className="glass-card rounded-2xl p-10 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-cosmic-purple/10 to-cosmic-teal/10 pointer-events-none" />
+          <div className="bg-background rounded-2xl p-10 relative overflow-hidden border border-border/50 shadow-sm">
             <div className="relative z-10 flex flex-col items-center gap-4">
               <Avatar className="h-24 w-24 border-2 border-cosmic-teal/40">
                 <AvatarImage src={shubhamPhoto} alt="Shubham Patel" className="object-cover" />
@@ -91,8 +90,8 @@ const TestimonialsSection = () => {
               </Avatar>
               <div>
                 <h3 className="text-xl font-bold font-display">Shubham Patel</h3>
-                <p className="text-sm text-cosmic-teal font-medium">Founder & CEO</p>
-                <div className="flex gap-3 mt-2">
+                <p className="text-sm text-cosmic-teal font-medium">Founder & CEO, Tech Intro</p>
+                <div className="flex gap-3 mt-2 justify-center">
                   <a href="https://www.linkedin.com/in/shubham-patel" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-background border border-border/50 text-muted-foreground hover:text-cosmic-teal transition-colors">
                     <Linkedin className="h-4 w-4" />
                   </a>
