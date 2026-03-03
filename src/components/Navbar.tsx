@@ -43,7 +43,8 @@ const Navbar = () => {
       <nav className="sticky top-0 z-50 w-full glass-card border-b border-border/30">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
-          <a href="/" className="font-display text-2xl font-bold bg-gradient-to-r from-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
+          <a href="/" className="flex items-center gap-2 font-display text-2xl font-bold bg-gradient-to-r from-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
+            <img src="/favicon.png" alt="Surya logo" className="h-8 w-8" />
             Surya
           </a>
 
