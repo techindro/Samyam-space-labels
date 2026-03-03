@@ -8,19 +8,19 @@ const testimonials = [
   {
     name: "Dr. Priya Sharma",
     title: "Chief Data Scientist, ISRO",
-    quote: "ChAi transformed how we process satellite imagery. What used to take months now takes days with unprecedented accuracy.",
+    quote: "Surya transformed how we process satellite imagery. What used to take months now takes days with unprecedented accuracy.",
     initials: "PS",
   },
   {
     name: "Col. James Mitchell",
     title: "Director of AI, US Space Command",
-    quote: "The precision and security of ChAi's labeling platform meets our most demanding classification requirements.",
+    quote: "The precision and security of Surya's labeling platform meets our most demanding classification requirements.",
     initials: "JM",
   },
   {
     name: "Elena Kowalski",
     title: "VP Engineering, Orbital Dynamics Corp",
-    quote: "ChAi's anomaly detection caught a critical sensor drift that our legacy systems completely missed. Game-changing technology.",
+    quote: "Surya's anomaly detection caught a critical sensor drift that our legacy systems completely missed. Game-changing technology.",
     initials: "EK",
   },
 ];

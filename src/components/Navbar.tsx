@@ -33,7 +33,7 @@ const Navbar = () => {
     <>
       {/* Announcement Banner */}
       <div className="w-full bg-gradient-to-r from-cosmic-purple/20 via-cosmic-teal/20 to-cosmic-purple/20 border-b border-border/50 py-2 px-4 text-center text-sm text-muted-foreground">
-        <span>ChAi launches satellite data labeling platform</span>
+        <span>Surya launches satellite data labeling platform</span>
         <a href="#" className="ml-2 text-cosmic-teal hover:text-cosmic-teal-glow inline-flex items-center gap-1 font-medium">
           Learn more <ArrowRight className="h-3 w-3" />
         </a>
@@ -44,7 +44,7 @@ const Navbar = () => {
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <a href="/" className="font-display text-2xl font-bold bg-gradient-to-r from-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
-            ChAi
+            Surya
           </a>
 
           {/* Desktop Links */}
