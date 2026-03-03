@@ -16,7 +16,8 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="#" className="font-display text-2xl font-bold bg-gradient-to-r from-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
+            <a href="#" className="flex items-center gap-2 font-display text-2xl font-bold bg-gradient-to-r from-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
+              <img src="/favicon.png" alt="Surya logo" className="h-8 w-8" />
               Surya
             </a>
             <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
