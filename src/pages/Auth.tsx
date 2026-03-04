@@ -123,7 +123,7 @@ const Auth = () => {
               {mode === "otp-verify" && "Verify OTP"}
             </h1>
             <p className="text-muted-foreground mt-2 text-sm">
-              {mode === "login" && "Welcome back to Surya"}
+              {mode === "login" && "Welcome back to Samyam"}
               {mode === "signup" && "Join us today"}
               {mode === "otp-request" && "We'll send a code to your email"}
               {mode === "otp-verify" && "Enter the code from your email"}

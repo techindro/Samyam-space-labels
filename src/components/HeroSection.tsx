@@ -33,7 +33,7 @@ const HeroSection = () => {
             </span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-xl mb-8 mx-auto lg:mx-0">
-            Surya delivers world-class data labeling, model evaluations, and AI solutions 
+            Samyam delivers world-class data labeling, model evaluations, and AI solutions 
             purpose-built for space agencies, defense contractors, and enterprises pushing the 
             boundaries of what's possible.
           </p>

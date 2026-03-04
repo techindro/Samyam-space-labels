@@ -9,21 +9,21 @@ import ParallelWebBg from "@/components/ParallelWebBg";
 const cases = [
   {
     tag: "Monitoring",
-    title: "Surya Powers Satellite Constellation Monitoring",
+    title: "Samyam Powers Satellite Constellation Monitoring",
     desc: "How a leading constellation operator achieved 99.7% uptime with AI-driven monitoring across 1,400+ LEO satellites.",
     image: caseMonitoring,
     stats: "1,400+ satellites monitored",
   },
   {
     tag: "Defense",
-    title: "AI-Driven Debris Tracking with Surya",
+    title: "AI-Driven Debris Tracking with Samyam",
     desc: "Tracking 30,000+ orbital objects in real time to protect critical space assets and prevent catastrophic collisions.",
     image: caseDebris,
     stats: "30,000+ objects tracked",
   },
   {
     tag: "Scale",
-    title: "How Surya Labeled 10M Satellite Images",
+    title: "How Samyam Labeled 10M Satellite Images",
     desc: "Delivering labeled satellite data at scale for the world's largest earth observation program with 99.4% annotation accuracy.",
     image: caseLabeled,
     stats: "10M+ images labeled",

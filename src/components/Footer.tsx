@@ -16,9 +16,9 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="#" className="flex items-center gap-2 font-display text-2xl font-bold bg-gradient-to-r from-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
-              <img src="/favicon.png" alt="Surya logo" className="h-8 w-8" style={{ filter: 'brightness(0)' }} />
-              Surya
+            <a href="#" className="flex items-center gap-2">
+              <img src="/favicon.png" alt="Samyam logo" className="h-8 w-8" style={{ filter: 'brightness(0)' }} />
+              <span className="text-2xl font-bold tracking-tight text-foreground">Samyam</span>
             </a>
             <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
               Breakthrough AI for space data labeling, defense, and enterprise.
@@ -45,7 +45,7 @@ const Footer = () => {
         {/* Bottom */}
         <div className="border-t border-border/30 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2026 Surya. All rights reserved.
+            © 2026 Samyam. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             {[
