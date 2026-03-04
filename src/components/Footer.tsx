@@ -16,8 +16,8 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="#" className="text-2xl font-bold tracking-tight text-foreground">
-              Samyam
+            <a href="#" className="text-[28px] font-medium tracking-wide text-foreground lowercase" style={{ fontFamily: "'Comfortaa', cursive" }}>
+              samyam
             </a>
             <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
               Breakthrough AI for space data labeling, defense, and enterprise.
