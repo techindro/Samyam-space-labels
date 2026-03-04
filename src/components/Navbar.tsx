@@ -44,7 +44,7 @@ const Navbar = () => {
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2 font-display text-2xl font-bold bg-gradient-to-r from-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
-            <img src="/favicon.png" alt="Surya logo" className="h-8 w-8" />
+            <img src="/favicon.png" alt="Surya logo" className="h-8 w-8 dark:invert" style={{ filter: 'brightness(0)' }} />
             Surya
           </a>
 

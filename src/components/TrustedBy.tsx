@@ -42,6 +42,7 @@ const TrustedBy = () => {
                   src={logo.src}
                   alt={`${logo.name} logo`}
                   className="h-8 max-w-[120px] object-contain"
+                  style={{ filter: 'brightness(0)' }}
                 />
               </div>
             ))}
