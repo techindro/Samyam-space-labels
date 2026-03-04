@@ -16,9 +16,8 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="#" className="flex items-center gap-2">
-              <img src="/favicon.png" alt="Samyam logo" className="h-8 w-8" style={{ filter: 'brightness(0)' }} />
-              <span className="text-2xl font-bold tracking-tight text-foreground">Samyam</span>
+            <a href="#" className="text-2xl font-bold tracking-tight text-foreground">
+              Samyam
             </a>
             <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
               Breakthrough AI for space data labeling, defense, and enterprise.

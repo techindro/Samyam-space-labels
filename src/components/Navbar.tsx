@@ -43,9 +43,8 @@ const Navbar = () => {
       <nav className="sticky top-0 z-50 w-full glass-card border-b border-border/30">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
-            <img src="/favicon.png" alt="Samyam logo" className="h-8 w-8" style={{ filter: 'brightness(0)' }} />
-            <span className="text-2xl font-bold tracking-tight text-foreground">Samyam</span>
+          <a href="/" className="text-2xl font-bold tracking-tight text-foreground">
+            Samyam
           </a>
 
           {/* Desktop Links */}
