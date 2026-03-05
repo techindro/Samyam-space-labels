@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import DataEngineSection from "@/components/DataEngineSection";
 import TrustedBy from "@/components/TrustedBy";
 import SolutionsSection from "@/components/SolutionsSection";
 import AgenticSection from "@/components/AgenticSection";
