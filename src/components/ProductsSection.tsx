@@ -1,8 +1,6 @@
 import { motion } from "framer-motion";
-import { Orbit, Mountain, AlertTriangle, Rocket } from "lucide-react";
-import ParallelWebBg from "@/components/ParallelWebBg";
-
 import { Orbit, Mountain, AlertTriangle, Rocket, FlaskConical, MessageSquareHeart, Workflow, ShieldCheck, Sparkles, BarChart3 } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const products = [
   {
