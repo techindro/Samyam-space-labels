@@ -2,26 +2,68 @@ import { motion } from "framer-motion";
 import { Orbit, Mountain, AlertTriangle, Rocket } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
+import { Orbit, Mountain, AlertTriangle, Rocket, FlaskConical, MessageSquareHeart, Workflow, ShieldCheck, Sparkles, BarChart3 } from "lucide-react";
+
 const products = [
   {
     icon: Orbit,
     title: "Orbital Data Labeling",
     desc: "Label and annotate satellite and telescope imagery with sub-pixel accuracy for training next-gen space AI.",
+    tag: "Core",
+  },
+  {
+    icon: FlaskConical,
+    title: "Model Evaluation",
+    desc: "Benchmark and stress-test your AI models against curated space datasets with automated quality scoring and regression detection.",
+    tag: "New",
+  },
+  {
+    icon: MessageSquareHeart,
+    title: "RLHF",
+    desc: "Reinforce your models with expert human feedback loops — fine-tune responses for mission-critical accuracy and safety alignment.",
+    tag: "New",
   },
   {
     icon: Mountain,
     title: "Terrain Classification",
     desc: "AI-powered terrain and land-use classification from multispectral satellite data across any geography.",
+    tag: "Core",
   },
   {
     icon: AlertTriangle,
     title: "Anomaly Detection",
     desc: "Detect anomalies in space sensor data, telemetry streams, and orbital mechanics in real time.",
+    tag: "Core",
+  },
+  {
+    icon: Workflow,
+    title: "Data Curation",
+    desc: "Automatically select, deduplicate, and balance training datasets for optimal model performance across domains.",
+    tag: "New",
+  },
+  {
+    icon: Sparkles,
+    title: "Prompt Engineering",
+    desc: "Design, test, and optimize prompts for foundation models with built-in evaluation metrics and A/B testing.",
+    tag: "New",
   },
   {
     icon: Rocket,
     title: "Mission Analytics",
     desc: "AI-driven insights for space missions — from launch windows to trajectory optimization and risk assessment.",
+    tag: "Core",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Safety & Alignment",
+    desc: "Red-team your models with adversarial testing, bias detection, and guardrail validation for responsible deployment.",
+    tag: "New",
+  },
+  {
+    icon: BarChart3,
+    title: "Model Monitoring",
+    desc: "Track model drift, latency, and accuracy in production with real-time dashboards and automated alerting.",
+    tag: "New",
   },
 ];
 
