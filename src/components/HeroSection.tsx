@@ -42,7 +42,7 @@ const HeroSection = () => {
               <Link to="/book-demo">Book a Demo <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
             <Button size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary/50 text-base px-8" onClick={() => document.getElementById('data-engine')?.scrollIntoView({ behavior: 'smooth' })}>
-              Data Engine <ArrowRight className="h-4 w-4 ml-2" />
+              Build AI <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
         </motion.div>
