@@ -17,6 +17,9 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
+        <div id="data-engine">
+          <DataEngineSection />
+        </div>
         <TrustedBy />
         <SolutionsSection />
         <AgenticSection />
