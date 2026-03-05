@@ -88,21 +88,26 @@ const ProductsSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 max-w-7xl mx-auto">
           {products.map((p, i) => (
             <motion.div
               key={p.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="glass-card rounded-xl p-6 hover:border-cosmic-teal/40 transition-all group cursor-pointer"
+              transition={{ delay: i * 0.07 }}
+              className="glass-card rounded-xl p-5 hover:border-cosmic-teal/40 transition-all group cursor-pointer relative"
             >
-              <div className="p-3 rounded-lg bg-cosmic-purple/10 w-fit mb-4 group-hover:bg-cosmic-purple/20 transition-colors">
-                <p.icon className="h-6 w-6 text-cosmic-purple-glow" />
+              {p.tag === "New" && (
+                <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cosmic-teal/20 text-cosmic-teal border border-cosmic-teal/30">
+                  New
+                </span>
+              )}
+              <div className="p-3 rounded-lg bg-cosmic-purple/10 w-fit mb-3 group-hover:bg-cosmic-purple/20 transition-colors">
+                <p.icon className="h-5 w-5 text-cosmic-purple-glow" />
               </div>
-              <h3 className="font-display text-lg font-semibold mb-2">{p.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{p.desc}</p>
+              <h3 className="font-display text-base font-semibold mb-1.5">{p.title}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed">{p.desc}</p>
             </motion.div>
           ))}
         </div>
