@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Orbit, Mountain, AlertTriangle, Rocket } from "lucide-react";
+import { Orbit, Mountain, AlertTriangle, Rocket, FlaskConical, MessageSquareHeart, Workflow, ShieldCheck, Sparkles, BarChart3 } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
 const products = [
@@ -7,21 +7,61 @@ const products = [
     icon: Orbit,
     title: "Orbital Data Labeling",
     desc: "Label and annotate satellite and telescope imagery with sub-pixel accuracy for training next-gen space AI.",
+    tag: "Core",
+  },
+  {
+    icon: FlaskConical,
+    title: "Model Evaluation",
+    desc: "Benchmark and stress-test your AI models against curated space datasets with automated quality scoring and regression detection.",
+    tag: "New",
+  },
+  {
+    icon: MessageSquareHeart,
+    title: "RLHF",
+    desc: "Reinforce your models with expert human feedback loops — fine-tune responses for mission-critical accuracy and safety alignment.",
+    tag: "New",
   },
   {
     icon: Mountain,
     title: "Terrain Classification",
     desc: "AI-powered terrain and land-use classification from multispectral satellite data across any geography.",
+    tag: "Core",
   },
   {
     icon: AlertTriangle,
     title: "Anomaly Detection",
     desc: "Detect anomalies in space sensor data, telemetry streams, and orbital mechanics in real time.",
+    tag: "Core",
+  },
+  {
+    icon: Workflow,
+    title: "Data Curation",
+    desc: "Automatically select, deduplicate, and balance training datasets for optimal model performance across domains.",
+    tag: "New",
+  },
+  {
+    icon: Sparkles,
+    title: "Prompt Engineering",
+    desc: "Design, test, and optimize prompts for foundation models with built-in evaluation metrics and A/B testing.",
+    tag: "New",
   },
   {
     icon: Rocket,
     title: "Mission Analytics",
     desc: "AI-driven insights for space missions — from launch windows to trajectory optimization and risk assessment.",
+    tag: "Core",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Safety & Alignment",
+    desc: "Red-team your models with adversarial testing, bias detection, and guardrail validation for responsible deployment.",
+    tag: "New",
+  },
+  {
+    icon: BarChart3,
+    title: "Model Monitoring",
+    desc: "Track model drift, latency, and accuracy in production with real-time dashboards and automated alerting.",
+    tag: "New",
   },
 ];
 
@@ -48,21 +88,26 @@ const ProductsSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 max-w-7xl mx-auto">
           {products.map((p, i) => (
             <motion.div
               key={p.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="glass-card rounded-xl p-6 hover:border-cosmic-teal/40 transition-all group cursor-pointer"
+              transition={{ delay: i * 0.07 }}
+              className="glass-card rounded-xl p-5 hover:border-cosmic-teal/40 transition-all group cursor-pointer relative"
             >
-              <div className="p-3 rounded-lg bg-cosmic-purple/10 w-fit mb-4 group-hover:bg-cosmic-purple/20 transition-colors">
-                <p.icon className="h-6 w-6 text-cosmic-purple-glow" />
+              {p.tag === "New" && (
+                <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cosmic-teal/20 text-cosmic-teal border border-cosmic-teal/30">
+                  New
+                </span>
+              )}
+              <div className="p-3 rounded-lg bg-cosmic-purple/10 w-fit mb-3 group-hover:bg-cosmic-purple/20 transition-colors">
+                <p.icon className="h-5 w-5 text-cosmic-purple-glow" />
               </div>
-              <h3 className="font-display text-lg font-semibold mb-2">{p.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{p.desc}</p>
+              <h3 className="font-display text-base font-semibold mb-1.5">{p.title}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed">{p.desc}</p>
             </motion.div>
           ))}
         </div>
