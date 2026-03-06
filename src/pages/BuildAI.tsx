@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import DataEngineSection from "@/components/DataEngineSection";
+import QuickStartGuide from "@/components/QuickStartGuide";
 import Footer from "@/components/Footer";
 
 const BuildAI = () => {
@@ -8,6 +9,7 @@ const BuildAI = () => {
       <Navbar />
       <main>
         <DataEngineSection />
+        <QuickStartGuide />
       </main>
       <Footer />
     </div>
