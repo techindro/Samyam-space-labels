@@ -2,7 +2,7 @@
 
 ## Project info 
 
-**URL**: https://chai-space-labels.lovable.app
+**URL**:https://samyam-space-labels.vercel.app
 
 ## How can I edit this code?
 
