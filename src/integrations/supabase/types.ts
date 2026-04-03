@@ -44,6 +44,81 @@ export type Database = {
         }
         Relationships: []
       }
+      frontier_leaderboards: {
+        Row: {
+          benchmark: string | null
+          category: string | null
+          created_at: string
+          evaluated_at: string | null
+          id: string
+          model_name: string
+          provider: string | null
+          rank: number | null
+          score: number | null
+        }
+        Insert: {
+          benchmark?: string | null
+          category?: string | null
+          created_at?: string
+          evaluated_at?: string | null
+          id?: string
+          model_name: string
+          provider?: string | null
+          rank?: number | null
+          score?: number | null
+        }
+        Update: {
+          benchmark?: string | null
+          category?: string | null
+          created_at?: string
+          evaluated_at?: string | null
+          id?: string
+          model_name?: string
+          provider?: string | null
+          rank?: number | null
+          score?: number | null
+        }
+        Relationships: []
+      }
+      preference_leaderboards: {
+        Row: {
+          category: string | null
+          created_at: string
+          elo_score: number | null
+          id: string
+          losses: number | null
+          model_name: string
+          provider: string | null
+          total_comparisons: number | null
+          updated_at: string
+          wins: number | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          elo_score?: number | null
+          id?: string
+          losses?: number | null
+          model_name: string
+          provider?: string | null
+          total_comparisons?: number | null
+          updated_at?: string
+          wins?: number | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          elo_score?: number | null
+          id?: string
+          losses?: number | null
+          model_name?: string
+          provider?: string | null
+          total_comparisons?: number | null
+          updated_at?: string
+          wins?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -71,6 +146,162 @@ export type Database = {
           updated_at?: string
           user_id?: string
           username?: string | null
+        }
+        Relationships: []
+      }
+      research_blog_posts: {
+        Row: {
+          author: string | null
+          content: string | null
+          cover_image_url: string | null
+          created_at: string
+          excerpt: string | null
+          id: string
+          published: boolean | null
+          published_at: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          content?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published?: boolean | null
+          published_at?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          content?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          published?: boolean | null
+          published_at?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      research_careers: {
+        Row: {
+          apply_url: string | null
+          created_at: string
+          department: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          location: string | null
+          requirements: string[] | null
+          title: string
+          type: string | null
+          updated_at: string
+        }
+        Insert: {
+          apply_url?: string | null
+          created_at?: string
+          department?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          requirements?: string[] | null
+          title: string
+          type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          apply_url?: string | null
+          created_at?: string
+          department?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          requirements?: string[] | null
+          title?: string
+          type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      research_labs: {
+        Row: {
+          created_at: string
+          description: string | null
+          focus_area: string | null
+          id: string
+          image_url: string | null
+          lead_researcher: string | null
+          name: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          focus_area?: string | null
+          id?: string
+          image_url?: string | null
+          lead_researcher?: string | null
+          name: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          focus_area?: string | null
+          id?: string
+          image_url?: string | null
+          lead_researcher?: string | null
+          name?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      research_papers: {
+        Row: {
+          abstract: string | null
+          authors: string[] | null
+          created_at: string
+          id: string
+          pdf_url: string | null
+          published_date: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          abstract?: string | null
+          authors?: string[] | null
+          created_at?: string
+          id?: string
+          pdf_url?: string | null
+          published_date?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          abstract?: string | null
+          authors?: string[] | null
+          created_at?: string
+          id?: string
+          pdf_url?: string | null
+          published_date?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
         }
         Relationships: []
       }

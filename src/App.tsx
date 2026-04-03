@@ -10,6 +10,12 @@ import BookDemo from "./pages/BookDemo";
 import BuildAI from "./pages/BuildAI";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ResearchPapers from "./pages/ResearchPapers";
+import ResearchBlog from "./pages/ResearchBlog";
+import FrontierLeaderboards from "./pages/FrontierLeaderboards";
+import PreferenceLeaderboard from "./pages/PreferenceLeaderboard";
+import ResearchLabs from "./pages/ResearchLabs";
+import ResearchCareers from "./pages/ResearchCareers";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +34,12 @@ const App = () => (
           <Route path="/build-ai" element={<BuildAI />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/research/papers" element={<ResearchPapers />} />
+          <Route path="/research/blog" element={<ResearchBlog />} />
+          <Route path="/research/frontier-leaderboards" element={<FrontierLeaderboards />} />
+          <Route path="/research/preference-leaderboard" element={<PreferenceLeaderboard />} />
+          <Route path="/research/labs" element={<ResearchLabs />} />
+          <Route path="/research/careers" element={<ResearchCareers />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
