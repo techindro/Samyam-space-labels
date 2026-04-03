@@ -7,7 +7,8 @@ import { Menu, X, ArrowRight, LogOut, User } from "lucide-react";
 
 const navLinks = ["Products", "Space Tech", "Government", "Enterprise", "Resources"];
 
-const Navbar = () => {
+const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
+  const isDark = variant === "dark";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
