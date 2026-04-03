@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 const BuildAI = () => {
   return (
     <div className="min-h-screen bg-foreground">
-      <Navbar />
+      <Navbar variant="dark" />
       <main>
         <BuildAIHero />
         <TrustedBestSection />
