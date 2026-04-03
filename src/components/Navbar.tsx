@@ -61,17 +61,17 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                <a href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                <a href="/dashboard" className={`text-sm transition-colors flex items-center gap-1 ${isDark ? 'text-white/70 hover:text-white' : 'text-muted-foreground hover:text-foreground'}`}>
                   <User className="h-4 w-4" />
                   {user.user_metadata?.username || user.email}
                 </a>
-                <Button size="sm" variant="outline" onClick={handleLogout} className="gap-1">
+                <Button size="sm" variant="outline" onClick={handleLogout} className={`gap-1 ${isDark ? 'border-white/20 text-white hover:bg-white/10' : ''}`}>
                   <LogOut className="h-3 w-3" /> Sign Out
                 </Button>
               </>
             ) : (
               <>
-                <a href="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="/auth" className={`text-sm transition-colors ${isDark ? 'text-white/70 hover:text-white' : 'text-muted-foreground hover:text-foreground'}`}>
                   Log In
                 </a>
                 <Button size="sm" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0" onClick={() => navigate("/auth")}>
@@ -82,33 +82,33 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
           </div>
 
           {/* Mobile Toggle */}
-          <button className="md:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
+          <button className={`md:hidden ${isDark ? 'text-white' : 'text-foreground'}`} onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="md:hidden glass-card border-t border-border/30 px-4 py-6 space-y-4">
+          <div className={`md:hidden border-t px-4 py-6 space-y-4 ${isDark ? 'bg-black/90 backdrop-blur-xl border-white/10' : 'glass-card border-border/30'}`}>
             {navLinks.map((link) => (
-              <a key={link} href="#" className="block text-sm text-muted-foreground hover:text-foreground">
+              <a key={link} href="#" className={`block text-sm ${isDark ? 'text-white/70 hover:text-white' : 'text-muted-foreground hover:text-foreground'}`}>
                 {link}
               </a>
             ))}
-            <div className="pt-4 border-t border-border/30 space-y-3">
+            <div className={`pt-4 border-t space-y-3 ${isDark ? 'border-white/10' : 'border-border/30'}`}>
               {user ? (
                 <>
-                  <span className="block text-sm text-muted-foreground">
+                  <span className={`block text-sm ${isDark ? 'text-white/70' : 'text-muted-foreground'}`}>
                     <User className="h-4 w-4 inline mr-1" />
                     {user.user_metadata?.username || user.email}
                   </span>
-                  <Button size="sm" variant="outline" className="w-full gap-1" onClick={handleLogout}>
+                  <Button size="sm" variant="outline" className={`w-full gap-1 ${isDark ? 'border-white/20 text-white hover:bg-white/10' : ''}`} onClick={handleLogout}>
                     <LogOut className="h-3 w-3" /> Sign Out
                   </Button>
                 </>
               ) : (
                 <>
-                  <a href="/auth" className="block text-sm text-muted-foreground">Log In</a>
+                  <a href="/auth" className={`block text-sm ${isDark ? 'text-white/70' : 'text-muted-foreground'}`}>Log In</a>
                   <Button size="sm" className="w-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0" onClick={() => navigate("/auth")}>
                     Sign Up <ArrowRight className="h-3 w-3 ml-1" />
                   </Button>
