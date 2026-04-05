@@ -22,6 +22,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [researchOpen, setResearchOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
   const dropdownRef = useRef<HTMLDivElement>(null);
