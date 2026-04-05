@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
-import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield } from "lucide-react";
+import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket } from "lucide-react";
 
 const navLinks = ["Products", "Space Tech", "Government", "Enterprise"];
 
@@ -17,15 +17,29 @@ const researchLinks = [
   { label: "Research Careers", href: "/research/careers", icon: Briefcase },
 ];
 
+const developerApis = [
+  { label: "Text to Speech", subtitle: "Samyam Voice V1", icon: Mic, href: "#" },
+  { label: "Speech to Text", subtitle: "Samyam Scribe V1", icon: MessageSquareText, href: "#" },
+  { label: "Document Digitisation", subtitle: "Samyam Vision", icon: ScanText, href: "#" },
+];
+
+const developerResources = [
+  { label: "Documentation", icon: Book, href: "#" },
+  { label: "API Pricing", icon: CreditCard, href: "#" },
+  { label: "Join Community", icon: MessagesSquare, href: "#" },
+];
+
 const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const isDark = variant === "dark";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [researchOpen, setResearchOpen] = useState(false);
+  const [developersOpen, setDevelopersOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const devDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -41,6 +55,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setResearchOpen(false);
+      }
+      if (devDropdownRef.current && !devDropdownRef.current.contains(e.target as Node)) {
+        setDevelopersOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -81,10 +98,91 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
               </a>
             ))}
 
+            {/* Developers Dropdown */}
+            <div ref={devDropdownRef} className="relative">
+              <button
+                onClick={() => { setDevelopersOpen(!developersOpen); setResearchOpen(false); }}
+                className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}
+              >
+                Developers
+                <ChevronDown className={`h-3 w-3 transition-transform ${developersOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {developersOpen && (
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[580px] rounded-xl border p-5 shadow-2xl ${isDark ? 'bg-[hsl(0,0%,8%)] border-white/10' : 'bg-background border-border shadow-lg'}`}>
+                  <div className="grid grid-cols-3 gap-6">
+                    {/* APIs */}
+                    <div>
+                      <p className={`text-xs uppercase tracking-widest mb-3 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>APIs</p>
+                      <div className="space-y-1">
+                        {developerApis.map(({ label, subtitle, icon: Icon, href }) => (
+                          <a
+                            key={label}
+                            href={href}
+                            onClick={(e) => { e.preventDefault(); setDevelopersOpen(false); }}
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                          >
+                            <div className={`p-1.5 rounded-lg ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
+                              <Icon className="h-4 w-4 shrink-0" />
+                            </div>
+                            <div>
+                              <span className="text-sm font-medium block">{label}</span>
+                              <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>{subtitle}</span>
+                            </div>
+                          </a>
+                        ))}
+                      </div>
+                      <a href="#" className={`text-xs font-medium mt-3 block px-3 ${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-primary hover:text-primary/80'}`}>
+                        View all models
+                      </a>
+                    </div>
+
+                    {/* Resources */}
+                    <div>
+                      <p className={`text-xs uppercase tracking-widest mb-3 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Resources</p>
+                      <div className="space-y-1">
+                        {developerResources.map(({ label, icon: Icon, href }) => (
+                          <a
+                            key={label}
+                            href={href}
+                            onClick={(e) => { e.preventDefault(); setDevelopersOpen(false); }}
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                          >
+                            <div className={`p-1.5 rounded-lg ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
+                              <Icon className="h-4 w-4 shrink-0" />
+                            </div>
+                            <span className="text-sm">{label}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Startup Program Card */}
+                    <div>
+                      <a
+                        href="#"
+                        onClick={(e) => { e.preventDefault(); setDevelopersOpen(false); }}
+                        className="block rounded-xl overflow-hidden group"
+                      >
+                        <div className="bg-gradient-to-br from-indigo-400/80 via-purple-400/60 to-blue-400/80 p-6 rounded-xl h-full flex flex-col items-center justify-center text-center min-h-[140px]">
+                          <Rocket className="h-6 w-6 text-white mb-2" />
+                          <span className="text-white text-lg font-bold leading-tight">Startup<br />Program</span>
+                        </div>
+                        <div className={`flex items-center justify-between pt-2 text-xs ${isDark ? 'text-white/50' : 'text-muted-foreground'}`}>
+                          <span>Samyam Startup Program</span>
+                          <ArrowRight className="h-3 w-3" />
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Research Dropdown */}
             <div ref={dropdownRef} className="relative">
               <button
-                onClick={() => setResearchOpen(!researchOpen)}
+                onClick={() => { setResearchOpen(!researchOpen); setDevelopersOpen(false); }}
                 className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}
               >
                 Research
@@ -154,8 +252,26 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
               <a key={link} href="#" className={`block text-sm ${linkClass}`}>{link}</a>
             ))}
 
+            {/* Mobile Developers Section */}
+            <div className="pt-2 pb-2">
+              <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Developers</p>
+              <div className="space-y-1">
+                {developerApis.map(({ label, subtitle, icon: Icon }) => (
+                  <a key={label} href="#" onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}
+                    className={`flex items-center gap-2 px-2 py-2 rounded-lg text-xs transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                    <div>
+                      <span className="block font-medium">{label}</span>
+                      <span className={`text-[10px] ${isDark ? 'text-white/30' : 'text-muted-foreground/60'}`}>{subtitle}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
             {/* Mobile Research Section */}
-            <div className={`pt-2 pb-2`}>
+            <div className="pt-2 pb-2">
               <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Research</p>
               <div className="grid grid-cols-2 gap-1">
                 {researchLinks.map(({ label, href, icon: Icon }) => (
