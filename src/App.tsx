@@ -16,7 +16,9 @@ import FrontierLeaderboards from "./pages/FrontierLeaderboards";
 import PreferenceLeaderboard from "./pages/PreferenceLeaderboard";
 import ResearchLabs from "./pages/ResearchLabs";
 import ResearchCareers from "./pages/ResearchCareers";
+import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +43,7 @@ const App = () => (
           <Route path="/research/labs" element={<ResearchLabs />} />
           <Route path="/research/careers" element={<ResearchCareers />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

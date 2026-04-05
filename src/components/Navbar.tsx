@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase } from "lucide-react";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield } from "lucide-react";
 
 const navLinks = ["Products", "Space Tech", "Government", "Enterprise"];
 
@@ -21,6 +22,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [researchOpen, setResearchOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -116,7 +118,12 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
-                <a href="/dashboard" className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}>
+                {isAdmin && (
+                  <a href="/admin" onClick={(e) => { e.preventDefault(); navigate("/admin"); }} className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}>
+                    <Shield className="h-4 w-4" /> Admin
+                  </a>
+                )}
+                <a href="/dashboard" onClick={(e) => { e.preventDefault(); navigate("/dashboard"); }} className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}>
                   <User className="h-4 w-4" />
                   {user.user_metadata?.username || user.email}
                 </a>
