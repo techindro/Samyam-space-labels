@@ -47,6 +47,9 @@ const App = () => (
           <Route path="/research/careers" element={<ResearchCareers />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/developers/text-to-speech" element={<DeveloperTextToSpeech />} />
+          <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
+          <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
