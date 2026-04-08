@@ -18,9 +18,9 @@ const researchLinks = [
 ];
 
 const developerApis = [
-  { label: "Text to Speech", subtitle: "Samyam Voice V1", icon: Mic, href: "#" },
-  { label: "Speech to Text", subtitle: "Samyam Scribe V1", icon: MessageSquareText, href: "#" },
-  { label: "Document Digitisation", subtitle: "Samyam Vision", icon: ScanText, href: "#" },
+  { label: "Text to Speech", subtitle: "Samyam Voice V1", icon: Mic, href: "/developers/text-to-speech" },
+  { label: "Speech to Text", subtitle: "Samyam Scribe V1", icon: MessageSquareText, href: "/developers/speech-to-text" },
+  { label: "Document Digitisation", subtitle: "Samyam Vision", icon: ScanText, href: "/developers/document-digitisation" },
 ];
 
 const developerResources = [

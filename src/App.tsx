@@ -20,6 +20,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import NotFound from "./pages/NotFound";
+import DeveloperTextToSpeech from "./pages/DeveloperTextToSpeech";
+import DeveloperSpeechToText from "./pages/DeveloperSpeechToText";
+import DeveloperDocumentDigitisation from "./pages/DeveloperDocumentDigitisation";
 
 const queryClient = new QueryClient();
 
