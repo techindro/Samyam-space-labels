@@ -9,24 +9,24 @@ import ParallelWebBg from "@/components/ParallelWebBg";
 const cases = [
   {
     tag: "Monitoring",
-    title: "Samyam Powers Satellite Constellation Monitoring",
-    desc: "How a leading constellation operator achieved 99.7% uptime with AI-driven monitoring across 1,400+ LEO satellites.",
+    title: "Satellite Health Monitoring with Samyam",
+    desc: "Helping an emerging constellation operator build AI-driven health checks across their initial fleet of LEO satellites.",
     image: caseMonitoring,
-    stats: "1,400+ satellites monitored",
+    stats: "Early-stage deployment",
   },
   {
     tag: "Defense",
-    title: "AI-Driven Debris Tracking with Samyam",
-    desc: "Tracking 30,000+ orbital objects in real time to protect critical space assets and prevent catastrophic collisions.",
+    title: "Orbital Debris Detection Pipeline",
+    desc: "Building labeled datasets of orbital objects to train detection models for space situational awareness applications.",
     image: caseDebris,
-    stats: "30,000+ objects tracked",
+    stats: "Custom annotation pipeline",
   },
   {
-    tag: "Scale",
-    title: "How Samyam Labeled 10M Satellite Images",
-    desc: "Delivering labeled satellite data at scale for the world's largest earth observation program with 99.4% annotation accuracy.",
+    tag: "Data",
+    title: "Satellite Image Annotation at Scale",
+    desc: "Delivering high-quality labeled satellite imagery for earth observation research with consistent annotation standards.",
     image: caseLabeled,
-    stats: "10M+ images labeled",
+    stats: "100K+ images labeled",
   },
 ];
 

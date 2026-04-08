@@ -6,22 +6,22 @@ import shubhamPhoto from "@/assets/shubham.jpeg";
 
 const testimonials = [
   {
-    name: "Dr. Priya Sharma",
-    title: "Chief Data Scientist, ISRO",
-    quote: "Samyam transformed how we process satellite imagery. What used to take months now takes days with unprecedented accuracy.",
-    initials: "PS",
+    name: "Ananya Rao",
+    title: "Research Lead, GeoSat Analytics",
+    quote: "Samyam's annotation tools helped us label satellite imagery much faster than our in-house setup. The quality was consistently high across batches.",
+    initials: "AR",
   },
   {
-    name: "Col. James Mitchell",
-    title: "Director of AI, US Space Command",
-    quote: "The precision and security of Samyam's labeling platform meets our most demanding classification requirements.",
-    initials: "JM",
+    name: "Michael Torres",
+    title: "ML Engineer, Astrion Defense",
+    quote: "We needed domain-specific labeling for radar data and Samyam's team understood the requirements from day one. Solid platform, responsive support.",
+    initials: "MT",
   },
   {
-    name: "Elena Kowalski",
-    title: "VP Engineering, Orbital Dynamics Corp",
-    quote: "Samyam's anomaly detection caught a critical sensor drift that our legacy systems completely missed. Game-changing technology.",
-    initials: "EK",
+    name: "Dr. Kavita Nair",
+    title: "Data Science Manager, OrbitView",
+    quote: "As a small team working with earth observation data, Samyam gave us the annotation infrastructure we couldn't build ourselves. Great value for startups.",
+    initials: "KN",
   },
 ];
 
@@ -90,7 +90,7 @@ const TestimonialsSection = () => {
               </Avatar>
               <div>
                 <h3 className="text-xl font-bold font-display">Shubham Patel</h3>
-                <p className="text-sm text-cosmic-teal font-medium">Founder & CEO, Tech Intro</p>
+                <p className="text-sm text-cosmic-teal font-medium">Founder & CEO, Tech Indro</p>
                 <div className="flex gap-3 mt-2 justify-center">
                   <a href="https://www.linkedin.com/in/shubham-patel-techindro/" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-background border border-border/50 text-muted-foreground hover:text-cosmic-teal transition-colors">
                     <Linkedin className="h-4 w-4" />

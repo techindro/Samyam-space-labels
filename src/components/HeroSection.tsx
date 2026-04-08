@@ -23,7 +23,7 @@ const HeroSection = () => {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/50 bg-secondary/50 text-sm text-muted-foreground mb-6">
             <Sparkles className="h-4 w-4 text-cosmic-teal" />
-            Now powering 50+ space missions
+            Building AI for space & defense
           </div>
           <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
             Breakthrough AI
@@ -33,9 +33,9 @@ const HeroSection = () => {
             </span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-xl mb-8 mx-auto lg:mx-0">
-            Samyam delivers world-class data labeling, model evaluations, and AI solutions 
-            purpose-built for space agencies, defense contractors, and enterprises pushing the 
-            boundaries of what's possible.
+            Samyam provides high-quality data labeling, model evaluation, and AI tools 
+            designed for space agencies, defense teams, and enterprises working on 
+            next-generation applications.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0 text-base px-8">
