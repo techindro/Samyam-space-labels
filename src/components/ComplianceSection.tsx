@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ShieldCheck } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
-const badges = ["SOC 2 Type II", "ISO 27001", "FedRAMP Ready", "ITAR Compliant", "NIST 800-171"];
+const badges = ["SOC 2 Type II", "ISO 27001", "ITAR Aware", "Data Encryption", "Access Controls"];
 
 const ComplianceSection = () => {
   return (
@@ -16,7 +16,7 @@ const ComplianceSection = () => {
         >
           <ShieldCheck className="h-8 w-8 text-cosmic-teal mx-auto mb-4" />
           <p className="text-sm text-muted-foreground uppercase tracking-widest mb-8">
-            Enterprise-grade security & compliance
+            Security & compliance standards we follow
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {badges.map((badge) => (

@@ -8,16 +8,16 @@ const cards = [
   {
     icon: Shield,
     title: "Space & Defense",
-    desc: "AI agents for mission planning, orbital analysis, threat detection, and space domain awareness. Built for classified and unclassified environments.",
+    desc: "AI agents for mission planning, orbital analysis, threat detection, and space domain awareness. Designed for both classified and unclassified environments.",
     image: agenticDefense,
-    stats: ["50+ missions supported", "24/7 real-time monitoring", "ITAR & FedRAMP compliant"],
+    stats: ["Mission-ready pipelines", "Real-time monitoring", "Security-first architecture"],
   },
   {
     icon: BarChart3,
     title: "Enterprise",
-    desc: "AI agents for commercial satellite analytics, earth observation insights, crop monitoring, and infrastructure assessment at global scale.",
+    desc: "AI agents for commercial satellite analytics, earth observation insights, crop monitoring, and infrastructure assessment.",
     image: agenticEnterprise,
-    stats: ["200TB+ data processed/month", "40+ enterprise clients", "Sub-meter resolution"],
+    stats: ["Scalable data processing", "Multi-sensor fusion", "Custom model training"],
   },
 ];
 
