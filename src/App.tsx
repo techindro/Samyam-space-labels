@@ -20,6 +20,9 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import NotFound from "./pages/NotFound";
+import DeveloperTextToSpeech from "./pages/DeveloperTextToSpeech";
+import DeveloperSpeechToText from "./pages/DeveloperSpeechToText";
+import DeveloperDocumentDigitisation from "./pages/DeveloperDocumentDigitisation";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +47,9 @@ const App = () => (
           <Route path="/research/careers" element={<ResearchCareers />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/developers/text-to-speech" element={<DeveloperTextToSpeech />} />
+          <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
+          <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
