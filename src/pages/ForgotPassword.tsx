@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Mail, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -29,16 +30,18 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 star-field">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      <ParallelWebBg />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
         <div className="glass-card rounded-2xl p-8 shadow-xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground font-['Space_Grotesk']">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">
               Reset Password
             </h1>
             <p className="text-muted-foreground mt-2 text-sm">
@@ -61,14 +64,7 @@ const ForgotPassword = () => {
                 <Label htmlFor="email" className="flex items-center gap-2">
                   <Mail className="w-4 h-4" /> Email
                 </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="you@example.com"
-                />
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@example.com" />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Sending..." : "Send Reset Link"}

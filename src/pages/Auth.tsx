@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Lock, Mail, User, KeyRound, ArrowLeft } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 type AuthMode = "login" | "signup" | "otp-request" | "otp-verify";
 
@@ -107,16 +108,18 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 star-field">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      <ParallelWebBg />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
         <div className="glass-card rounded-2xl p-8 shadow-xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground font-['Space_Grotesk']">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">
               {mode === "login" && "Sign In"}
               {mode === "signup" && "Create Account"}
               {mode === "otp-request" && "OTP Login"}
@@ -130,7 +133,6 @@ const Auth = () => {
             </p>
           </div>
 
-          {/* Login */}
           {mode === "login" && (
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
@@ -151,7 +153,6 @@ const Auth = () => {
             </form>
           )}
 
-          {/* Signup */}
           {mode === "signup" && (
             <form onSubmit={handleSignup} className="space-y-4">
               <div className="space-y-2">
@@ -176,7 +177,6 @@ const Auth = () => {
             </form>
           )}
 
-          {/* OTP Request */}
           {mode === "otp-request" && (
             <form onSubmit={handleOtpRequest} className="space-y-4">
               <div className="space-y-2">
@@ -191,7 +191,6 @@ const Auth = () => {
             </form>
           )}
 
-          {/* OTP Verify */}
           {mode === "otp-verify" && (
             <form onSubmit={handleOtpVerify} className="space-y-4">
               <div className="space-y-2">

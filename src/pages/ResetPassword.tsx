@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -17,13 +18,11 @@ const ResetPassword = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Listen for the PASSWORD_RECOVERY event from the magic link
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setReady(true);
       }
     });
-    // Also check if we already have a session with recovery type
     const hash = window.location.hash;
     if (hash.includes("type=recovery")) {
       setReady(true);
@@ -54,9 +53,10 @@ const ResetPassword = () => {
 
   if (!ready) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4 star-field">
-        <div className="glass-card rounded-2xl p-8 shadow-xl text-center max-w-md">
-          <h1 className="text-2xl font-bold text-foreground font-['Space_Grotesk'] mb-2">Loading...</h1>
+      <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+        <ParallelWebBg />
+        <div className="glass-card rounded-2xl p-8 shadow-xl text-center max-w-md relative z-10">
+          <h1 className="text-2xl font-bold text-foreground font-display mb-2">Loading...</h1>
           <p className="text-sm text-muted-foreground">Verifying your reset link. If nothing happens, the link may be expired.</p>
         </div>
       </div>
@@ -64,16 +64,18 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 star-field">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
+      <ParallelWebBg />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
         <div className="glass-card rounded-2xl p-8 shadow-xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground font-['Space_Grotesk']">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground font-display">
               Set New Password
             </h1>
             <p className="text-muted-foreground mt-2 text-sm">Enter your new password below</p>
