@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { User, Mail, Edit3, Save, LogOut, ArrowLeft, Camera } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const Dashboard = () => {
   const [user, setUser] = useState<any>(null);
@@ -109,9 +110,11 @@ const Dashboard = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background star-field">
-      {/* Header */}
-      <div className="border-b border-border/30 glass-card">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      <ParallelWebBg />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-teal/5 to-transparent pointer-events-none" />
+      
+      <div className="border-b border-border/30 glass-card relative z-10">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           <button onClick={() => navigate("/")} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back to Home
@@ -123,13 +126,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12 max-w-2xl">
+      <div className="container mx-auto px-4 py-12 max-w-2xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Profile Card */}
           <div className="glass-card rounded-2xl p-8 shadow-xl">
             <div className="flex items-center justify-between mb-8">
               <h1 className="text-2xl font-bold font-display">Your Profile</h1>
@@ -140,7 +142,6 @@ const Dashboard = () => {
               )}
             </div>
 
-            {/* Avatar */}
             <div className="flex justify-center mb-8">
               <div className="relative group">
                 {getAvatarUrl() ? (
@@ -193,7 +194,6 @@ const Dashboard = () => {
             )}
           </div>
 
-          {/* Account Info */}
           <div className="glass-card rounded-2xl p-6 shadow-xl mt-6">
             <h2 className="text-lg font-bold font-display mb-4">Account Info</h2>
             <div className="space-y-2 text-sm text-muted-foreground">

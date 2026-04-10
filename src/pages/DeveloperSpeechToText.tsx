@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ParallelWebBg from "@/components/ParallelWebBg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { MessageSquareText, Mic, MicOff, Copy, Code, Zap, Shield, FileText } from "lucide-react";
@@ -62,28 +63,29 @@ const DeveloperSpeechToText = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar variant="dark" />
+      <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative pt-32 pb-20 px-4 bg-foreground text-primary-foreground overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)", backgroundSize: "40px 40px" }} />
-          <div className="container mx-auto max-w-6xl relative">
+        <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+          <ParallelWebBg />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-teal/5 to-transparent pointer-events-none" />
+          <div className="container mx-auto max-w-6xl relative z-10">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-primary-foreground/20 bg-primary-foreground/5">
-                <MessageSquareText className="h-3.5 w-3.5" />
-                <span className="text-xs font-medium tracking-widest uppercase">Samyam Scribe V1</span>
+              <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-border bg-secondary/50">
+                <MessageSquareText className="h-3.5 w-3.5 text-cosmic-teal" />
+                <span className="text-xs font-medium tracking-widest uppercase text-muted-foreground" style={{ fontFamily: "'Comfortaa', cursive" }}>Samyam Scribe V1</span>
               </div>
-              <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 max-w-3xl">
+              <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 max-w-3xl text-foreground">
                 Speech to Text API
               </h1>
-              <p className="text-lg text-primary-foreground/70 max-w-2xl mb-8">
+              <p className="text-lg text-muted-foreground max-w-2xl mb-8">
                 Transcribe audio into accurate text in real-time. Built for aerospace and defense with domain-specific vocabulary and streaming support.
               </p>
               <div className="flex gap-4">
-                <Button size="lg" className="bg-primary-foreground text-foreground hover:bg-primary-foreground/90">
+                <Button size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0">
                   Get API Key
                 </Button>
-                <Button size="lg" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+                <Button size="lg" variant="outline">
                   View Docs
                 </Button>
               </div>
@@ -92,18 +94,19 @@ const DeveloperSpeechToText = () => {
         </section>
 
         {/* Interactive Demo */}
-        <section className="py-20 px-4">
-          <div className="container mx-auto max-w-6xl">
+        <section className="relative py-20 px-4 overflow-hidden">
+          <ParallelWebBg />
+          <div className="container mx-auto max-w-6xl relative z-10">
             <h2 className="text-2xl md:text-3xl font-bold font-display text-foreground mb-2 text-center">Try It Live</h2>
             <p className="text-muted-foreground text-center mb-10 text-sm">Click the microphone to start real-time transcription.</p>
             <div className="max-w-3xl mx-auto">
-              <div className="rounded-2xl border border-border bg-card p-8 flex flex-col items-center gap-6">
+              <div className="glass-card rounded-2xl p-8 flex flex-col items-center gap-6">
                 <button
                   onClick={toggleRecording}
                   className={`w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 ${
                     isRecording
                       ? "bg-destructive text-destructive-foreground shadow-[0_0_40px_-8px_hsl(var(--destructive)/0.5)] scale-110"
-                      : "bg-foreground text-primary-foreground hover:scale-105"
+                      : "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:scale-105"
                   }`}
                 >
                   {isRecording ? <MicOff className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
@@ -124,8 +127,10 @@ const DeveloperSpeechToText = () => {
         </section>
 
         {/* Features */}
-        <section className="py-20 px-4 bg-secondary/30">
-          <div className="container mx-auto max-w-6xl">
+        <section className="relative py-20 px-4 overflow-hidden">
+          <ParallelWebBg />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
+          <div className="container mx-auto max-w-6xl relative z-10">
             <h2 className="text-2xl md:text-3xl font-bold font-display text-foreground mb-12 text-center">Why Samyam Scribe</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {features.map((f, i) => (
@@ -135,10 +140,10 @@ const DeveloperSpeechToText = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="rounded-2xl border border-border bg-card p-6 flex gap-4"
+                  className="glass-card rounded-2xl p-6 flex gap-4 hover:border-cosmic-teal/40 transition-all"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center shrink-0">
-                    <f.icon className="h-5 w-5 text-foreground" />
+                  <div className="w-10 h-10 rounded-xl bg-cosmic-teal/10 flex items-center justify-center shrink-0">
+                    <f.icon className="h-5 w-5 text-cosmic-teal" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">{f.title}</h3>
@@ -151,22 +156,23 @@ const DeveloperSpeechToText = () => {
         </section>
 
         {/* Code Example */}
-        <section className="py-20 px-4">
-          <div className="container mx-auto max-w-4xl">
+        <section className="relative py-20 px-4 overflow-hidden">
+          <ParallelWebBg />
+          <div className="container mx-auto max-w-4xl relative z-10">
             <h2 className="text-2xl md:text-3xl font-bold font-display text-foreground mb-2 text-center">Quick Start</h2>
             <p className="text-muted-foreground text-center mb-10 text-sm">Transcribe audio in just a few lines.</p>
-            <div className="rounded-2xl border border-border bg-foreground text-primary-foreground overflow-hidden">
-              <div className="flex items-center justify-between px-5 py-3 border-b border-primary-foreground/10">
-                <span className="text-xs font-mono text-primary-foreground/50">python</span>
+            <div className="glass-card rounded-2xl overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-border/30">
+                <span className="text-xs font-mono text-muted-foreground">python</span>
                 <button
                   onClick={() => navigator.clipboard.writeText(codeExample)}
-                  className="text-xs text-primary-foreground/40 hover:text-primary-foreground/70 flex items-center gap-1"
+                  className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
                 >
                   <Copy className="h-3 w-3" /> Copy
                 </button>
               </div>
-              <pre className="p-5 text-sm font-mono leading-relaxed overflow-x-auto">
-                <code>{codeExample}</code>
+              <pre className="p-5 text-sm font-mono leading-relaxed overflow-x-auto bg-secondary/30">
+                <code className="text-foreground">{codeExample}</code>
               </pre>
             </div>
           </div>

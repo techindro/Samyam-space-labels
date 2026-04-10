@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ParallelWebBg from "@/components/ParallelWebBg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -55,69 +56,73 @@ const BookDemo = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="container mx-auto px-4 py-24 max-w-lg">
-        <Button variant="ghost" className="mb-6 text-muted-foreground" onClick={() => navigate("/")}>
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Home
-        </Button>
+      <main className="relative py-24 overflow-hidden">
+        <ParallelWebBg />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
+        <div className="container mx-auto px-4 max-w-lg relative z-10">
+          <Button variant="ghost" className="mb-6 text-muted-foreground" onClick={() => navigate("/")}>
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Home
+          </Button>
 
-        {submitted ? (
-          <div className="text-center py-16 space-y-4">
-            <CheckCircle className="h-16 w-16 text-cosmic-teal mx-auto" />
-            <h2 className="font-display text-3xl font-bold">Thank You!</h2>
-            <p className="text-muted-foreground">We've received your request and will be in touch shortly.</p>
-            <Button onClick={() => navigate("/")} className="mt-4 bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0">
-              Return Home
-            </Button>
-          </div>
-        ) : (
-          <>
-            <h1 className="font-display text-4xl font-bold mb-2">Book a Demo</h1>
-            <p className="text-muted-foreground mb-8">Fill out the form and our team will get back to you within 24 hours.</p>
+          {submitted ? (
+            <div className="text-center py-16 space-y-4 glass-card rounded-2xl p-8">
+              <CheckCircle className="h-16 w-16 text-cosmic-teal mx-auto" />
+              <h2 className="font-display text-3xl font-bold">Thank You!</h2>
+              <p className="text-muted-foreground">We've received your request and will be in touch shortly.</p>
+              <Button onClick={() => navigate("/")} className="mt-4 bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0">
+                Return Home
+              </Button>
+            </div>
+          ) : (
+            <div className="glass-card rounded-2xl p-8">
+              <h1 className="font-display text-4xl font-bold mb-2">Book a Demo</h1>
+              <p className="text-muted-foreground mb-8">Fill out the form and our team will get back to you within 24 hours.</p>
 
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                <FormField control={form.control} name="name" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name *</FormLabel>
-                    <FormControl><Input placeholder="Jane Doe" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="email" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Work Email *</FormLabel>
-                    <FormControl><Input type="email" placeholder="jane@company.com" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="company" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company</FormLabel>
-                    <FormControl><Input placeholder="Acme Corp" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="role" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Role</FormLabel>
-                    <FormControl><Input placeholder="CTO" {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="message" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Message</FormLabel>
-                    <FormControl><Textarea placeholder="Tell us about your use case..." {...field} /></FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0">
-                  {loading ? "Submitting..." : <><Send className="h-4 w-4 mr-2" /> Submit Request</>}
-                </Button>
-              </form>
-            </Form>
-          </>
-        )}
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                  <FormField control={form.control} name="name" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name *</FormLabel>
+                      <FormControl><Input placeholder="Jane Doe" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="email" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Work Email *</FormLabel>
+                      <FormControl><Input type="email" placeholder="jane@company.com" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="company" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company</FormLabel>
+                      <FormControl><Input placeholder="Acme Corp" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="role" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Role</FormLabel>
+                      <FormControl><Input placeholder="CTO" {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="message" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Message</FormLabel>
+                      <FormControl><Textarea placeholder="Tell us about your use case..." {...field} /></FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )} />
+                  <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0">
+                    {loading ? "Submitting..." : <><Send className="h-4 w-4 mr-2" /> Submit Request</>}
+                  </Button>
+                </form>
+              </Form>
+            </div>
+          )}
+        </div>
       </main>
       <Footer />
     </div>
