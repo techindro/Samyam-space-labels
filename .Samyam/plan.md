@@ -1,22 +1,22 @@
 
 
-# ChAi — Data Labeling & Space Tech AI Platform
+# Samyam — Data Labeling & Space Tech AI Platform
 
-A stunning, dark-themed landing website inspired by Scale AI's design, rebranded as **ChAi** with a focus on **data labeling** and **space technology**.
+A stunning, dark-themed landing website inspired by Scale AI's design, rebranded as **SamyamAI** with a focus on **data labeling** and **space technology**.
 
 ---
 
 ## Page Structure & Sections
 
 ### 1. Navigation Bar
-- **ChAi** logo/brand on the left
+- **SamyamAI** logo/brand on the left
 - Nav links: Products, Space Tech, Government, Enterprise, Resources
 - "Book a Demo →" CTA button + "Log In" link on the right
 - Top announcement banner (e.g., "ChAi launches satellite data labeling platform → Learn more")
 
 ### 2. Hero Section
 - Bold headline: **"Breakthrough AI for Space & Beyond"**
-- Subtitle about ChAi delivering data labeling, evaluations, and AI solutions for space agencies, defense, and enterprises
+- Subtitle about SamyamAI delivering data labeling, evaluations, and AI solutions for space agencies, defense, and enterprises
 - Two CTA buttons: "Book a Demo →" and "Explore Platform →"
 - Animated glowing 3D-style orb/planet graphic (CSS-based realistic space visual with gradients and glow effects)
 
