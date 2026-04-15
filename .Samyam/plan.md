@@ -1,5 +1,4 @@
 
-
 # Samyam AI — Data Labeling & Space Tech AI Platform
 
 A stunning, dark-themed landing website inspired by Scale AI's design, rebranded as **SamyamAI** with a focus on **data labeling** and **space technology**.
