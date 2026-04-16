@@ -24,10 +24,10 @@ Follow these steps:
 
 ```sh
 # Step 1: Clone the repository using the project's Git URL.
-git clone <https://github.com/techindro/chai-space-labels.git>
+git clone <https://github.com/techindro/Samyam-space-labels.git>
 
 # Step 2: Navigate to the project directory.
-cd <chai-space-labels>
+cd <Samyam-space-labels>
 
 # Step 3: Install the necessary dependencies.
 npm i
