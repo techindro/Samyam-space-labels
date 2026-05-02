@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Diamond, Camera, TrendingUp, Users } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const pillars = [
   {
@@ -26,7 +27,8 @@ const pillars = [
 
 const TrustedBestSection = () => {
   return (
-    <section className="relative py-24 bg-foreground overflow-hidden">
+    <section className="relative py-24 overflow-hidden">
+      <ParallelWebBg />
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div
@@ -36,13 +38,13 @@ const TrustedBestSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-primary-foreground/40 text-sm tracking-[0.3em] uppercase mb-4">
+          <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4" style={{ fontFamily: "'Comfortaa', cursive" }}>
             trusted
           </p>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground mb-5">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-5">
             The Best In The Business
           </h2>
-          <p className="text-primary-foreground/50 text-base max-w-2xl mx-auto leading-relaxed">
+          <p className="text-muted-foreground text-base max-w-2xl mx-auto leading-relaxed">
             The Samyam Data Engine is trusted by the world's leading ML teams to accelerate model development with unmatched operations, experts, and quality.
           </p>
         </motion.div>
@@ -58,11 +60,11 @@ const TrustedBestSection = () => {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="text-center"
             >
-              <div className="w-12 h-12 rounded-lg border border-primary-foreground/15 bg-primary-foreground/5 flex items-center justify-center mb-4 mx-auto">
-                <pillar.icon className="w-5 h-5 text-primary-foreground/60" />
+              <div className="w-12 h-12 rounded-lg border border-border bg-secondary/50 flex items-center justify-center mb-4 mx-auto">
+                <pillar.icon className="w-5 h-5 text-cosmic-purple" />
               </div>
-              <h3 className="font-display text-lg font-semibold text-primary-foreground mb-2">{pillar.title}</h3>
-              <p className="text-primary-foreground/40 text-sm leading-relaxed">{pillar.description}</p>
+              <h3 className="font-display text-lg font-semibold text-foreground mb-2">{pillar.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
             </motion.div>
           ))}
         </div>
@@ -76,10 +78,10 @@ const TrustedBestSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="rounded-xl border border-primary-foreground/10 bg-primary-foreground/5 p-8"
+              className="glass-card rounded-xl p-8"
             >
-              <h3 className="font-display text-xl font-semibold text-primary-foreground mb-3">{pillar.title}</h3>
-              <p className="text-primary-foreground/40 text-sm leading-relaxed">{pillar.description}</p>
+              <h3 className="font-display text-xl font-semibold text-foreground mb-3">{pillar.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">{pillar.description}</p>
             </motion.div>
           ))}
         </div>

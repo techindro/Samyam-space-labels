@@ -2,12 +2,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const DataEngineSection = () => {
   return (
-    <section className="relative py-24 bg-background overflow-hidden">
-      {/* Subtle gradient bg */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/20 to-background pointer-events-none" />
+    <section className="relative py-24 overflow-hidden">
+      <ParallelWebBg />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
