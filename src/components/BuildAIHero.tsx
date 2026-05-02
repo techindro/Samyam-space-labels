@@ -1,14 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
 const BuildAIHero = () => {
   return (
-    <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+    <section className="relative pt-32 pb-24 px-4 overflow-hidden star-field">
       <ParallelWebBg />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
+      {/* Gradient overlays — match HeroSection */}
+      <div className="absolute inset-0 bg-gradient-to-b from-cosmic-purple/10 via-transparent to-background pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cosmic-purple/5 rounded-full blur-[120px]" />
+      <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-cosmic-teal/5 rounded-full blur-[100px]" />
+
       <div className="container mx-auto relative z-10">
         {/* Top header */}
         <motion.div
@@ -17,14 +21,18 @@ const BuildAIHero = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4" style={{ fontFamily: "'Comfortaa', cursive" }}>
-            build ai
-          </p>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl font-bold text-foreground mb-5">
-            Powering Frontier AI
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/50 bg-secondary/50 text-sm text-muted-foreground mb-6">
+            <Sparkles className="h-4 w-4 text-cosmic-teal" />
+            <span style={{ fontFamily: "'Comfortaa', cursive" }}>build ai</span>
+          </div>
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+            Powering{" "}
+            <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
+              Frontier AI
+            </span>
           </h1>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Next Generation AI powered by world-class data.
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+            Next generation AI powered by world-class data.
           </p>
         </motion.div>
 
@@ -68,21 +76,24 @@ const BuildAIHero = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
           >
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-3">
-              Generative AI
+            <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-3" style={{ fontFamily: "'Comfortaa', cursive" }}>
+              generative ai
+            </p>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight">
+              Powering the next generation of{" "}
+              <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
+                Generative AI
+              </span>
             </h2>
-            <p className="text-muted-foreground text-sm mb-4">
-              Powering the next generation of Generative AI
-            </p>
             <p className="text-muted-foreground text-base leading-relaxed mb-8">
-              Samyam's Generative AI Data Engine powers many of the most advanced LLMs and generative models in the world through world-class RLHF, data generation, model evaluation, safety, and alignment.
+              Samyam's Generative AI Data Engine powers advanced LLMs and generative models through world-class RLHF, data generation, model evaluation, safety, and alignment.
             </p>
-            <div className="flex gap-4">
-              <Button asChild size="lg" className="rounded-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0 text-sm px-6">
-                <Link to="/book-demo">Book a Demo <ArrowRight className="h-4 w-4 ml-1" /></Link>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0 text-base px-8">
+                <Link to="/book-demo">Book a Demo <ArrowRight className="h-4 w-4 ml-2" /></Link>
               </Button>
-              <Button asChild variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground hover:bg-transparent text-sm">
-                <Link to="/build-ai">Build AI <ArrowRight className="h-4 w-4 ml-1" /></Link>
+              <Button asChild size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary/50 text-base px-8">
+                <Link to="/build-ai">Build AI <ArrowRight className="h-4 w-4 ml-2" /></Link>
               </Button>
             </div>
           </motion.div>
