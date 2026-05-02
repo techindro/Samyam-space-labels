@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { BookOpen, Database, Cpu } from "lucide-react";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const resources = [
   {
@@ -26,7 +27,8 @@ const resources = [
 
 const ResourcesSection = () => {
   return (
-    <section className="relative py-24 bg-foreground overflow-hidden">
+    <section className="relative py-24 overflow-hidden">
+      <ParallelWebBg />
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div
@@ -36,10 +38,10 @@ const ResourcesSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-primary-foreground/40 text-sm tracking-[0.3em] uppercase mb-4">
+          <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4" style={{ fontFamily: "'Comfortaa', cursive" }}>
             resources
           </p>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-primary-foreground">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
             Learn More About The Data Engine
           </h2>
         </motion.div>
@@ -56,12 +58,12 @@ const ResourcesSection = () => {
               className="group cursor-pointer"
             >
               {/* Icon card */}
-              <div className="aspect-square rounded-xl border border-primary-foreground/10 bg-primary-foreground/5 flex items-center justify-center mb-4 group-hover:border-primary-foreground/25 transition-colors">
-                <resource.icon className="w-16 h-16 text-primary-foreground/20 group-hover:text-primary-foreground/40 transition-colors" strokeWidth={1} />
+              <div className="glass-card aspect-square rounded-xl flex items-center justify-center mb-4 group-hover:border-cosmic-purple/40 transition-colors">
+                <resource.icon className="w-16 h-16 text-cosmic-purple/40 group-hover:text-cosmic-purple transition-colors" strokeWidth={1} />
               </div>
               {/* Label */}
-              <p className="text-primary-foreground/30 text-xs mb-1">{resource.tag}</p>
-              <h3 className="font-display text-base font-medium text-primary-foreground group-hover:text-primary-foreground/80 transition-colors">
+              <p className="text-muted-foreground text-xs mb-1">{resource.tag}</p>
+              <h3 className="font-display text-base font-medium text-foreground group-hover:text-cosmic-purple transition-colors">
                 {resource.title}
               </h3>
             </motion.div>
