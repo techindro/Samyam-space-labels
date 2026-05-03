@@ -122,8 +122,8 @@ function Satellite() {
       </group>
 
       {/* Lens / sensor */}
-      <mesh position={[0, -0.4, 0.81]}>
-        <cylinderGeometry args={[0.12, 0.12, 0.08, 24]} rotation={[Math.PI / 2, 0, 0]} />
+      <mesh position={[0, -0.4, 0.81]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.12, 0.12, 0.08, 24]} />
         <meshStandardMaterial color="#0a0a0a" metalness={0.9} roughness={0.1} emissive="#003366" emissiveIntensity={0.4} />
       </mesh>
 
