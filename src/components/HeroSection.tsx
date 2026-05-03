@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
+import SatelliteScene from "@/components/SatelliteScene";
 
 const HeroSection = () => {
   return (
