@@ -71,16 +71,18 @@ function useEarthTextures() {
     }
     dctx.putImageData(oceanImg, 0, 0);
 
+    const sx = w / 2048;
     const drawBlob = (cx: number, cy: number, pts: [number, number][], fill: string) => {
+      cx *= sx; cy *= sx;
       dctx.fillStyle = fill;
       dctx.beginPath();
-      dctx.moveTo(cx + pts[0][0], cy + pts[0][1]);
+      dctx.moveTo(cx + pts[0][0] * sx, cy + pts[0][1] * sx);
       for (let i = 1; i < pts.length; i++) {
         const [x, y] = pts[i];
         const [px, py] = pts[i - 1];
-        const mx = cx + (px + x) / 2;
-        const my = cy + (py + y) / 2;
-        dctx.quadraticCurveTo(cx + px, cy + py, mx, my);
+        const mx = cx + ((px + x) / 2) * sx;
+        const my = cy + ((py + y) / 2) * sx;
+        dctx.quadraticCurveTo(cx + px * sx, cy + py * sx, mx, my);
       }
       dctx.closePath();
       dctx.fill();
@@ -100,8 +102,8 @@ function useEarthTextures() {
     drawBlob(1620, 720, [[0,-50],[110,-40],[150,20],[80,60],[-30,50],[-70,0]], desert);
     drawBlob(700, 200, [[0,-50],[60,-30],[60,30],[10,50],[-40,20],[-30,-30]], ice);
     dctx.fillStyle = ice;
-    dctx.fillRect(0, h - 70, w, 70);
-    dctx.fillRect(0, 0, w, 40);
+    dctx.fillRect(0, h - 70 * sx, w, 70 * sx);
+    dctx.fillRect(0, 0, w, 40 * sx);
 
     const landImg = dctx.getImageData(0, 0, w, h);
     for (let i = 0; i < landImg.data.length; i += 4) {
