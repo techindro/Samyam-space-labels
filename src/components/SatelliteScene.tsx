@@ -1,13 +1,51 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Stars, Float, OrbitControls } from "@react-three/drei";
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo, createContext, useContext } from "react";
 import * as THREE from "three";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-// Procedural high-detail Earth textures (day, night lights, clouds, bump, specular)
+// ---- Quality tier ----
+type Quality = {
+  tier: "low" | "med" | "high";
+  texSize: number;       // earth texture resolution
+  earthSegments: number; // sphere subdivisions
+  cloudSegments: number;
+  starsCount: number;
+  starsCount2: number;
+  dpr: [number, number];
+  shadows: boolean;
+};
+const QualityCtx = createContext<Quality>({
+  tier: "high", texSize: 2048, earthSegments: 128, cloudSegments: 96,
+  starsCount: 5000, starsCount2: 1500, dpr: [1, 2], shadows: true,
+});
+const useQuality = () => useContext(QualityCtx);
+
+function pickQuality(isMobile: boolean): Quality {
+  // Heuristics: hardware concurrency + memory + mobile flag
+  const cores = (navigator as any).hardwareConcurrency || 4;
+  const mem = (navigator as any).deviceMemory || 4;
+  const lowEnd = isMobile || cores <= 4 || mem <= 4;
+  const midEnd = !lowEnd && (cores <= 8 || mem <= 8);
+
+  if (lowEnd) {
+    return { tier: "low", texSize: 1024, earthSegments: 64, cloudSegments: 48,
+      starsCount: 1500, starsCount2: 600, dpr: [1, 1.4], shadows: false };
+  }
+  if (midEnd) {
+    return { tier: "med", texSize: 1536, earthSegments: 96, cloudSegments: 72,
+      starsCount: 3000, starsCount2: 1000, dpr: [1, 1.75], shadows: false };
+  }
+  return { tier: "high", texSize: 2048, earthSegments: 128, cloudSegments: 96,
+    starsCount: 5000, starsCount2: 1500, dpr: [1, 2], shadows: true };
+}
+
+// Procedural Earth textures sized by quality
 function useEarthTextures() {
+  const q = useQuality();
   return useMemo(() => {
-    const w = 2048;
-    const h = 1024;
+    const w = q.texSize;
+    const h = q.texSize / 2;
 
     // ---- Day map ----
     const day = document.createElement("canvas");
