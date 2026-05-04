@@ -186,6 +186,8 @@ function Earth() {
   const ref = useRef<THREE.Mesh>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
   const { dayTex, cloudTex, bumpTex, specTex } = useEarthTextures();
+  const q = useQuality();
+  const haloSeg = q.tier === "low" ? 32 : 64;
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
@@ -195,23 +197,21 @@ function Earth() {
 
   return (
     <group position={[0, 0, 0]} rotation={[0.32, 0, 0.12]}>
-      {/* Atmosphere halos */}
       <mesh scale={1.16}>
-        <sphereGeometry args={[1.6, 64, 64]} />
+        <sphereGeometry args={[1.6, haloSeg, haloSeg]} />
         <meshBasicMaterial color="#3d7dff" transparent opacity={0.06} side={THREE.BackSide} />
       </mesh>
       <mesh scale={1.08}>
-        <sphereGeometry args={[1.6, 64, 64]} />
+        <sphereGeometry args={[1.6, haloSeg, haloSeg]} />
         <meshBasicMaterial color="#7fb6ff" transparent opacity={0.18} side={THREE.BackSide} />
       </mesh>
       <mesh scale={1.028}>
-        <sphereGeometry args={[1.6, 64, 64]} />
+        <sphereGeometry args={[1.6, haloSeg, haloSeg]} />
         <meshBasicMaterial color="#bcdcff" transparent opacity={0.12} side={THREE.BackSide} />
       </mesh>
 
-      {/* Earth */}
-      <mesh ref={ref} castShadow receiveShadow>
-        <sphereGeometry args={[1.6, 128, 128]} />
+      <mesh ref={ref} castShadow={q.shadows} receiveShadow={q.shadows}>
+        <sphereGeometry args={[1.6, q.earthSegments, q.earthSegments]} />
         <meshPhongMaterial
           map={dayTex}
           bumpMap={bumpTex}
@@ -222,9 +222,8 @@ function Earth() {
         />
       </mesh>
 
-      {/* Clouds */}
       <mesh ref={cloudsRef} scale={1.02}>
-        <sphereGeometry args={[1.6, 96, 96]} />
+        <sphereGeometry args={[1.6, q.cloudSegments, q.cloudSegments]} />
         <meshStandardMaterial
           map={cloudTex}
           transparent
