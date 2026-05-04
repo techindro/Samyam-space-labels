@@ -381,9 +381,11 @@ function Satellite() {
 }
 
 function OrbitRing() {
+  const q = useQuality();
+  const seg = q.tier === "low" ? 96 : q.tier === "med" ? 144 : 192;
   return (
     <mesh rotation={[Math.PI / 2.2, 0, 0]}>
-      <ringGeometry args={[2.78, 2.81, 192]} />
+      <ringGeometry args={[2.78, 2.81, seg]} />
       <meshBasicMaterial color="#88c4ff" transparent opacity={0.12} side={THREE.DoubleSide} />
     </mesh>
   );
@@ -398,9 +400,8 @@ function CinematicDrift({ userActive }: { userActive: React.MutableRefObject<boo
   useFrame((state, delta) => {
     if (userActive.current) return;
     const t = state.clock.getElapsedTime();
-    const a = t * 0.018; // very slow drift
+    const a = t * 0.018;
     const r = base.current.r;
-    // Parallax from pointer (-1..1)
     const px = pointer.x * 0.6;
     const py = pointer.y * 0.4;
     target.current.set(
@@ -414,12 +415,69 @@ function CinematicDrift({ userActive }: { userActive: React.MutableRefObject<boo
   return null;
 }
 
-const SatelliteScene = () => {
+// Adaptive DPR: drop pixel ratio if FPS dips, raise it back if smooth
+function AdaptivePerf() {
+  const { gl } = useThree();
+  const fps = useRef({ frames: 0, last: performance.now(), dpr: 0 });
+  useFrame(() => {
+    fps.current.frames++;
+    const now = performance.now();
+    if (now - fps.current.last >= 1000) {
+      const f = fps.current.frames;
+      fps.current.frames = 0;
+      fps.current.last = now;
+      const cur = gl.getPixelRatio();
+      if (f < 40 && cur > 1) gl.setPixelRatio(Math.max(1, cur - 0.25));
+      else if (f > 55 && cur < Math.min(window.devicePixelRatio, 2)) {
+        gl.setPixelRatio(Math.min(window.devicePixelRatio, 2, cur + 0.25));
+      }
+    }
+  });
+  return null;
+}
+
+const SceneContents = () => {
+  const q = useQuality();
   const userActive = useRef(false);
+  return (
+    <>
+      <CinematicDrift userActive={userActive} />
+      <AdaptivePerf />
+      <ambientLight intensity={0.18} />
+      <directionalLight position={[6, 3, 4]} intensity={1.9} color="#fff4dc" castShadow={q.shadows} />
+      <directionalLight position={[-5, -2, -3]} intensity={0.25} color="#4a78c4" />
+      <pointLight position={[0, 0, -6]} intensity={0.45} color="#3a6cff" />
+
+      <Stars radius={120} depth={60} count={q.starsCount} factor={3.5} saturation={0} fade speed={0.1} />
+      <Stars radius={50} depth={30} count={q.starsCount2} factor={1.5} saturation={0} fade speed={0.25} />
+
+      <Earth />
+      <OrbitRing />
+      <Float speed={0.3} rotationIntensity={0.04} floatIntensity={0.08}>
+        <Satellite />
+      </Float>
+
+      <OrbitControls
+        enablePan={false}
+        enableZoom
+        minDistance={3.5}
+        maxDistance={11}
+        rotateSpeed={0.55}
+        zoomSpeed={0.6}
+        autoRotate={false}
+        onStart={() => { userActive.current = true; }}
+        onEnd={() => { userActive.current = true; }}
+      />
+    </>
+  );
+};
+
+const SatelliteScene = () => {
+  const isMobile = useIsMobile();
+  const quality = useMemo(() => pickQuality(!!isMobile), [isMobile]);
 
   return (
     <div className="relative w-full max-w-[520px] aspect-square mx-auto">
-      {/* Deep-space backdrop confined to scene */}
       <div className="absolute inset-0 rounded-full overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0a1130_0%,#04061a_55%,transparent_78%)]" />
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(24,95%,55%)]/10 via-transparent to-[hsl(145,60%,38%)]/10 blur-[40px]" />
@@ -427,41 +485,16 @@ const SatelliteScene = () => {
 
       <Canvas
         camera={{ position: [0, 0.6, 6.4], fov: 42 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true }}
+        dpr={quality.dpr}
+        gl={{ antialias: quality.tier !== "low", alpha: true, powerPreference: "high-performance" }}
+        shadows={quality.shadows}
         style={{ background: "transparent" }}
       >
-        <CinematicDrift userActive={userActive} />
-        <ambientLight intensity={0.18} />
-        <directionalLight position={[6, 3, 4]} intensity={1.9} color="#fff4dc" castShadow />
-        <directionalLight position={[-5, -2, -3]} intensity={0.25} color="#4a78c4" />
-        <pointLight position={[0, 0, -6]} intensity={0.45} color="#3a6cff" />
-
-        {/* Layered starfield for depth */}
-        <Stars radius={120} depth={60} count={5000} factor={3.5} saturation={0} fade speed={0.1} />
-        <Stars radius={50} depth={30} count={1500} factor={1.5} saturation={0} fade speed={0.25} />
-
-        <Earth />
-        <OrbitRing />
-        <Float speed={0.3} rotationIntensity={0.04} floatIntensity={0.08}>
-          <Satellite />
-        </Float>
-
-        {/* User controls — drag/pinch to orbit the satellite & earth */}
-        <OrbitControls
-          enablePan={false}
-          enableZoom
-          minDistance={3.5}
-          maxDistance={11}
-          rotateSpeed={0.55}
-          zoomSpeed={0.6}
-          autoRotate={false}
-          onStart={() => { userActive.current = true; }}
-          onEnd={() => { userActive.current = true; /* keep manual control after touch */ }}
-        />
+        <QualityCtx.Provider value={quality}>
+          <SceneContents />
+        </QualityCtx.Provider>
       </Canvas>
 
-      {/* Subtle hint */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[11px] tracking-wide text-white/60 pointer-events-none select-none">
         drag to orbit · scroll to zoom
       </div>
