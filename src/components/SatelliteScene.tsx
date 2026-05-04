@@ -179,7 +179,7 @@ function useEarthTextures() {
     specTex.anisotropy = 4;
 
     return { dayTex, cloudTex, bumpTex, specTex };
-  }, []);
+  }, [q.texSize, q.tier]);
 }
 
 function Earth() {
