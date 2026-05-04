@@ -127,7 +127,8 @@ function useEarthTextures() {
     cloud.height = h;
     const cctx = cloud.getContext("2d")!;
     cctx.clearRect(0, 0, w, h);
-    for (let i = 0; i < 260; i++) {
+    const cloudCount = q.tier === "low" ? 110 : q.tier === "med" ? 180 : 260;
+    for (let i = 0; i < cloudCount; i++) {
       const x = Math.random() * w;
       const y = Math.random() * h;
       const r = 30 + Math.random() * 130;
