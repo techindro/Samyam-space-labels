@@ -530,7 +530,7 @@ const SatelliteScene = () => {
       </div>
 
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[11px] tracking-wide text-white/60 pointer-events-none select-none">
-        drag to orbit · scroll to zoom
+        drag to orbit
       </div>
     </div>
   );
