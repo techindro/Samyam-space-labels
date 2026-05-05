@@ -467,11 +467,8 @@ const SceneContents = () => {
 
       <OrbitControls
         enablePan={false}
-        enableZoom
-        minDistance={3.5}
-        maxDistance={11}
-        rotateSpeed={0.55}
-        zoomSpeed={0.6}
+        enableZoom={false}
+        rotateSpeed={0.5}
         autoRotate={false}
         onStart={() => { userActive.current = true; }}
         onEnd={() => { userActive.current = true; }}
