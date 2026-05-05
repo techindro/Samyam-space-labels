@@ -22,8 +22,15 @@ const QualityCtx = createContext<Quality>({
 });
 const useQuality = () => useContext(QualityCtx);
 
-function pickQuality(isMobile: boolean): Quality {
-  // Heuristics: hardware concurrency + memory + mobile flag
+function pickQuality(isMobile: boolean, mode: "auto" | "high" | "saver" = "auto"): Quality {
+  if (mode === "saver") {
+    return { tier: "low", texSize: 1024, earthSegments: 64, cloudSegments: 48,
+      starsCount: 800, starsCount2: 300, dpr: [1, 1.25], shadows: false };
+  }
+  if (mode === "high") {
+    return { tier: "high", texSize: 2048, earthSegments: 128, cloudSegments: 96,
+      starsCount: 5000, starsCount2: 1500, dpr: [1, 2], shadows: true };
+  }
   const cores = (navigator as any).hardwareConcurrency || 4;
   const mem = (navigator as any).deviceMemory || 4;
   const lowEnd = isMobile || cores <= 4 || mem <= 4;
