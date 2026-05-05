@@ -1,8 +1,9 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Stars, Float, OrbitControls } from "@react-three/drei";
-import { useRef, useMemo, createContext, useContext } from "react";
+import { useRef, useMemo, createContext, useContext, useState, useEffect } from "react";
 import * as THREE from "three";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Zap, Battery } from "lucide-react";
 
 // ---- Quality tier ----
 type Quality = {
@@ -21,8 +22,15 @@ const QualityCtx = createContext<Quality>({
 });
 const useQuality = () => useContext(QualityCtx);
 
-function pickQuality(isMobile: boolean): Quality {
-  // Heuristics: hardware concurrency + memory + mobile flag
+function pickQuality(isMobile: boolean, mode: "auto" | "high" | "saver" = "auto"): Quality {
+  if (mode === "saver") {
+    return { tier: "low", texSize: 1024, earthSegments: 64, cloudSegments: 48,
+      starsCount: 800, starsCount2: 300, dpr: [1, 1.25], shadows: false };
+  }
+  if (mode === "high") {
+    return { tier: "high", texSize: 2048, earthSegments: 128, cloudSegments: 96,
+      starsCount: 5000, starsCount2: 1500, dpr: [1, 2], shadows: true };
+  }
   const cores = (navigator as any).hardwareConcurrency || 4;
   const mem = (navigator as any).deviceMemory || 4;
   const lowEnd = isMobile || cores <= 4 || mem <= 4;
@@ -472,18 +480,29 @@ const SceneContents = () => {
   );
 };
 
+type Mode = "auto" | "high" | "saver";
+
 const SatelliteScene = () => {
   const isMobile = useIsMobile();
-  const quality = useMemo(() => pickQuality(!!isMobile), [isMobile]);
+  const [mode, setMode] = useState<Mode>(() => {
+    if (typeof window === "undefined") return "auto";
+    return (localStorage.getItem("satellite-quality") as Mode) || "auto";
+  });
+  useEffect(() => {
+    try { localStorage.setItem("satellite-quality", mode); } catch {}
+  }, [mode]);
+  const quality = useMemo(() => pickQuality(!!isMobile, mode), [isMobile, mode]);
+  const isSaver = mode === "saver" || (mode === "auto" && quality.tier === "low");
 
   return (
     <div className="relative w-full max-w-[520px] aspect-square mx-auto">
-      <div className="absolute inset-0 rounded-full overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#0a1130_0%,#04061a_55%,transparent_78%)]" />
+      {/* Soft ambient glow only — no dark blackout circle */}
+      <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(24,95%,55%)]/10 via-transparent to-[hsl(145,60%,38%)]/10 blur-[40px]" />
       </div>
 
       <Canvas
+        key={`${quality.tier}-${quality.texSize}`}
         camera={{ position: [0, 0.6, 6.4], fov: 42 }}
         dpr={quality.dpr}
         gl={{ antialias: quality.tier !== "low", alpha: true, powerPreference: "high-performance" }}
@@ -494,6 +513,24 @@ const SatelliteScene = () => {
           <SceneContents />
         </QualityCtx.Provider>
       </Canvas>
+
+      {/* Quality toggle */}
+      <div className="absolute top-3 right-3 z-10 flex items-center gap-1 rounded-full border border-white/15 bg-black/30 backdrop-blur-md p-1 text-[11px]">
+        <button
+          onClick={() => setMode("high")}
+          className={`flex items-center gap-1 px-2 py-1 rounded-full transition ${!isSaver ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
+          title="High quality"
+        >
+          <Zap className="h-3 w-3" /> High
+        </button>
+        <button
+          onClick={() => setMode("saver")}
+          className={`flex items-center gap-1 px-2 py-1 rounded-full transition ${isSaver ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
+          title="Battery saver"
+        >
+          <Battery className="h-3 w-3" /> Saver
+        </button>
+      </div>
 
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[11px] tracking-wide text-white/60 pointer-events-none select-none">
         drag to orbit · scroll to zoom
