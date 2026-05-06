@@ -269,7 +269,7 @@ function Satellite() {
 
   return (
     <group ref={orbit}>
-      <group ref={body} position={[2.85, 0.35, 0]} scale={0.34}>
+      <group ref={body} position={[2.35, 0.3, 0]} scale={0.28}>
         <mesh castShadow>
           <boxGeometry args={[1.1, 1.1, 1.5]} />
           <meshStandardMaterial color="#d9c98a" metalness={0.85} roughness={0.35} />
@@ -400,7 +400,7 @@ function OrbitRing() {
   const seg = q.tier === "low" ? 96 : q.tier === "med" ? 144 : 192;
   return (
     <mesh rotation={[Math.PI / 2.2, 0, 0]}>
-      <ringGeometry args={[2.78, 2.81, seg]} />
+      <ringGeometry args={[2.33, 2.36, seg]} />
       <meshBasicMaterial color="#88c4ff" transparent opacity={0.12} side={THREE.DoubleSide} />
     </mesh>
   );
@@ -507,7 +507,7 @@ const SatelliteScene = () => {
 
       <Canvas
         key={`${quality.tier}-${quality.texSize}`}
-        camera={{ position: [0, 0.6, 7.4], fov: 40 }}
+        camera={{ position: [0, 0.6, 8.4], fov: 38 }}
         dpr={quality.dpr}
         gl={{ antialias: quality.tier !== "low", alpha: true, powerPreference: "high-performance" }}
         shadows={quality.shadows}
