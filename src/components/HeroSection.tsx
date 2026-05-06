@@ -3,7 +3,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
-import heroOrb from "@/assets/hero-orb.jpg";
+import SatelliteScene from "@/components/SatelliteScene";
 
 const HeroSection = () => {
   return (
@@ -53,18 +53,9 @@ const HeroSection = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="flex items-center justify-center relative"
+          className="flex items-center justify-center"
         >
-          <div className="absolute inset-0 bg-cosmic-purple/20 blur-[120px] rounded-full" />
-          <motion.img
-            src={heroOrb}
-            alt="Cinematic glowing AI orb in deep space"
-            width={1024}
-            height={1024}
-            className="relative w-full max-w-[560px] h-auto rounded-full drop-shadow-[0_0_80px_hsl(var(--cosmic-purple)/0.5)]"
-            animate={{ y: [0, -16, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
+          <SatelliteScene />
         </motion.div>
       </div>
     </section>
