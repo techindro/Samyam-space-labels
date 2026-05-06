@@ -1,9 +1,10 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Stars, Float, OrbitControls } from "@react-three/drei";
+import { Stars, Float, OrbitControls, useTexture } from "@react-three/drei";
 import { useRef, useMemo, createContext, useContext, useState, useEffect } from "react";
 import * as THREE from "three";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Zap, Battery } from "lucide-react";
+import earthMapUrl from "@/assets/earth-map.jpg";
 
 // ---- Quality tier ----
 type Quality = {
@@ -193,7 +194,13 @@ function useEarthTextures() {
 function Earth() {
   const ref = useRef<THREE.Mesh>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
-  const { dayTex, cloudTex, bumpTex, specTex } = useEarthTextures();
+  const { cloudTex, bumpTex, specTex } = useEarthTextures();
+  const dayTex = useTexture(earthMapUrl);
+  useMemo(() => {
+    dayTex.colorSpace = THREE.SRGBColorSpace;
+    dayTex.anisotropy = 8;
+    dayTex.wrapS = THREE.RepeatWrapping;
+  }, [dayTex]);
   const q = useQuality();
   const haloSeg = q.tier === "low" ? 32 : 64;
 
@@ -223,10 +230,10 @@ function Earth() {
         <meshPhongMaterial
           map={dayTex}
           bumpMap={bumpTex}
-          bumpScale={0.05}
+          bumpScale={0.04}
           specularMap={specTex}
           specular={new THREE.Color("#3a6db8")}
-          shininess={18}
+          shininess={20}
         />
       </mesh>
 
