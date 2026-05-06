@@ -4,9 +4,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
-import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket } from "lucide-react";
+import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2 } from "lucide-react";
 
-const navLinks = ["Products", "Space Tech", "Government", "Enterprise"];
+const navLinks = ["Products", "Space Tech", "Enterprise"];
+
+const governmentLinks = [
+  { label: "Indian Defence (MoD)", subtitle: "AI for Armed Forces & DRDO programs", icon: Shield, href: "#" },
+  { label: "ISRO & Space", subtitle: "Satellite intelligence & mission analytics", icon: Satellite, href: "#" },
+  { label: "Intelligence & Security", subtitle: "ISR, GEOINT and threat detection", icon: Radar, href: "#" },
+  { label: "Border & Maritime", subtitle: "Surveillance for BSF, ITBP & Coast Guard", icon: Eye, href: "#" },
+  { label: "Smart Governance", subtitle: "AI for ministries & public services", icon: Landmark, href: "#" },
+  { label: "PSU & Strategic Sector", subtitle: "AI for HAL, BEL, ISRO partners", icon: Building2, href: "#" },
+  { label: "IndiaAI Mission Aligned", subtitle: "Sovereign AI infrastructure & datasets", icon: Cpu, href: "#" },
+  { label: "Test, Eval & Assurance", subtitle: "Red-team & evaluate mission-critical AI", icon: ShieldCheck, href: "#" },
+  { label: "Global Public Sector", subtitle: "Allied programs & coalition partners", icon: Globe2, href: "#" },
+];
 
 const researchLinks = [
   { label: "Research Papers", href: "/research/papers", icon: FileText },
@@ -35,6 +47,8 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const [researchOpen, setResearchOpen] = useState(false);
   const [developersOpen, setDevelopersOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [governmentOpen, setGovernmentOpen] = useState(false);
+  const govDropdownRef = useRef<HTMLDivElement>(null);
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -58,6 +72,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
       }
       if (devDropdownRef.current && !devDropdownRef.current.contains(e.target as Node)) {
         setDevelopersOpen(false);
+      }
+      if (govDropdownRef.current && !govDropdownRef.current.contains(e.target as Node)) {
+        setGovernmentOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -97,6 +114,50 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                 {link}
               </a>
             ))}
+
+            {/* Government Dropdown */}
+            <div ref={govDropdownRef} className="relative">
+              <button
+                onClick={() => { setGovernmentOpen(!governmentOpen); setDevelopersOpen(false); setResearchOpen(false); }}
+                className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}
+              >
+                Government
+                <ChevronDown className={`h-3 w-3 transition-transform ${governmentOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {governmentOpen && (
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[640px] rounded-xl border p-5 shadow-2xl ${isDark ? 'bg-[hsl(0,0%,8%)] border-white/10' : 'bg-background border-border shadow-lg'}`}>
+                  <div className="flex items-center justify-between mb-3 px-1">
+                    <p className={`text-xs uppercase tracking-widest font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Government — India & Allies</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full border ${isDark ? 'border-white/15 text-white/60' : 'border-border text-muted-foreground'}`}>ITAR Aware</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {governmentLinks.map(({ label, subtitle, icon: Icon, href }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        onClick={(e) => { e.preventDefault(); setGovernmentOpen(false); }}
+                        className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                      >
+                        <div className={`p-1.5 rounded-lg mt-0.5 ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
+                          <Icon className="h-4 w-4 shrink-0" />
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium block leading-tight">{label}</span>
+                          <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>{subtitle}</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                  <div className={`mt-4 pt-3 border-t flex items-center justify-between px-1 ${isDark ? 'border-white/10' : 'border-border'}`}>
+                    <span className={`text-xs ${isDark ? 'text-white/50' : 'text-muted-foreground'}`}>Mission-ready AI for sovereign defence & space programs</span>
+                    <a href="/book-demo" onClick={(e) => { e.preventDefault(); setGovernmentOpen(false); navigate("/book-demo"); }} className={`text-xs font-medium inline-flex items-center gap-1 ${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-primary hover:text-primary/80'}`}>
+                      Book briefing <ArrowRight className="h-3 w-3" />
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Developers Dropdown */}
             <div ref={devDropdownRef} className="relative">
@@ -264,6 +325,24 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                     <div>
                       <span className="block font-medium">{label}</span>
                       <span className={`text-[10px] ${isDark ? 'text-white/30' : 'text-muted-foreground/60'}`}>{subtitle}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile Government Section */}
+            <div className="pt-2 pb-2">
+              <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Government — India & Allies</p>
+              <div className="grid grid-cols-1 gap-1">
+                {governmentLinks.map(({ label, subtitle, icon: Icon, href }) => (
+                  <a key={label} href={href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}
+                    className={`flex items-start gap-2 px-2 py-2 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="block text-xs font-medium leading-tight">{label}</span>
+                      <span className={`text-[10px] ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>{subtitle}</span>
                     </div>
                   </a>
                 ))}
