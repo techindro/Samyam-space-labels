@@ -258,12 +258,12 @@ function Satellite() {
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     if (orbit.current) {
-      orbit.current.rotation.y = t * 0.035;
-      orbit.current.rotation.x = Math.sin(t * 0.025) * 0.16;
+      orbit.current.rotation.y = t * 0.18;
+      orbit.current.rotation.x = Math.sin(t * 0.08) * 0.18;
     }
     if (body.current) {
-      body.current.rotation.y = Math.sin(t * 0.06) * 0.22;
-      body.current.rotation.z = Math.sin(t * 0.04) * 0.07;
+      body.current.rotation.y = Math.sin(t * 0.25) * 0.25;
+      body.current.rotation.z = Math.sin(t * 0.18) * 0.08;
     }
   });
 
@@ -458,10 +458,10 @@ const SceneContents = () => {
     <>
       <CinematicDrift userActive={userActive} />
       <AdaptivePerf />
-      <ambientLight intensity={0.18} />
-      <directionalLight position={[6, 3, 4]} intensity={1.9} color="#fff4dc" castShadow={q.shadows} />
-      <directionalLight position={[-5, -2, -3]} intensity={0.25} color="#4a78c4" />
-      <pointLight position={[0, 0, -6]} intensity={0.45} color="#3a6cff" />
+      <ambientLight intensity={0.55} />
+      <directionalLight position={[6, 3, 4]} intensity={1.6} color="#fff4dc" castShadow={q.shadows} />
+      <directionalLight position={[-5, -2, -3]} intensity={0.7} color="#88aaff" />
+      <pointLight position={[0, 0, -6]} intensity={0.5} color="#3a6cff" />
 
       <Stars radius={120} depth={60} count={q.starsCount} factor={3.5} saturation={0} fade speed={0.1} />
       <Stars radius={50} depth={30} count={q.starsCount2} factor={1.5} saturation={0} fade speed={0.25} />
@@ -507,7 +507,7 @@ const SatelliteScene = () => {
 
       <Canvas
         key={`${quality.tier}-${quality.texSize}`}
-        camera={{ position: [0, 0.6, 6.4], fov: 42 }}
+        camera={{ position: [0, 0.6, 7.4], fov: 40 }}
         dpr={quality.dpr}
         gl={{ antialias: quality.tier !== "low", alpha: true, powerPreference: "high-performance" }}
         shadows={quality.shadows}
