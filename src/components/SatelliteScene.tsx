@@ -400,7 +400,7 @@ function OrbitRing() {
   const seg = q.tier === "low" ? 96 : q.tier === "med" ? 144 : 192;
   return (
     <mesh rotation={[Math.PI / 2.2, 0, 0]}>
-      <ringGeometry args={[2.78, 2.81, seg]} />
+      <ringGeometry args={[2.33, 2.36, seg]} />
       <meshBasicMaterial color="#88c4ff" transparent opacity={0.12} side={THREE.DoubleSide} />
     </mesh>
   );
