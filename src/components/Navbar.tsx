@@ -4,9 +4,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
-import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket } from "lucide-react";
+import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2 } from "lucide-react";
 
-const navLinks = ["Products", "Space Tech", "Government", "Enterprise"];
+const navLinks = ["Products", "Space Tech", "Enterprise"];
+
+const governmentLinks = [
+  { label: "Indian Defence (MoD)", subtitle: "AI for Armed Forces & DRDO programs", icon: Shield, href: "#" },
+  { label: "ISRO & Space", subtitle: "Satellite intelligence & mission analytics", icon: Satellite, href: "#" },
+  { label: "Intelligence & Security", subtitle: "ISR, GEOINT and threat detection", icon: Radar, href: "#" },
+  { label: "Border & Maritime", subtitle: "Surveillance for BSF, ITBP & Coast Guard", icon: Eye, href: "#" },
+  { label: "Smart Governance", subtitle: "AI for ministries & public services", icon: Landmark, href: "#" },
+  { label: "PSU & Strategic Sector", subtitle: "AI for HAL, BEL, ISRO partners", icon: Building2, href: "#" },
+  { label: "IndiaAI Mission Aligned", subtitle: "Sovereign AI infrastructure & datasets", icon: Cpu, href: "#" },
+  { label: "Test, Eval & Assurance", subtitle: "Red-team & evaluate mission-critical AI", icon: ShieldCheck, href: "#" },
+  { label: "Global Public Sector", subtitle: "Allied programs & coalition partners", icon: Globe2, href: "#" },
+];
 
 const researchLinks = [
   { label: "Research Papers", href: "/research/papers", icon: FileText },
@@ -35,6 +47,8 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const [researchOpen, setResearchOpen] = useState(false);
   const [developersOpen, setDevelopersOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [governmentOpen, setGovernmentOpen] = useState(false);
+  const govDropdownRef = useRef<HTMLDivElement>(null);
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
