@@ -133,7 +133,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                       <a
                         key={label}
                         href={href}
-                        onClick={(e) => { e.preventDefault(); setGovernmentOpen(false); }}
+                        onClick={(e) => { e.preventDefault(); setGovernmentOpen(false); navigate(href); }}
                         className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                       >
                         <div className={`p-1.5 rounded-lg mt-0.5 ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
