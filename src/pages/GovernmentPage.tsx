@@ -64,6 +64,9 @@ const GovernmentPage = () => {
             </Button>
             <Button variant="outline" onClick={() => navigate("/build-ai")}>Explore platform</Button>
           </div>
+          <div className="mt-12 rounded-2xl overflow-hidden border border-border shadow-2xl">
+            <img src={page.image} alt={page.label} width={1280} height={720} className="w-full h-auto object-cover" />
+          </div>
         </div>
       </section>
 
@@ -155,10 +158,15 @@ const GovernmentPage = () => {
               const OIcon = o.icon;
               return (
                 <Link key={o.slug} to={`/government/${o.slug}`} className="group">
-                  <Card className="p-5 h-full hover:border-primary/40 transition-colors">
-                    <OIcon className="w-5 h-5 text-primary mb-3" />
-                    <div className="font-semibold text-sm mb-1 group-hover:text-primary transition-colors">{o.label}</div>
-                    <div className="text-xs text-muted-foreground">{o.subtitle}</div>
+                  <Card className="overflow-hidden h-full hover:border-primary/40 transition-colors">
+                    <div className="aspect-video overflow-hidden">
+                      <img src={o.image} alt={o.label} loading="lazy" width={1280} height={720} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div className="p-5">
+                      <OIcon className="w-5 h-5 text-primary mb-2" />
+                      <div className="font-semibold text-sm mb-1 group-hover:text-primary transition-colors">{o.label}</div>
+                      <div className="text-xs text-muted-foreground">{o.subtitle}</div>
+                    </div>
                   </Card>
                 </Link>
               );
