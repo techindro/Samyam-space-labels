@@ -23,6 +23,7 @@ import NotFound from "./pages/NotFound";
 import DeveloperTextToSpeech from "./pages/DeveloperTextToSpeech";
 import DeveloperSpeechToText from "./pages/DeveloperSpeechToText";
 import DeveloperDocumentDigitisation from "./pages/DeveloperDocumentDigitisation";
+import GovernmentPage from "./pages/GovernmentPage";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/developers/text-to-speech" element={<DeveloperTextToSpeech />} />
           <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
           <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
+          <Route path="/government/:slug" element={<GovernmentPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

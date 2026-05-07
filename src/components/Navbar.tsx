@@ -8,17 +8,14 @@ import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Tro
 
 const navLinks = ["Products", "Space Tech", "Enterprise"];
 
-const governmentLinks = [
-  { label: "Indian Defence (MoD)", subtitle: "AI for Armed Forces & DRDO programs", icon: Shield, href: "#" },
-  { label: "ISRO & Space", subtitle: "Satellite intelligence & mission analytics", icon: Satellite, href: "#" },
-  { label: "Intelligence & Security", subtitle: "ISR, GEOINT and threat detection", icon: Radar, href: "#" },
-  { label: "Border & Maritime", subtitle: "Surveillance for BSF, ITBP & Coast Guard", icon: Eye, href: "#" },
-  { label: "Smart Governance", subtitle: "AI for ministries & public services", icon: Landmark, href: "#" },
-  { label: "PSU & Strategic Sector", subtitle: "AI for HAL, BEL, ISRO partners", icon: Building2, href: "#" },
-  { label: "IndiaAI Mission Aligned", subtitle: "Sovereign AI infrastructure & datasets", icon: Cpu, href: "#" },
-  { label: "Test, Eval & Assurance", subtitle: "Red-team & evaluate mission-critical AI", icon: ShieldCheck, href: "#" },
-  { label: "Global Public Sector", subtitle: "Allied programs & coalition partners", icon: Globe2, href: "#" },
-];
+import { governmentPages } from "@/data/governmentPages";
+
+const governmentLinks = governmentPages.map((p) => ({
+  label: p.label,
+  subtitle: p.subtitle,
+  icon: p.icon,
+  href: `/government/${p.slug}`,
+}));
 
 const researchLinks = [
   { label: "Research Papers", href: "/research/papers", icon: FileText },
@@ -136,7 +133,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                       <a
                         key={label}
                         href={href}
-                        onClick={(e) => { e.preventDefault(); setGovernmentOpen(false); }}
+                        onClick={(e) => { e.preventDefault(); setGovernmentOpen(false); navigate(href); }}
                         className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                       >
                         <div className={`p-1.5 rounded-lg mt-0.5 ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
@@ -336,7 +333,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
               <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Government — India & Allies</p>
               <div className="grid grid-cols-1 gap-1">
                 {governmentLinks.map(({ label, subtitle, icon: Icon, href }) => (
-                  <a key={label} href={href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}
+                  <a key={label} href={href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate(href); }}
                     className={`flex items-start gap-2 px-2 py-2 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                   >
                     <Icon className="h-3.5 w-3.5 shrink-0 mt-0.5" />
