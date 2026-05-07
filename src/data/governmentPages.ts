@@ -1,10 +1,20 @@
 import { Shield, Satellite, Radar, Eye, Landmark, Building2, Cpu, ShieldCheck, Globe2, LucideIcon } from "lucide-react";
+import modImg from "@/assets/gov/mod.jpg";
+import isroImg from "@/assets/gov/isro.jpg";
+import intelImg from "@/assets/gov/intel.jpg";
+import borderImg from "@/assets/gov/border.jpg";
+import governanceImg from "@/assets/gov/governance.jpg";
+import psuImg from "@/assets/gov/psu.jpg";
+import indiaaiImg from "@/assets/gov/indiaai.jpg";
+import tevalImg from "@/assets/gov/teval.jpg";
+import globalImg from "@/assets/gov/global.jpg";
 
 export type GovernmentPage = {
   slug: string;
   label: string;
   subtitle: string;
   icon: LucideIcon;
+  image: string;
   hero: { eyebrow: string; title: string; description: string };
   capabilities: { title: string; description: string }[];
   useCases: { title: string; description: string }[];
