@@ -333,7 +333,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
               <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Government — India & Allies</p>
               <div className="grid grid-cols-1 gap-1">
                 {governmentLinks.map(({ label, subtitle, icon: Icon, href }) => (
-                  <a key={label} href={href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}
+                  <a key={label} href={href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate(href); }}
                     className={`flex items-start gap-2 px-2 py-2 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                   >
                     <Icon className="h-3.5 w-3.5 shrink-0 mt-0.5" />
