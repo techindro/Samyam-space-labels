@@ -64,6 +64,9 @@ const GovernmentPage = () => {
             </Button>
             <Button variant="outline" onClick={() => navigate("/build-ai")}>Explore platform</Button>
           </div>
+          <div className="mt-12 rounded-2xl overflow-hidden border border-border shadow-2xl">
+            <img src={page.image} alt={page.label} width={1280} height={720} className="w-full h-auto object-cover" />
+          </div>
         </div>
       </section>
 
