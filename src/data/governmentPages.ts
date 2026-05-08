@@ -8,6 +8,15 @@ import psuImg from "@/assets/gov/psu.jpg";
 import indiaaiImg from "@/assets/gov/indiaai.jpg";
 import tevalImg from "@/assets/gov/teval.jpg";
 import globalImg from "@/assets/gov/global.jpg";
+import modPartners from "@/assets/gov/partners/mod.jpg";
+import isroPartners from "@/assets/gov/partners/isro.jpg";
+import intelPartners from "@/assets/gov/partners/intel.jpg";
+import borderPartners from "@/assets/gov/partners/border.jpg";
+import governancePartners from "@/assets/gov/partners/governance.jpg";
+import psuPartners from "@/assets/gov/partners/psu.jpg";
+import indiaaiPartners from "@/assets/gov/partners/indiaai.jpg";
+import tevalPartners from "@/assets/gov/partners/teval.jpg";
+import globalPartners from "@/assets/gov/partners/global.jpg";
 
 export type GovernmentPage = {
   slug: string;
@@ -15,6 +24,7 @@ export type GovernmentPage = {
   subtitle: string;
   icon: LucideIcon;
   image: string;
+  partnerVisual: string;
   hero: { eyebrow: string; title: string; description: string };
   capabilities: { title: string; description: string }[];
   useCases: { title: string; description: string }[];
