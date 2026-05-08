@@ -126,10 +126,44 @@ const GovernmentPage = () => {
         <div className="container mx-auto px-4 max-w-5xl">
           <h2 className="text-3xl font-semibold mb-2">Designed to work with</h2>
           <p className="text-muted-foreground mb-8">Programs and organisations this offering is aligned to.</p>
-          <div className="flex flex-wrap gap-3">
-            {page.partners.map((p) => (
-              <span key={p} className="px-4 py-2 rounded-full border border-border bg-card/50 text-sm">{p}</span>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            <div className="md:col-span-1">
+              <div className="rounded-2xl overflow-hidden border border-border bg-card/50 aspect-square">
+                <img
+                  src={page.partnerVisual}
+                  alt={`${page.label} partner ecosystem`}
+                  loading="lazy"
+                  width={1024}
+                  height={1024}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-3 text-center">
+                Illustrative emblem — not an official logo of any agency.
+              </p>
+            </div>
+            <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {page.partners.map((p) => {
+                const initials = p
+                  .split(/[\s&]+/)
+                  .filter(Boolean)
+                  .slice(0, 3)
+                  .map((w) => w[0])
+                  .join("")
+                  .toUpperCase();
+                return (
+                  <div
+                    key={p}
+                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card/50 hover:border-primary/40 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-semibold text-xs shrink-0">
+                      {initials}
+                    </div>
+                    <span className="text-sm font-medium leading-tight">{p}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>

@@ -8,6 +8,15 @@ import psuImg from "@/assets/gov/psu.jpg";
 import indiaaiImg from "@/assets/gov/indiaai.jpg";
 import tevalImg from "@/assets/gov/teval.jpg";
 import globalImg from "@/assets/gov/global.jpg";
+import modPartners from "@/assets/gov/partners/mod.jpg";
+import isroPartners from "@/assets/gov/partners/isro.jpg";
+import intelPartners from "@/assets/gov/partners/intel.jpg";
+import borderPartners from "@/assets/gov/partners/border.jpg";
+import governancePartners from "@/assets/gov/partners/governance.jpg";
+import psuPartners from "@/assets/gov/partners/psu.jpg";
+import indiaaiPartners from "@/assets/gov/partners/indiaai.jpg";
+import tevalPartners from "@/assets/gov/partners/teval.jpg";
+import globalPartners from "@/assets/gov/partners/global.jpg";
 
 export type GovernmentPage = {
   slug: string;
@@ -15,6 +24,7 @@ export type GovernmentPage = {
   subtitle: string;
   icon: LucideIcon;
   image: string;
+  partnerVisual: string;
   hero: { eyebrow: string; title: string; description: string };
   capabilities: { title: string; description: string }[];
   useCases: { title: string; description: string }[];
@@ -29,6 +39,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "AI for Armed Forces & DRDO programs",
     icon: Shield,
     image: modImg,
+    partnerVisual: modPartners,
     hero: {
       eyebrow: "Ministry of Defence",
       title: "Mission-ready AI for the Indian Armed Forces",
@@ -59,6 +70,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "Satellite intelligence & mission analytics",
     icon: Satellite,
     image: isroImg,
+    partnerVisual: isroPartners,
     hero: {
       eyebrow: "ISRO & New Space",
       title: "AI for India's space missions",
@@ -89,6 +101,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "ISR, GEOINT and threat detection",
     icon: Radar,
     image: intelImg,
+    partnerVisual: intelPartners,
     hero: {
       eyebrow: "Intelligence Community",
       title: "GEOINT and ISR analytics at national scale",
@@ -119,6 +132,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "Surveillance for BSF, ITBP & Coast Guard",
     icon: Eye,
     image: borderImg,
+    partnerVisual: borderPartners,
     hero: {
       eyebrow: "Border & Coastal Security",
       title: "Persistent surveillance for India's frontiers",
@@ -149,6 +163,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "AI for ministries & public services",
     icon: Landmark,
     image: governanceImg,
+    partnerVisual: governancePartners,
     hero: {
       eyebrow: "Digital India",
       title: "AI for ministries and citizen services",
@@ -179,6 +194,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "AI for HAL, BEL, ISRO partners",
     icon: Building2,
     image: psuImg,
+    partnerVisual: psuPartners,
     hero: {
       eyebrow: "Defence PSUs & Strategic Industry",
       title: "AI for India's strategic manufacturers",
@@ -209,6 +225,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "Sovereign AI infrastructure & datasets",
     icon: Cpu,
     image: indiaaiImg,
+    partnerVisual: indiaaiPartners,
     hero: {
       eyebrow: "IndiaAI Mission",
       title: "Building blocks for Sovereign AI",
@@ -239,6 +256,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "Red-team & evaluate mission-critical AI",
     icon: ShieldCheck,
     image: tevalImg,
+    partnerVisual: tevalPartners,
     hero: {
       eyebrow: "T&E and AI Assurance",
       title: "Trust your mission-critical AI",
@@ -269,6 +287,7 @@ export const governmentPages: GovernmentPage[] = [
     subtitle: "Allied programs & coalition partners",
     icon: Globe2,
     image: globalImg,
+    partnerVisual: globalPartners,
     hero: {
       eyebrow: "Allied & Coalition",
       title: "AI for allied public-sector programs",
