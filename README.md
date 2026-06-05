@@ -8,7 +8,7 @@
 
 There are several ways of editing your application.
 
-**Use Lovable**
+**Use Samyam**
 
 Simply visit the [Vercel Project](https://vercel.com/techindros-projects) and start prompting.
 
