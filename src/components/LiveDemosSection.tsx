@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Play, Road, Car, HeartPulse, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
