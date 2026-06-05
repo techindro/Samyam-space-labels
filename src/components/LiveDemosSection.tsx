@@ -1,29 +1,29 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Play, Route, Car, HeartPulse, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
 const demos = [
   {
-    emoji: "🛣️",
+    icon: Route,
     title: "Indian Road Detector",
     description: "AI-powered road detection & segmentation for Indian road infrastructure.",
     url: "https://huggingface.co/spaces/techindro/SamyamLm-Demo",
   },
   {
-    emoji: "🚗",
+    icon: Car,
     title: "Self Driving Car",
     description: "Real-time object detection and lane segmentation for autonomous vehicles.",
     url: "https://huggingface.co/spaces/techindro/SamyamLm-SelfDriving",
   },
   {
-    emoji: "🏥",
+    icon: HeartPulse,
     title: "Health Detector",
     description: "Medical imaging analysis and diagnostic AI for healthcare applications.",
     url: "https://huggingface.co/spaces/techindro/SamyamLm-Health",
   },
   {
-    emoji: "📚",
+    icon: GraduationCap,
     title: "Education Detector",
     description: "Content analysis and educational material classification using NLP & vision.",
     url: "https://huggingface.co/spaces/techindro/SamyamLm-Education",
@@ -67,22 +67,26 @@ const LiveDemosSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <div className="glass-card h-full rounded-xl border border-border/40 bg-card/40 backdrop-blur-sm p-6 hover:border-cosmic-teal/40 hover:bg-card/60 transition-all duration-300 flex flex-col">
+              <div className="glass-card h-full rounded-2xl border border-border/40 bg-card/40 backdrop-blur-sm p-7 hover:border-cosmic-teal/40 hover:bg-card/60 transition-all duration-300 flex flex-col">
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cosmic-purple/20 to-cosmic-teal/20 flex items-center justify-center mb-5">
+                  <demo.icon className="w-6 h-6 text-cosmic-teal" />
+                </div>
+
                 {/* Title */}
-                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                <h3 className="font-display text-lg font-semibold text-foreground mb-3 leading-snug">
                   {demo.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-muted-foreground text-sm leading-relaxed mb-6 flex-1">
+                <p className="text-muted-foreground text-sm leading-relaxed mb-7 flex-1">
                   {demo.description}
                 </p>
 
                 {/* CTA */}
                 <Button
                   asChild
-                  size="default"
-                  className="w-full rounded-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 text-sm font-semibold shadow-lg shadow-cosmic-purple/20"
+                  className="w-full h-11 rounded-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 text-sm font-semibold shadow-lg shadow-cosmic-purple/20"
                 >
                   <a href={demo.url} target="_blank" rel="noopener noreferrer">
                     Try Demo <ArrowRight className="w-4 h-4 ml-2" />
