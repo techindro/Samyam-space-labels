@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Play, ExternalLink } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
@@ -67,37 +67,33 @@ const LiveDemosSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <a
-                href={demo.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block h-full"
-              >
-                <div className="glass-card h-full rounded-xl border border-border/40 bg-card/40 backdrop-blur-sm p-6 hover:border-cosmic-teal/40 hover:bg-card/60 transition-all duration-300">
-                  {/* Emoji */}
-                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {demo.emoji}
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="font-display text-lg font-semibold text-foreground mb-2 group-hover:text-cosmic-teal transition-colors">
-                    {demo.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-5">
-                    {demo.description}
-                  </p>
-
-                  {/* CTA */}
-                  <Button
-                    size="sm"
-                    className="w-full rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm"
-                  >
-                    Open Demo <ExternalLink className="w-3.5 h-3.5 ml-2" />
-                  </Button>
+              <div className="glass-card h-full rounded-xl border border-border/40 bg-card/40 backdrop-blur-sm p-6 hover:border-cosmic-teal/40 hover:bg-card/60 transition-all duration-300 flex flex-col">
+                {/* Emoji */}
+                <div className="text-4xl mb-4">
+                  {demo.emoji}
                 </div>
-              </a>
+
+                {/* Title */}
+                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                  {demo.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-muted-foreground text-sm leading-relaxed mb-6 flex-1">
+                  {demo.description}
+                </p>
+
+                {/* CTA */}
+                <Button
+                  asChild
+                  size="default"
+                  className="w-full rounded-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 text-sm font-semibold shadow-lg shadow-cosmic-purple/20"
+                >
+                  <a href={demo.url} target="_blank" rel="noopener noreferrer">
+                    Try Demo <ArrowRight className="w-4 h-4 ml-2" />
+                  </a>
+                </Button>
+              </div>
             </motion.div>
           ))}
         </div>
