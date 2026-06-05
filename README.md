@@ -64,7 +64,7 @@ This project is built with:
 
 Simply open [Vercel](https://vercel.com/techindros-projects) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
+## Can I connect a custom domain to my LLM project?
 
 Yes, you can!
 
