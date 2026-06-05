@@ -5,6 +5,7 @@ import DataEngineExplainer from "@/components/DataEngineExplainer";
 import DataEngineSection from "@/components/DataEngineSection";
 import AnnotationTypesSection from "@/components/AnnotationTypesSection";
 import QuickStartGuide from "@/components/QuickStartGuide";
+import LiveDemosSection from "@/components/LiveDemosSection";
 import ResourcesSection from "@/components/ResourcesSection";
 import Footer from "@/components/Footer";
 
