@@ -27,7 +27,7 @@ const TrustedBy = () => {
       <ParallelWebBg />
       <div className="container mx-auto px-4 relative z-10">
         <p className="text-center text-sm text-muted-foreground uppercase tracking-widest mb-10">
-          Trusted by industry leaders
+          Powering the Future with
         </p>
         <div className="overflow-hidden relative">
           <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
