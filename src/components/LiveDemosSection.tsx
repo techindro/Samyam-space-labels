@@ -68,11 +68,6 @@ const LiveDemosSection = () => {
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
               <div className="glass-card h-full rounded-xl border border-border/40 bg-card/40 backdrop-blur-sm p-6 hover:border-cosmic-teal/40 hover:bg-card/60 transition-all duration-300 flex flex-col">
-                {/* Emoji */}
-                <div className="text-4xl mb-4">
-                  {demo.emoji}
-                </div>
-
                 {/* Title */}
                 <h3 className="font-display text-lg font-semibold text-foreground mb-2">
                   {demo.title}
