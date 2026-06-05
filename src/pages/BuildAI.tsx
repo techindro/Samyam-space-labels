@@ -20,6 +20,7 @@ const BuildAI = () => {
         <DataEngineSection />
         <AnnotationTypesSection />
         <QuickStartGuide />
+        <LiveDemosSection />
         <ResourcesSection />
       </main>
       <Footer />
