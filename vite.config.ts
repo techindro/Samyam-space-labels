@@ -12,11 +12,10 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  // 
+
   preview: {
-    allowedHosts: [
-      '://onrender.com'
-    ]
+    host: true,
+    strictPort: true
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
