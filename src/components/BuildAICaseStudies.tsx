@@ -334,11 +334,6 @@ const BuildAICaseStudies = () => {
 
                 {/* Metrics */}
                 <div>
-                  <h4 className="text-sm font-semibold tracking-widest uppercase text-cosmic-teal mb-4">
-                    Key Metrics
-                  </h4>
-                {/* Metrics */}
-                <div>
                   <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <h4 className="text-sm font-semibold tracking-widest uppercase text-cosmic-teal">
                       Key Metrics
