@@ -163,10 +163,22 @@ const caseCharts: Array<{
   },
 ];
 
+type MetricView = "cards" | "bar" | "line";
+
 const BuildAICaseStudies = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [metricView, setMetricView] = useState<MetricView>("cards");
+  const [activeMetric, setActiveMetric] = useState<number>(0);
+
+  useEffect(() => {
+    if (openIndex !== null) {
+      setMetricView("cards");
+      setActiveMetric(0);
+    }
+  }, [openIndex]);
 
   const activeCase = openIndex !== null ? cases[openIndex] : null;
+  const activeChart = openIndex !== null ? caseCharts[openIndex] : null;
 
   return (
     <section className="py-24 relative overflow-hidden">
