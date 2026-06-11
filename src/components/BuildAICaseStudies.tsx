@@ -1,6 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, X, BarChart3, LayoutGrid, TrendingUp } from "lucide-react";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  LineChart,
+  Line,
+} from "recharts";
 import { Badge } from "@/components/ui/badge";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import caseMonitoring from "@/assets/case-satellite-monitoring.jpg";
