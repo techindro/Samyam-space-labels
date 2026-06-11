@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, X } from "lucide-react";
-import { Badge } from "/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import caseMonitoring from "@/assets/case-satellite-monitoring.jpg";
 import caseDebris from "@/assets/case-debris-tracking.jpg";
