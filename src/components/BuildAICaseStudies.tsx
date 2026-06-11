@@ -1,6 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, X, BarChart3, LayoutGrid, TrendingUp } from "lucide-react";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  LineChart,
+  Line,
+} from "recharts";
 import { Badge } from "@/components/ui/badge";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import caseMonitoring from "@/assets/case-satellite-monitoring.jpg";
@@ -67,10 +78,107 @@ const cases = [
   },
 ];
 
+// Interactive chart data per case (index-aligned with `cases`)
+const caseCharts: Array<{
+  bar: { title: string; unit: string; data: Array<{ name: string; value: number }> };
+  line: { title: string; unit: string; data: Array<{ name: string; value: number }> };
+}> = [
+  {
+    bar: {
+      title: "Class distribution (frames)",
+      unit: "frames",
+      data: [
+        { name: "Potholes", value: 1820 },
+        { name: "Lanes", value: 2450 },
+        { name: "Signs", value: 1390 },
+        { name: "Vehicles", value: 2980 },
+        { name: "Pedestrians", value: 1100 },
+        { name: "Animals", value: 460 },
+      ],
+    },
+    line: {
+      title: "mAP@0.5 over training epochs",
+      unit: "mAP",
+      data: [
+        { name: "E1", value: 0.42 },
+        { name: "E5", value: 0.58 },
+        { name: "E10", value: 0.69 },
+        { name: "E15", value: 0.77 },
+        { name: "E20", value: 0.82 },
+        { name: "E25", value: 0.84 },
+      ],
+    },
+  },
+  {
+    bar: {
+      title: "Edge-case tags by category",
+      unit: "tags",
+      data: [
+        { name: "Weather", value: 6 },
+        { name: "Occlusion", value: 5 },
+        { name: "Lighting", value: 4 },
+        { name: "Construction", value: 3 },
+        { name: "Signals", value: 3 },
+        { name: "Other", value: 2 },
+      ],
+    },
+    line: {
+      title: "Review cycle time (hours)",
+      unit: "hrs",
+      data: [
+        { name: "Wk1", value: 168 },
+        { name: "Wk4", value: 110 },
+        { name: "Wk8", value: 72 },
+        { name: "Wk12", value: 56 },
+        { name: "Wk16", value: 48 },
+        { name: "Wk20", value: 42 },
+      ],
+    },
+  },
+  {
+    bar: {
+      title: "Annotation types reviewed",
+      unit: "batches",
+      data: [
+        { name: "Symptom", value: 38 },
+        { name: "Anomaly", value: 27 },
+        { name: "Severity", value: 22 },
+        { name: "Region", value: 31 },
+        { name: "Signal", value: 19 },
+        { name: "Other", value: 8 },
+      ],
+    },
+    line: {
+      title: "Reviewer agreement (%)",
+      unit: "%",
+      data: [
+        { name: "M1", value: 71 },
+        { name: "M2", value: 78 },
+        { name: "M3", value: 84 },
+        { name: "M4", value: 88 },
+        { name: "M5", value: 91 },
+        { name: "M6", value: 94 },
+      ],
+    },
+  },
+];
+
+type MetricView = "cards" | "bar" | "line";
+
 const BuildAICaseStudies = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [metricView, setMetricView] = useState<MetricView>("cards");
+  const [activeMetric, setActiveMetric] = useState<number>(0);
+
+  useEffect(() => {
+    if (openIndex !== null) {
+      setMetricView("cards");
+      setActiveMetric(0);
+    }
+  }, [openIndex]);
 
   const activeCase = openIndex !== null ? cases[openIndex] : null;
+  const activeChart = openIndex !== null ? caseCharts[openIndex] : null;
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -226,24 +334,121 @@ const BuildAICaseStudies = () => {
 
                 {/* Metrics */}
                 <div>
-                  <h4 className="text-sm font-semibold tracking-widest uppercase text-cosmic-teal mb-4">
-                    Key Metrics
-                  </h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    {activeCase.metrics.map((m) => (
-                      <div
-                        key={m.label}
-                        className="bg-muted/50 rounded-xl p-4 text-center border border-border hover:border-cosmic-teal/30 transition-colors"
-                      >
-                        <div className="font-display text-xl sm:text-2xl font-bold text-foreground mb-1">
-                          {m.value}
-                        </div>
-                        <div className="text-xs text-muted-foreground uppercase tracking-wide">
-                          {m.label}
-                        </div>
-                      </div>
-                    ))}
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <h4 className="text-sm font-semibold tracking-widest uppercase text-cosmic-teal">
+                      Key Metrics
+                    </h4>
+                    <div className="inline-flex items-center gap-1 p-1 rounded-full border border-border bg-muted/40">
+                      {([
+                        { id: "cards" as const, label: "Cards", Icon: LayoutGrid },
+                        { id: "bar" as const, label: "Bar", Icon: BarChart3 },
+                        { id: "line" as const, label: "Trend", Icon: TrendingUp },
+                      ]).map(({ id, label, Icon }) => (
+                        <button
+                          key={id}
+                          onClick={() => setMetricView(id)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                            metricView === id
+                              ? "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white shadow"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          <Icon className="h-3.5 w-3.5" />
+                          {label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
+
+                  {metricView === "cards" && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {activeCase.metrics.map((m, idx) => (
+                        <button
+                          key={m.label}
+                          onClick={() => setActiveMetric(idx)}
+                          className={`bg-muted/50 rounded-xl p-4 text-center border transition-all ${
+                            activeMetric === idx
+                              ? "border-cosmic-teal/60 shadow-[0_0_0_1px_hsl(var(--border))]"
+                              : "border-border hover:border-cosmic-teal/30"
+                          }`}
+                        >
+                          <div className="font-display text-xl sm:text-2xl font-bold text-foreground mb-1">
+                            {m.value}
+                          </div>
+                          <div className="text-xs text-muted-foreground uppercase tracking-wide">
+                            {m.label}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {metricView !== "cards" && activeChart && (
+                    <motion.div
+                      key={metricView}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-muted/40 rounded-xl border border-border p-4 sm:p-5"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-sm font-medium text-foreground">
+                          {metricView === "bar" ? activeChart.bar.title : activeChart.line.title}
+                        </p>
+                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                          {metricView === "bar" ? activeChart.bar.unit : activeChart.line.unit}
+                        </span>
+                      </div>
+                      <div className="h-56 w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                          {metricView === "bar" ? (
+                            <BarChart data={activeChart.bar.data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+                              <defs>
+                                <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="hsl(var(--cosmic-teal))" stopOpacity={0.95} />
+                                  <stop offset="100%" stopColor="hsl(var(--cosmic-purple))" stopOpacity={0.75} />
+                                </linearGradient>
+                              </defs>
+                              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                              <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                              <Tooltip
+                                cursor={{ fill: "hsl(var(--muted) / 0.4)" }}
+                                contentStyle={{
+                                  background: "hsl(var(--card))",
+                                  border: "1px solid hsl(var(--border))",
+                                  borderRadius: 8,
+                                  fontSize: 12,
+                                }}
+                              />
+                              <Bar dataKey="value" fill="url(#barGrad)" radius={[6, 6, 0, 0]} />
+                            </BarChart>
+                          ) : (
+                            <LineChart data={activeChart.line.data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                              <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                              <Tooltip
+                                contentStyle={{
+                                  background: "hsl(var(--card))",
+                                  border: "1px solid hsl(var(--border))",
+                                  borderRadius: 8,
+                                  fontSize: 12,
+                                }}
+                              />
+                              <Line
+                                type="monotone"
+                                dataKey="value"
+                                stroke="hsl(var(--cosmic-teal))"
+                                strokeWidth={2.5}
+                                dot={{ r: 4, fill: "hsl(var(--cosmic-purple))", strokeWidth: 0 }}
+                                activeDot={{ r: 6 }}
+                              />
+                            </LineChart>
+                          )}
+                        </ResponsiveContainer>
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               </div>
 
