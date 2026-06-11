@@ -78,6 +78,91 @@ const cases = [
   },
 ];
 
+// Interactive chart data per case (index-aligned with `cases`)
+const caseCharts: Array<{
+  bar: { title: string; unit: string; data: Array<{ name: string; value: number }> };
+  line: { title: string; unit: string; data: Array<{ name: string; value: number }> };
+}> = [
+  {
+    bar: {
+      title: "Class distribution (frames)",
+      unit: "frames",
+      data: [
+        { name: "Potholes", value: 1820 },
+        { name: "Lanes", value: 2450 },
+        { name: "Signs", value: 1390 },
+        { name: "Vehicles", value: 2980 },
+        { name: "Pedestrians", value: 1100 },
+        { name: "Animals", value: 460 },
+      ],
+    },
+    line: {
+      title: "mAP@0.5 over training epochs",
+      unit: "mAP",
+      data: [
+        { name: "E1", value: 0.42 },
+        { name: "E5", value: 0.58 },
+        { name: "E10", value: 0.69 },
+        { name: "E15", value: 0.77 },
+        { name: "E20", value: 0.82 },
+        { name: "E25", value: 0.84 },
+      ],
+    },
+  },
+  {
+    bar: {
+      title: "Edge-case tags by category",
+      unit: "tags",
+      data: [
+        { name: "Weather", value: 6 },
+        { name: "Occlusion", value: 5 },
+        { name: "Lighting", value: 4 },
+        { name: "Construction", value: 3 },
+        { name: "Signals", value: 3 },
+        { name: "Other", value: 2 },
+      ],
+    },
+    line: {
+      title: "Review cycle time (hours)",
+      unit: "hrs",
+      data: [
+        { name: "Wk1", value: 168 },
+        { name: "Wk4", value: 110 },
+        { name: "Wk8", value: 72 },
+        { name: "Wk12", value: 56 },
+        { name: "Wk16", value: 48 },
+        { name: "Wk20", value: 42 },
+      ],
+    },
+  },
+  {
+    bar: {
+      title: "Annotation types reviewed",
+      unit: "batches",
+      data: [
+        { name: "Symptom", value: 38 },
+        { name: "Anomaly", value: 27 },
+        { name: "Severity", value: 22 },
+        { name: "Region", value: 31 },
+        { name: "Signal", value: 19 },
+        { name: "Other", value: 8 },
+      ],
+    },
+    line: {
+      title: "Reviewer agreement (%)",
+      unit: "%",
+      data: [
+        { name: "M1", value: 71 },
+        { name: "M2", value: 78 },
+        { name: "M3", value: 84 },
+        { name: "M4", value: 88 },
+        { name: "M5", value: 91 },
+        { name: "M6", value: 94 },
+      ],
+    },
+  },
+];
+
 const BuildAICaseStudies = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
