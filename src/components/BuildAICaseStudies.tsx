@@ -337,21 +337,123 @@ const BuildAICaseStudies = () => {
                   <h4 className="text-sm font-semibold tracking-widest uppercase text-cosmic-teal mb-4">
                     Key Metrics
                   </h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    {activeCase.metrics.map((m) => (
-                      <div
-                        key={m.label}
-                        className="bg-muted/50 rounded-xl p-4 text-center border border-border hover:border-cosmic-teal/30 transition-colors"
-                      >
-                        <div className="font-display text-xl sm:text-2xl font-bold text-foreground mb-1">
-                          {m.value}
-                        </div>
-                        <div className="text-xs text-muted-foreground uppercase tracking-wide">
-                          {m.label}
-                        </div>
-                      </div>
-                    ))}
+                {/* Metrics */}
+                <div>
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <h4 className="text-sm font-semibold tracking-widest uppercase text-cosmic-teal">
+                      Key Metrics
+                    </h4>
+                    <div className="inline-flex items-center gap-1 p-1 rounded-full border border-border bg-muted/40">
+                      {([
+                        { id: "cards" as const, label: "Cards", Icon: LayoutGrid },
+                        { id: "bar" as const, label: "Bar", Icon: BarChart3 },
+                        { id: "line" as const, label: "Trend", Icon: TrendingUp },
+                      ]).map(({ id, label, Icon }) => (
+                        <button
+                          key={id}
+                          onClick={() => setMetricView(id)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                            metricView === id
+                              ? "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white shadow"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          <Icon className="h-3.5 w-3.5" />
+                          {label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
+
+                  {metricView === "cards" && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {activeCase.metrics.map((m, idx) => (
+                        <button
+                          key={m.label}
+                          onClick={() => setActiveMetric(idx)}
+                          className={`bg-muted/50 rounded-xl p-4 text-center border transition-all ${
+                            activeMetric === idx
+                              ? "border-cosmic-teal/60 shadow-[0_0_0_1px_hsl(var(--border))]"
+                              : "border-border hover:border-cosmic-teal/30"
+                          }`}
+                        >
+                          <div className="font-display text-xl sm:text-2xl font-bold text-foreground mb-1">
+                            {m.value}
+                          </div>
+                          <div className="text-xs text-muted-foreground uppercase tracking-wide">
+                            {m.label}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {metricView !== "cards" && activeChart && (
+                    <motion.div
+                      key={metricView}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-muted/40 rounded-xl border border-border p-4 sm:p-5"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="text-sm font-medium text-foreground">
+                          {metricView === "bar" ? activeChart.bar.title : activeChart.line.title}
+                        </p>
+                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                          {metricView === "bar" ? activeChart.bar.unit : activeChart.line.unit}
+                        </span>
+                      </div>
+                      <div className="h-56 w-full">
+                        <ResponsiveContainer width="100%" height="100%">
+                          {metricView === "bar" ? (
+                            <BarChart data={activeChart.bar.data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+                              <defs>
+                                <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="hsl(var(--cosmic-teal))" stopOpacity={0.95} />
+                                  <stop offset="100%" stopColor="hsl(var(--cosmic-purple))" stopOpacity={0.75} />
+                                </linearGradient>
+                              </defs>
+                              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                              <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                              <Tooltip
+                                cursor={{ fill: "hsl(var(--muted) / 0.4)" }}
+                                contentStyle={{
+                                  background: "hsl(var(--card))",
+                                  border: "1px solid hsl(var(--border))",
+                                  borderRadius: 8,
+                                  fontSize: 12,
+                                }}
+                              />
+                              <Bar dataKey="value" fill="url(#barGrad)" radius={[6, 6, 0, 0]} />
+                            </BarChart>
+                          ) : (
+                            <LineChart data={activeChart.line.data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                              <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                              <Tooltip
+                                contentStyle={{
+                                  background: "hsl(var(--card))",
+                                  border: "1px solid hsl(var(--border))",
+                                  borderRadius: 8,
+                                  fontSize: 12,
+                                }}
+                              />
+                              <Line
+                                type="monotone"
+                                dataKey="value"
+                                stroke="hsl(var(--cosmic-teal))"
+                                strokeWidth={2.5}
+                                dot={{ r: 4, fill: "hsl(var(--cosmic-purple))", strokeWidth: 0 }}
+                                activeDot={{ r: 6 }}
+                              />
+                            </LineChart>
+                          )}
+                        </ResponsiveContainer>
+                      </div>
+                    </motion.div>
+                  )}
                 </div>
               </div>
 
