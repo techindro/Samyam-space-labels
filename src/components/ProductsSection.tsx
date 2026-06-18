@@ -177,7 +177,7 @@ const ProductsSection = () => {
             </span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Four flagship products, powered by a live backend — data, evaluation, alignment, and pipeline, end to end.
+            Eight flagship products powered by a live backend — data, evaluation, alignment, pipeline, and a defense-tailored stack for space-grade workloads.
           </p>
         </motion.div>
 
@@ -194,6 +194,11 @@ const ProductsSection = () => {
                 transition={{ delay: i * 0.08 }}
                 className="glass-card rounded-2xl p-6 hover:border-cosmic-teal/40 transition-all group relative flex flex-col"
               >
+                {p.badge && (
+                  <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cosmic-purple/20 text-cosmic-purple-glow border border-cosmic-purple/30">
+                    {p.badge}
+                  </span>
+                )}
                 <div className="p-3 rounded-lg bg-cosmic-purple/10 w-fit mb-4 group-hover:bg-cosmic-purple/20 transition-colors">
                   <p.icon className="h-6 w-6 text-cosmic-purple-glow" />
                 </div>
@@ -211,6 +216,7 @@ const ProductsSection = () => {
             );
           })}
         </div>
+
 
         {/* Supporting capabilities */}
         <div className="text-center mb-8">
