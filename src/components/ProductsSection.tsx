@@ -15,11 +15,23 @@ import {
   Gauge,
   Scale,
   Briefcase,
+  Satellite,
+  Radar,
+  Target,
+  ShieldAlert,
 } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { supabase } from "@/integrations/supabase/client";
 
-type FlagshipKey = "datasets" | "evals" | "votes" | "demos";
+type FlagshipKey =
+  | "datasets"
+  | "evals"
+  | "votes"
+  | "demos"
+  | "geo"
+  | "fusion"
+  | "sim"
+  | "probes";
 
 const flagship: {
   key: FlagshipKey;
@@ -27,6 +39,7 @@ const flagship: {
   title: string;
   desc: string;
   metricLabel: string;
+  badge?: string;
 }[] = [
   {
     key: "datasets",
@@ -56,6 +69,38 @@ const flagship: {
     desc: "Qualified demo requests flow into a tracked pipeline — interest tagging, status, and admin handoff for the GTM team.",
     metricLabel: "demo requests",
   },
+  {
+    key: "geo",
+    icon: Satellite,
+    title: "Geospatial Labeling",
+    desc: "Annotate EO, SAR, and IR imagery at sub-pixel precision — bounding boxes, masks, and class labels for orbital and aerial training sets.",
+    metricLabel: "imagery sets",
+    badge: "Defense",
+  },
+  {
+    key: "fusion",
+    icon: Radar,
+    title: "Sensor Fusion Datasets",
+    desc: "Multi-modal records combining SAR, EO/IR, radar, and telemetry with per-modality quality scoring for robust perception stacks.",
+    metricLabel: "fusion sets",
+    badge: "Defense",
+  },
+  {
+    key: "sim",
+    icon: Target,
+    title: "Mission Simulation",
+    desc: "Scenario-based evaluation for autonomy and decision models — tracked KPI scores, pass/fail outcomes, and reviewer notes per run.",
+    metricLabel: "sim runs",
+    badge: "Defense",
+  },
+  {
+    key: "probes",
+    icon: ShieldAlert,
+    title: "Red-Team Safety Probes",
+    desc: "Adversarial prompt library with severity tiers, reviewer signoff, and mitigation status — defense-aligned safety from day one.",
+    metricLabel: "safety probes",
+    badge: "Defense",
+  },
 ];
 
 const capabilities = [
@@ -77,28 +122,42 @@ const ProductsSection = () => {
     evals: null,
     votes: null,
     demos: null,
+    geo: null,
+    fusion: null,
+    sim: null,
+    probes: null,
   });
 
   useEffect(() => {
     let alive = true;
     (async () => {
-      const [datasetsRes, evalsRes, votesRes] = await Promise.all([
-        supabase.from("datasets").select("id", { count: "exact", head: true }),
-        supabase.from("evaluation_runs").select("id", { count: "exact", head: true }),
-        supabase.from("preference_votes").select("id", { count: "exact", head: true }),
-      ]);
+      const [datasetsRes, evalsRes, votesRes, geoRes, fusionRes, simRes, probesRes] =
+        await Promise.all([
+          supabase.from("datasets").select("id", { count: "exact", head: true }),
+          supabase.from("evaluation_runs").select("id", { count: "exact", head: true }),
+          supabase.from("preference_votes").select("id", { count: "exact", head: true }),
+          supabase.from("geospatial_labels").select("id", { count: "exact", head: true }),
+          supabase.from("sensor_fusion_datasets").select("id", { count: "exact", head: true }),
+          supabase.from("mission_sim_runs").select("id", { count: "exact", head: true }),
+          supabase.from("red_team_probes").select("id", { count: "exact", head: true }),
+        ]);
       if (!alive) return;
       setCounts({
         datasets: datasetsRes.count ?? 0,
         evals: evalsRes.count ?? 0,
         votes: votesRes.count ?? 0,
-        demos: null, // admin-only read; UI shows a dash
+        demos: null,
+        geo: geoRes.count ?? 0,
+        fusion: fusionRes.count ?? 0,
+        sim: simRes.count ?? 0,
+        probes: probesRes.count ?? 0,
       });
     })();
     return () => {
       alive = false;
     };
   }, []);
+
 
   return (
     <section className="py-24 relative overflow-hidden">
