@@ -220,6 +220,84 @@ export type Database = {
         }
         Relationships: []
       }
+      geospatial_labels: {
+        Row: {
+          created_at: string
+          id: string
+          image_count: number
+          label_count: number
+          name: string
+          owner_id: string | null
+          region: string | null
+          sensor_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_count?: number
+          label_count?: number
+          name: string
+          owner_id?: string | null
+          region?: string | null
+          sensor_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_count?: number
+          label_count?: number
+          name?: string
+          owner_id?: string | null
+          region?: string | null
+          sensor_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      mission_sim_runs: {
+        Row: {
+          created_at: string
+          id: string
+          kpi_score: number | null
+          model_name: string
+          notes: string | null
+          outcome: string | null
+          owner_id: string | null
+          scenario: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kpi_score?: number | null
+          model_name: string
+          notes?: string | null
+          outcome?: string | null
+          owner_id?: string | null
+          scenario: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kpi_score?: number | null
+          model_name?: string
+          notes?: string | null
+          outcome?: string | null
+          owner_id?: string | null
+          scenario?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       preference_leaderboards: {
         Row: {
           category: string | null
@@ -325,6 +403,48 @@ export type Database = {
           updated_at?: string
           user_id?: string
           username?: string | null
+        }
+        Relationships: []
+      }
+      red_team_probes: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          prompt: string
+          response: string | null
+          reviewed_by: string | null
+          reviewer_signoff: boolean
+          severity: string
+          status: string
+          submitted_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          prompt: string
+          response?: string | null
+          reviewed_by?: string | null
+          reviewer_signoff?: boolean
+          severity?: string
+          status?: string
+          submitted_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          prompt?: string
+          response?: string | null
+          reviewed_by?: string | null
+          reviewer_signoff?: boolean
+          severity?: string
+          status?: string
+          submitted_by?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -484,6 +604,45 @@ export type Database = {
         }
         Relationships: []
       }
+      sensor_fusion_datasets: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          modalities: string[]
+          name: string
+          owner_id: string | null
+          quality_score: number | null
+          record_count: number
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          modalities?: string[]
+          name: string
+          owner_id?: string | null
+          quality_score?: number | null
+          record_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          modalities?: string[]
+          name?: string
+          owner_id?: string | null
+          quality_score?: number | null
+          record_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -516,7 +675,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: "admin" | "moderator" | "user" | "contributor"
       dataset_status: "draft" | "active" | "archived"
       demo_status: "new" | "contacted" | "qualified" | "closed"
       eval_status: "queued" | "running" | "completed" | "failed"
@@ -653,7 +812,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: ["admin", "moderator", "user", "contributor"],
       dataset_status: ["draft", "active", "archived"],
       demo_status: ["new", "contacted", "qualified", "closed"],
       eval_status: ["queued", "running", "completed", "failed"],
