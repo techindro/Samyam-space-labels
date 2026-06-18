@@ -14,6 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
+      annotation_tasks: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          created_by: string
+          dataset_id: string | null
+          id: string
+          instructions: string | null
+          label_schema: Json
+          payload: Json
+          result: Json | null
+          reviewer_id: string | null
+          status: Database["public"]["Enums"]["task_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          created_by: string
+          dataset_id?: string | null
+          id?: string
+          instructions?: string | null
+          label_schema?: Json
+          payload?: Json
+          result?: Json | null
+          reviewer_id?: string | null
+          status?: Database["public"]["Enums"]["task_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          created_by?: string
+          dataset_id?: string | null
+          id?: string
+          instructions?: string | null
+          label_schema?: Json
+          payload?: Json
+          result?: Json | null
+          reviewer_id?: string | null
+          status?: Database["public"]["Enums"]["task_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "annotation_tasks_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "datasets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      datasets: {
+        Row: {
+          created_at: string
+          description: string | null
+          domain: string | null
+          id: string
+          item_count: number
+          name: string
+          owner_id: string
+          status: Database["public"]["Enums"]["dataset_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          item_count?: number
+          name: string
+          owner_id: string
+          status?: Database["public"]["Enums"]["dataset_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          domain?: string | null
+          id?: string
+          item_count?: number
+          name?: string
+          owner_id?: string
+          status?: Database["public"]["Enums"]["dataset_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       demo_requests: {
         Row: {
           company: string | null
@@ -22,7 +114,9 @@ export type Database = {
           id: string
           message: string | null
           name: string
+          product_interest: string | null
           role: string | null
+          status: Database["public"]["Enums"]["demo_status"]
         }
         Insert: {
           company?: string | null
@@ -31,7 +125,9 @@ export type Database = {
           id?: string
           message?: string | null
           name: string
+          product_interest?: string | null
           role?: string | null
+          status?: Database["public"]["Enums"]["demo_status"]
         }
         Update: {
           company?: string | null
@@ -40,7 +136,51 @@ export type Database = {
           id?: string
           message?: string | null
           name?: string
+          product_interest?: string | null
           role?: string | null
+          status?: Database["public"]["Enums"]["demo_status"]
+        }
+        Relationships: []
+      }
+      evaluation_runs: {
+        Row: {
+          benchmark: string
+          created_at: string
+          id: string
+          metrics: Json
+          model_name: string
+          notes: string | null
+          owner_id: string
+          provider: string | null
+          score: number | null
+          status: Database["public"]["Enums"]["eval_status"]
+          updated_at: string
+        }
+        Insert: {
+          benchmark: string
+          created_at?: string
+          id?: string
+          metrics?: Json
+          model_name: string
+          notes?: string | null
+          owner_id: string
+          provider?: string | null
+          score?: number | null
+          status?: Database["public"]["Enums"]["eval_status"]
+          updated_at?: string
+        }
+        Update: {
+          benchmark?: string
+          created_at?: string
+          id?: string
+          metrics?: Json
+          model_name?: string
+          notes?: string | null
+          owner_id?: string
+          provider?: string | null
+          score?: number | null
+          status?: Database["public"]["Enums"]["eval_status"]
+          updated_at?: string
         }
         Relationships: []
       }
@@ -116,6 +256,45 @@ export type Database = {
           total_comparisons?: number | null
           updated_at?: string
           wins?: number | null
+        }
+        Relationships: []
+      }
+      preference_votes: {
+        Row: {
+          created_at: string
+          id: string
+          model_a: string
+          model_b: string
+          prompt: string
+          rationale: string | null
+          response_a: string | null
+          response_b: string | null
+          voter_id: string
+          winner: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          model_a: string
+          model_b: string
+          prompt: string
+          rationale?: string | null
+          response_a?: string | null
+          response_b?: string | null
+          voter_id: string
+          winner: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          model_a?: string
+          model_b?: string
+          prompt?: string
+          rationale?: string | null
+          response_a?: string | null
+          response_b?: string | null
+          voter_id?: string
+          winner?: string
         }
         Relationships: []
       }
@@ -338,6 +517,15 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      dataset_status: "draft" | "active" | "archived"
+      demo_status: "new" | "contacted" | "qualified" | "closed"
+      eval_status: "queued" | "running" | "completed" | "failed"
+      task_status:
+        | "open"
+        | "in_progress"
+        | "submitted"
+        | "approved"
+        | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -466,6 +654,10 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      dataset_status: ["draft", "active", "archived"],
+      demo_status: ["new", "contacted", "qualified", "closed"],
+      eval_status: ["queued", "running", "completed", "failed"],
+      task_status: ["open", "in_progress", "submitted", "approved", "rejected"],
     },
   },
 } as const
