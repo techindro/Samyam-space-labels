@@ -20,12 +20,28 @@ serve(async (req) => {
   try {
     const { message, agentType } = await req.json();
 
-    if (!message || !agentType) {
+    if (typeof message !== "string" || typeof agentType !== "string" || !message || !agentType) {
       return new Response(
         JSON.stringify({ error: "message and agentType are required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    if (message.length > 500) {
+      return new Response(
+        JSON.stringify({ error: "Message too long (max 500 characters)" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const allowedAgents = ["Data Annotation", "Model Evaluation", "Dataset Query"];
+    if (!allowedAgents.includes(agentType)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid agentType" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
