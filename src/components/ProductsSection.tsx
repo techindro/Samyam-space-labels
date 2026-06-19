@@ -231,6 +231,7 @@ const ProductsSection = () => {
                     {p.metricLabel}
                   </span>
                 </div>
+                </div>
               </motion.div>
             );
           })}
