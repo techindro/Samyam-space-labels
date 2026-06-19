@@ -139,31 +139,39 @@ const ProductsSection = () => {
 
   useEffect(() => {
     let alive = true;
-    (async () => {
-      const [datasetsRes, evalsRes, votesRes, geoRes, fusionRes, simRes, probesRes] =
-        await Promise.all([
-          supabase.from("datasets").select("id", { count: "exact", head: true }),
-          supabase.from("evaluation_runs").select("id", { count: "exact", head: true }),
-          supabase.from("preference_votes").select("id", { count: "exact", head: true }),
-          supabase.from("geospatial_labels").select("id", { count: "exact", head: true }),
-          supabase.from("sensor_fusion_datasets").select("id", { count: "exact", head: true }),
-          supabase.from("mission_sim_runs").select("id", { count: "exact", head: true }),
-          supabase.from("red_team_probes").select("id", { count: "exact", head: true }),
-        ]);
+    const tableByKey: Record<FlagshipKey, string> = {
+      datasets: "datasets",
+      evals: "evaluation_runs",
+      votes: "preference_votes",
+      demos: "demo_requests",
+      geo: "geospatial_labels",
+      fusion: "sensor_fusion_datasets",
+      sim: "mission_sim_runs",
+      probes: "red_team_probes",
+    };
+    const keys = Object.keys(tableByKey) as FlagshipKey[];
+
+    const fetchCounts = async () => {
+      const results = await Promise.all(
+        keys.map((k) =>
+          supabase
+            .from(tableByKey[k] as never)
+            .select("id", { count: "exact", head: true })
+        )
+      );
       if (!alive) return;
-      setCounts({
-        datasets: datasetsRes.count ?? 0,
-        evals: evalsRes.count ?? 0,
-        votes: votesRes.count ?? 0,
-        demos: null,
-        geo: geoRes.count ?? 0,
-        fusion: fusionRes.count ?? 0,
-        sim: simRes.count ?? 0,
-        probes: probesRes.count ?? 0,
+      const next = {} as Record<FlagshipKey, number | null>;
+      keys.forEach((k, i) => {
+        next[k] = results[i].count ?? 0;
       });
-    })();
+      setCounts(next);
+    };
+
+    fetchCounts();
+    const id = window.setInterval(fetchCounts, 30000);
     return () => {
       alive = false;
+      window.clearInterval(id);
     };
   }, []);
 
