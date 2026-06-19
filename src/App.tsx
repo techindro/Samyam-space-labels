@@ -53,6 +53,7 @@ const App = () => (
           <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
           <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
           <Route path="/government/:slug" element={<GovernmentPage />} />
+          <Route path="/products/:slug" element={<ProductPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
