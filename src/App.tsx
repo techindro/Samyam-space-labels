@@ -24,6 +24,7 @@ import DeveloperTextToSpeech from "./pages/DeveloperTextToSpeech";
 import DeveloperSpeechToText from "./pages/DeveloperSpeechToText";
 import DeveloperDocumentDigitisation from "./pages/DeveloperDocumentDigitisation";
 import GovernmentPage from "./pages/GovernmentPage";
+import ProductPage from "./pages/ProductPage";
 
 const queryClient = new QueryClient();
 
