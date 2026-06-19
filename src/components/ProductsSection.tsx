@@ -48,6 +48,7 @@ const flagship: {
     title: "Data Engine",
     desc: "Build, version, and curate annotation-ready datasets with reviewer workflows and quality scoring — the backbone of every model we train.",
     metricLabel: "datasets",
+    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=70",
   },
   {
     key: "evals",
@@ -55,6 +56,7 @@ const flagship: {
     title: "Model Evaluation",
     desc: "Run reproducible benchmarks across foundation and fine-tuned models with full metric history, regression alerts, and audit trails.",
     metricLabel: "evaluation runs",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=70",
   },
   {
     key: "votes",
@@ -62,6 +64,7 @@ const flagship: {
     title: "RLHF & Preferences",
     desc: "Collect pairwise human preferences at scale to align models for mission-critical accuracy, safety, and tone.",
     metricLabel: "preference votes",
+    image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=70",
   },
   {
     key: "demos",
@@ -69,6 +72,7 @@ const flagship: {
     title: "Enterprise Pipeline",
     desc: "Qualified demo requests flow into a tracked pipeline — interest tagging, status, and admin handoff for the GTM team.",
     metricLabel: "demo requests",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=70",
   },
   {
     key: "geo",
@@ -77,6 +81,7 @@ const flagship: {
     desc: "Annotate EO, SAR, and IR imagery at sub-pixel precision — bounding boxes, masks, and class labels for orbital and aerial training sets.",
     metricLabel: "imagery sets",
     badge: "Defense",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=70",
   },
   {
     key: "fusion",
@@ -85,6 +90,7 @@ const flagship: {
     desc: "Multi-modal records combining SAR, EO/IR, radar, and telemetry with per-modality quality scoring for robust perception stacks.",
     metricLabel: "fusion sets",
     badge: "Defense",
+    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=70",
   },
   {
     key: "sim",
@@ -93,6 +99,7 @@ const flagship: {
     desc: "Scenario-based evaluation for autonomy and decision models — tracked KPI scores, pass/fail outcomes, and reviewer notes per run.",
     metricLabel: "sim runs",
     badge: "Defense",
+    image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=800&q=70",
   },
   {
     key: "probes",
@@ -101,6 +108,7 @@ const flagship: {
     desc: "Adversarial prompt library with severity tiers, reviewer signoff, and mitigation status — defense-aligned safety from day one.",
     metricLabel: "safety probes",
     badge: "Defense",
+    image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&w=800&q=70",
   },
 ];
 
