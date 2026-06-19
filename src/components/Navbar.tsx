@@ -364,9 +364,34 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
         {/* Mobile Menu */}
         {mobileOpen && (
           <div className={`md:hidden border-t px-4 py-6 space-y-4 ${isDark ? 'bg-black/90 backdrop-blur-xl border-white/10' : 'glass-card border-border/30'}`}>
+            {/* Mobile Products Section */}
+            <div className="pt-2 pb-2">
+              <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Products</p>
+              <div className="space-y-1">
+                {productLinks.map(({ label, subtitle, icon: Icon, href, badge }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate(href); }}
+                    className={`flex items-center gap-2 px-2 py-2 rounded-lg text-xs transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="block font-medium">{label}</span>
+                        {badge && <span className="text-[9px] uppercase tracking-wider px-1 py-0.5 rounded bg-cosmic-purple/15 text-cosmic-purple-glow">{badge}</span>}
+                      </div>
+                      <span className={`text-[10px] ${isDark ? 'text-white/30' : 'text-muted-foreground/60'}`}>{subtitle}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
             {navLinks.map((link) => (
               <a key={link} href="#" className={`block text-sm ${linkClass}`}>{link}</a>
             ))}
+
 
             {/* Mobile Developers Section */}
             <div className="pt-2 pb-2">
