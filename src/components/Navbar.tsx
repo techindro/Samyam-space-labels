@@ -6,15 +6,24 @@ import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2 } from "lucide-react";
 
-const navLinks = ["Products", "Space Tech", "Enterprise"];
+const navLinks = ["Space Tech", "Enterprise"];
 
 import { governmentPages } from "@/data/governmentPages";
+import { productPages } from "@/data/productPages";
 
 const governmentLinks = governmentPages.map((p) => ({
   label: p.label,
   subtitle: p.subtitle,
   icon: p.icon,
   href: `/government/${p.slug}`,
+}));
+
+const productLinks = productPages.map((p) => ({
+  label: p.label,
+  subtitle: p.subtitle,
+  icon: p.icon,
+  badge: p.badge,
+  href: `/products/${p.slug}`,
 }));
 
 const researchLinks = [
