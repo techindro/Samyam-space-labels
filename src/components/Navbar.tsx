@@ -6,15 +6,24 @@ import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2 } from "lucide-react";
 
-const navLinks = ["Products", "Space Tech", "Enterprise"];
+const navLinks = ["Space Tech", "Enterprise"];
 
 import { governmentPages } from "@/data/governmentPages";
+import { productPages } from "@/data/productPages";
 
 const governmentLinks = governmentPages.map((p) => ({
   label: p.label,
   subtitle: p.subtitle,
   icon: p.icon,
   href: `/government/${p.slug}`,
+}));
+
+const productLinks = productPages.map((p) => ({
+  label: p.label,
+  subtitle: p.subtitle,
+  icon: p.icon,
+  badge: p.badge,
+  href: `/products/${p.slug}`,
 }));
 
 const researchLinks = [
@@ -45,7 +54,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const [developersOpen, setDevelopersOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [governmentOpen, setGovernmentOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
   const govDropdownRef = useRef<HTMLDivElement>(null);
+  const productsDropdownRef = useRef<HTMLDivElement>(null);
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -72,6 +83,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
       }
       if (govDropdownRef.current && !govDropdownRef.current.contains(e.target as Node)) {
         setGovernmentOpen(false);
+      }
+      if (productsDropdownRef.current && !productsDropdownRef.current.contains(e.target as Node)) {
+        setProductsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -106,11 +120,55 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
+            {/* Products Dropdown */}
+            <div ref={productsDropdownRef} className="relative">
+              <button
+                onClick={() => { setProductsOpen(!productsOpen); setGovernmentOpen(false); setDevelopersOpen(false); setResearchOpen(false); }}
+                className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}
+              >
+                Products
+                <ChevronDown className={`h-3 w-3 transition-transform ${productsOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {productsOpen && (
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[640px] rounded-xl border p-5 shadow-2xl ${isDark ? 'bg-[hsl(0,0%,8%)] border-white/10' : 'bg-background border-border shadow-lg'}`}>
+                  <div className="flex items-center justify-between mb-3 px-1">
+                    <p className={`text-xs uppercase tracking-widest font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Products — Live backend</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full border ${isDark ? 'border-white/15 text-white/60' : 'border-border text-muted-foreground'}`}>8 modules</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {productLinks.map(({ label, subtitle, icon: Icon, href, badge }) => (
+                      <a
+                        key={href}
+                        href={href}
+                        onClick={(e) => { e.preventDefault(); setProductsOpen(false); navigate(href); }}
+                        className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                      >
+                        <div className={`p-1.5 rounded-lg mt-0.5 ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
+                          <Icon className="h-4 w-4 shrink-0" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium leading-tight">{label}</span>
+                            {badge && (
+                              <span className={`text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded ${isDark ? 'bg-cosmic-purple/20 text-cosmic-purple-glow' : 'bg-cosmic-purple/10 text-cosmic-purple-glow'}`}>{badge}</span>
+                            )}
+                          </div>
+                          <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>{subtitle}</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {navLinks.map((link) => (
               <a key={link} href="#" className={`text-sm transition-colors ${linkClass}`}>
                 {link}
               </a>
             ))}
+
 
             {/* Government Dropdown */}
             <div ref={govDropdownRef} className="relative">
@@ -306,9 +364,34 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
         {/* Mobile Menu */}
         {mobileOpen && (
           <div className={`md:hidden border-t px-4 py-6 space-y-4 ${isDark ? 'bg-black/90 backdrop-blur-xl border-white/10' : 'glass-card border-border/30'}`}>
+            {/* Mobile Products Section */}
+            <div className="pt-2 pb-2">
+              <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Products</p>
+              <div className="space-y-1">
+                {productLinks.map(({ label, subtitle, icon: Icon, href, badge }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate(href); }}
+                    className={`flex items-center gap-2 px-2 py-2 rounded-lg text-xs transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="block font-medium">{label}</span>
+                        {badge && <span className="text-[9px] uppercase tracking-wider px-1 py-0.5 rounded bg-cosmic-purple/15 text-cosmic-purple-glow">{badge}</span>}
+                      </div>
+                      <span className={`text-[10px] ${isDark ? 'text-white/30' : 'text-muted-foreground/60'}`}>{subtitle}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
             {navLinks.map((link) => (
               <a key={link} href="#" className={`block text-sm ${linkClass}`}>{link}</a>
             ))}
+
 
             {/* Mobile Developers Section */}
             <div className="pt-2 pb-2">

@@ -24,6 +24,7 @@ import DeveloperTextToSpeech from "./pages/DeveloperTextToSpeech";
 import DeveloperSpeechToText from "./pages/DeveloperSpeechToText";
 import DeveloperDocumentDigitisation from "./pages/DeveloperDocumentDigitisation";
 import GovernmentPage from "./pages/GovernmentPage";
+import ProductPage from "./pages/ProductPage";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ const App = () => (
           <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
           <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
           <Route path="/government/:slug" element={<GovernmentPage />} />
+          <Route path="/products/:slug" element={<ProductPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
