@@ -54,7 +54,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const [developersOpen, setDevelopersOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [governmentOpen, setGovernmentOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
   const govDropdownRef = useRef<HTMLDivElement>(null);
+  const productsDropdownRef = useRef<HTMLDivElement>(null);
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
