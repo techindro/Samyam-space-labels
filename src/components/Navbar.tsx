@@ -84,6 +84,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
       if (govDropdownRef.current && !govDropdownRef.current.contains(e.target as Node)) {
         setGovernmentOpen(false);
       }
+      if (productsDropdownRef.current && !productsDropdownRef.current.contains(e.target as Node)) {
+        setProductsOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
