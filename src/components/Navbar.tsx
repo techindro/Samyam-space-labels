@@ -120,11 +120,55 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
+            {/* Products Dropdown */}
+            <div ref={productsDropdownRef} className="relative">
+              <button
+                onClick={() => { setProductsOpen(!productsOpen); setGovernmentOpen(false); setDevelopersOpen(false); setResearchOpen(false); }}
+                className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}
+              >
+                Products
+                <ChevronDown className={`h-3 w-3 transition-transform ${productsOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {productsOpen && (
+                <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[640px] rounded-xl border p-5 shadow-2xl ${isDark ? 'bg-[hsl(0,0%,8%)] border-white/10' : 'bg-background border-border shadow-lg'}`}>
+                  <div className="flex items-center justify-between mb-3 px-1">
+                    <p className={`text-xs uppercase tracking-widest font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Products — Live backend</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full border ${isDark ? 'border-white/15 text-white/60' : 'border-border text-muted-foreground'}`}>8 modules</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {productLinks.map(({ label, subtitle, icon: Icon, href, badge }) => (
+                      <a
+                        key={href}
+                        href={href}
+                        onClick={(e) => { e.preventDefault(); setProductsOpen(false); navigate(href); }}
+                        className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                      >
+                        <div className={`p-1.5 rounded-lg mt-0.5 ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
+                          <Icon className="h-4 w-4 shrink-0" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium leading-tight">{label}</span>
+                            {badge && (
+                              <span className={`text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded ${isDark ? 'bg-cosmic-purple/20 text-cosmic-purple-glow' : 'bg-cosmic-purple/10 text-cosmic-purple-glow'}`}>{badge}</span>
+                            )}
+                          </div>
+                          <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>{subtitle}</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {navLinks.map((link) => (
               <a key={link} href="#" className={`text-sm transition-colors ${linkClass}`}>
                 {link}
               </a>
             ))}
+
 
             {/* Government Dropdown */}
             <div ref={govDropdownRef} className="relative">
