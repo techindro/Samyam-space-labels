@@ -39,6 +39,7 @@ const flagship: {
   title: string;
   desc: string;
   metricLabel: string;
+  image: string;
   badge?: string;
 }[] = [
   {
