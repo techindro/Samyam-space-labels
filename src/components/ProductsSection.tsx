@@ -201,16 +201,26 @@ const ProductsSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
-                className="glass-card rounded-2xl p-6 hover:border-cosmic-teal/40 transition-all group relative flex flex-col"
+                className="glass-card rounded-2xl overflow-hidden hover:border-cosmic-teal/40 transition-all group relative flex flex-col"
               >
-                {p.badge && (
-                  <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cosmic-purple/20 text-cosmic-purple-glow border border-cosmic-purple/30">
-                    {p.badge}
-                  </span>
-                )}
-                <div className="p-3 rounded-lg bg-cosmic-purple/10 w-fit mb-4 group-hover:bg-cosmic-purple/20 transition-colors">
-                  <p.icon className="h-6 w-6 text-cosmic-purple-glow" />
+                <div className="relative h-36 overflow-hidden">
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                  {p.badge && (
+                    <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cosmic-purple/30 text-cosmic-purple-glow border border-cosmic-purple/40 backdrop-blur-sm">
+                      {p.badge}
+                    </span>
+                  )}
+                  <div className="absolute bottom-3 left-3 p-2 rounded-lg bg-background/70 backdrop-blur-sm border border-border/50">
+                    <p.icon className="h-5 w-5 text-cosmic-purple-glow" />
+                  </div>
                 </div>
+                <div className="p-6 flex flex-col flex-1">
                 <h3 className="font-display text-lg font-semibold mb-2">{p.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1">{p.desc}</p>
                 <div className="pt-4 border-t border-border/40 flex items-baseline gap-2">
