@@ -81,9 +81,35 @@ const ProductPage = () => {
   }
 
   const Icon = product.icon;
+  const pageUrl = `https://chai-space-labels.lovable.app/products/${product.slug}`;
+  const pageTitle = `${product.label} — samyam`;
+  const pageDescription = product.hero.description;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <link rel="canonical" href={pageUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={product.image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:image" content={product.image} />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.label,
+          description: pageDescription,
+          image: product.image,
+          url: pageUrl,
+          brand: { "@type": "Brand", name: "samyam" },
+        })}</script>
+      </Helmet>
       <Navbar />
 
       {/* Hero */}
