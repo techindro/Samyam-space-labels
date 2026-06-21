@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { ArrowLeft, Database } from "lucide-react";
 import Navbar from "@/components/Navbar";
