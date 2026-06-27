@@ -1,18 +1,70 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, matchPath } from "react-router-dom";
+
+interface AutoScrollRevealProps {
+  /**
+   * Route patterns (react-router style) where the global reveal should be
+   * disabled entirely — e.g. ["/auth", "/reset-password"].
+   */
+  excludeRoutes?: string[];
+  /**
+   * Extra CSS selectors whose elements should NEVER be revealed, in addition
+   * to the built-in opt-outs below.
+   */
+  excludeSelectors?: string[];
+}
 
 /**
- * Mounts once inside the Router. After every route change, it finds all
- * <section> elements (and any element marked with [data-reveal]) and applies
- * a fade/slide-up animation as they enter the viewport.
+ * Global scroll-reveal. Mounted once inside the Router.
  *
- * Pages don't have to opt in individually — wrapping <section> is enough.
+ * Opt-out mechanisms (any one is enough to keep an element static):
+ *  - Attribute on the element itself: `data-reveal="off"` or `data-no-reveal`
+ *  - Ancestor with `data-reveal="off"` / `data-no-reveal`
+ *  - Class on the element or an ancestor: `.no-reveal`
+ *  - Route listed in `excludeRoutes`
+ *  - Selector listed in `excludeSelectors`
+ *  - Built-in: <header>, <nav>, [role="banner"], [role="navigation"],
+ *    and anything inside them (so navbars/hero banners stay static).
  */
-const AutoScrollReveal = () => {
+const BUILTIN_EXCLUDE_ANCESTORS = [
+  "header",
+  "nav",
+  '[role="banner"]',
+  '[role="navigation"]',
+  "[data-reveal='off']",
+  "[data-no-reveal]",
+  ".no-reveal",
+];
+
+const isExcluded = (
+  el: HTMLElement,
+  extraSelectors: string[]
+): boolean => {
+  // Direct opt-out on the element itself.
+  if (
+    el.dataset.reveal === "off" ||
+    el.hasAttribute("data-no-reveal") ||
+    el.classList.contains("no-reveal")
+  ) {
+    return true;
+  }
+  const selectors = [...BUILTIN_EXCLUDE_ANCESTORS, ...extraSelectors];
+  return selectors.some((sel) => {
+    try {
+      return el.closest(sel) !== null;
+    } catch {
+      return false;
+    }
+  });
+};
+
+const AutoScrollReveal = ({
+  excludeRoutes = [],
+  excludeSelectors = [],
+}: AutoScrollRevealProps) => {
   const location = useLocation();
 
   useEffect(() => {
-    // Respect reduced-motion users.
     if (
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
@@ -20,11 +72,22 @@ const AutoScrollReveal = () => {
       return;
     }
 
-    const targets = Array.from(
-      document.querySelectorAll<HTMLElement>("section, [data-reveal]")
-    ).filter((el) => !el.dataset.revealBound);
+    const routeExcluded = excludeRoutes.some((pattern) =>
+      matchPath({ path: pattern, end: false }, location.pathname)
+    );
+    if (routeExcluded) return;
 
-    if (targets.length === 0) return;
+    const collect = () =>
+      Array.from(
+        document.querySelectorAll<HTMLElement>("section, [data-reveal='on'], [data-reveal-target]")
+      ).filter(
+        (el) =>
+          !el.dataset.revealBound &&
+          // Honour opt-outs.
+          (el.dataset.reveal === "on" ||
+            el.hasAttribute("data-reveal-target") ||
+            !isExcluded(el, excludeSelectors))
+      );
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -38,32 +101,24 @@ const AutoScrollReveal = () => {
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
     );
 
-    targets.forEach((el, i) => {
-      el.dataset.revealBound = "1";
-      el.classList.add("reveal-on-scroll");
-      // Light stagger across the first few sections only.
-      if (i < 6) el.style.transitionDelay = `${i * 60}ms`;
-      io.observe(el);
-    });
+    const bind = (targets: HTMLElement[]) => {
+      targets.forEach((el, i) => {
+        el.dataset.revealBound = "1";
+        el.classList.add("reveal-on-scroll");
+        if (i < 6) el.style.transitionDelay = `${i * 60}ms`;
+        io.observe(el);
+      });
+    };
 
-    // Re-scan shortly after route mount in case sections render async.
-    const rescan = window.setTimeout(() => {
-      document
-        .querySelectorAll<HTMLElement>("section, [data-reveal]")
-        .forEach((el) => {
-          if (!el.dataset.revealBound) {
-            el.dataset.revealBound = "1";
-            el.classList.add("reveal-on-scroll");
-            io.observe(el);
-          }
-        });
-    }, 400);
+    bind(collect());
+
+    const rescan = window.setTimeout(() => bind(collect()), 400);
 
     return () => {
       window.clearTimeout(rescan);
       io.disconnect();
     };
-  }, [location.pathname]);
+  }, [location.pathname, excludeRoutes, excludeSelectors]);
 
   return null;
 };
