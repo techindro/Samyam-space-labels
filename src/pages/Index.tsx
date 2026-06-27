@@ -10,6 +10,7 @@ import CaseStudiesSection from "@/components/CaseStudiesSection";
 import ComplianceSection from "@/components/ComplianceSection";
 import ExperienceSamyam from "@/components/ExperienceSamyam";
 import Footer from "@/components/Footer";
+import ScrollReveal from "@/components/ScrollReveal";
 
 const Index = () => {
   return (
@@ -17,15 +18,15 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
-        <TrustedBy />
-        <SolutionsSection />
-        <AgenticSection />
-        <ProductsSection />
-        <LearnAISection />
-        <TestimonialsSection />
-        <CaseStudiesSection />
-        <ComplianceSection />
-        <ExperienceSamyam />
+        <ScrollReveal><TrustedBy /></ScrollReveal>
+        <ScrollReveal><SolutionsSection /></ScrollReveal>
+        <ScrollReveal><AgenticSection /></ScrollReveal>
+        <ScrollReveal><ProductsSection /></ScrollReveal>
+        <ScrollReveal><LearnAISection /></ScrollReveal>
+        <ScrollReveal><TestimonialsSection /></ScrollReveal>
+        <ScrollReveal><CaseStudiesSection /></ScrollReveal>
+        <ScrollReveal><ComplianceSection /></ScrollReveal>
+        <ScrollReveal><ExperienceSamyam /></ScrollReveal>
       </main>
       <Footer />
     </div>
