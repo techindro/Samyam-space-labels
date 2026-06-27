@@ -25,6 +25,7 @@ import DeveloperSpeechToText from "./pages/DeveloperSpeechToText";
 import DeveloperDocumentDigitisation from "./pages/DeveloperDocumentDigitisation";
 import GovernmentPage from "./pages/GovernmentPage";
 import ProductPage from "./pages/ProductPage";
+import AutoScrollReveal from "./components/AutoScrollReveal";
 
 const queryClient = new QueryClient();
 
