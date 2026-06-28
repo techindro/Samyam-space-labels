@@ -7,6 +7,10 @@ import {
   Radar,
   Target,
   ShieldAlert,
+  Activity,
+  Orbit,
+  Moon,
+  Rocket,
   type LucideIcon,
 } from "lucide-react";
 
