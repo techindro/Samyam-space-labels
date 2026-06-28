@@ -31,7 +31,11 @@ type FlagshipKey =
   | "geo"
   | "fusion"
   | "sim"
-  | "probes";
+  | "probes"
+  | "telemetry"
+  | "debris"
+  | "lunar"
+  | "launch";
 
 const flagship: {
   key: FlagshipKey;
