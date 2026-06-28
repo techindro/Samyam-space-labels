@@ -134,7 +134,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                 <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[640px] rounded-xl border p-5 shadow-2xl ${isDark ? 'bg-[hsl(0,0%,8%)] border-white/10' : 'bg-background border-border shadow-lg'}`}>
                   <div className="flex items-center justify-between mb-3 px-1">
                     <p className={`text-xs uppercase tracking-widest font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Products — Live backend</p>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full border ${isDark ? 'border-white/15 text-white/60' : 'border-border text-muted-foreground'}`}>8 modules</span>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full border ${isDark ? 'border-white/15 text-white/60' : 'border-border text-muted-foreground'}`}>12 modules</span>
                   </div>
                   <div className="grid grid-cols-2 gap-1">
                     {productLinks.map(({ label, subtitle, icon: Icon, href, badge }) => (

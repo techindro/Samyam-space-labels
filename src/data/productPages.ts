@@ -7,6 +7,10 @@ import {
   Radar,
   Target,
   ShieldAlert,
+  Activity,
+  Orbit,
+  Moon,
+  Rocket,
   type LucideIcon,
 } from "lucide-react";
 
@@ -30,7 +34,11 @@ export type ProductPage = {
     | "geospatial_labels"
     | "sensor_fusion_datasets"
     | "mission_sim_runs"
-    | "red_team_probes";
+    | "red_team_probes"
+    | "orbital_telemetry_streams"
+    | "space_debris_tracks"
+    | "lunar_surface_maps"
+    | "launch_trajectory_runs";
   metricLabel: string;
   image: string;
   hero: { eyebrow: string; title: string; description: string };
@@ -229,6 +237,106 @@ export const productPages: ProductPage[] = [
       { key: "severity", label: "Severity", format: "badge" },
       { key: "reviewer_signoff", label: "Signoff", format: "boolean" },
       { key: "status", label: "Status", format: "badge" },
+    ],
+  },
+  {
+    slug: "orbital-telemetry",
+    label: "Orbital Telemetry",
+    subtitle: "Spacecraft downlink anomaly detection",
+    icon: Activity,
+    badge: "Space",
+    table: "orbital_telemetry_streams",
+    metricLabel: "telemetry streams",
+    image:
+      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1600&q=70",
+    hero: {
+      eyebrow: "Product · Orbital Telemetry",
+      title: "Detect spacecraft anomalies in real time",
+      description:
+        "Ingest downlink streams from orbital assets and surface anomalies, drift, and subsystem health with reviewer-signed labels.",
+    },
+    primaryColumn: "spacecraft",
+    orderBy: "created_at",
+    columns: [
+      { key: "mission", label: "Mission" },
+      { key: "anomaly_count", label: "Anomalies", format: "number" },
+      { key: "downlink_rate", label: "Downlink (Mbps)", format: "score" },
+      { key: "status", label: "Status", format: "badge" },
+    ],
+  },
+  {
+    slug: "space-debris-tracking",
+    label: "Space Debris Tracking",
+    subtitle: "Conjunction analysis for orbital safety",
+    icon: Orbit,
+    badge: "Space",
+    table: "space_debris_tracks",
+    metricLabel: "tracked objects",
+    image:
+      "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=1600&q=70",
+    hero: {
+      eyebrow: "Product · Space Debris",
+      title: "Catalog and score orbital debris risk",
+      description:
+        "Track resident space objects, score conjunction risk, and flag high-priority encounters for collision avoidance planning.",
+    },
+    primaryColumn: "object_name",
+    orderBy: "created_at",
+    columns: [
+      { key: "orbit_class", label: "Orbit", format: "badge" },
+      { key: "altitude_km", label: "Altitude (km)", format: "score" },
+      { key: "risk_level", label: "Risk", format: "badge" },
+      { key: "conjunction_count", label: "Conjunctions", format: "number" },
+    ],
+  },
+  {
+    slug: "lunar-surface-mapping",
+    label: "Lunar Surface Mapping",
+    subtitle: "Planetary terrain labels at sub-meter resolution",
+    icon: Moon,
+    badge: "Space",
+    table: "lunar_surface_maps",
+    metricLabel: "lunar regions",
+    image:
+      "https://images.unsplash.com/photo-1532800783378-1bed60adaf58?auto=format&fit=crop&w=1600&q=70",
+    hero: {
+      eyebrow: "Product · Lunar Mapping",
+      title: "Sub-meter terrain labels for lunar missions",
+      description:
+        "Annotate craters, boulders, slopes, and landing hazards across lunar imagery to power autonomy stacks for orbiters and landers.",
+    },
+    primaryColumn: "region",
+    orderBy: "created_at",
+    columns: [
+      { key: "mission", label: "Mission" },
+      { key: "label_count", label: "Labels", format: "number" },
+      { key: "resolution_m", label: "Res (m)", format: "score" },
+      { key: "sensor_type", label: "Sensor", format: "badge" },
+    ],
+  },
+  {
+    slug: "launch-trajectory",
+    label: "Launch Trajectory Eval",
+    subtitle: "Pre-flight scoring for launch vehicles",
+    icon: Rocket,
+    badge: "Space",
+    table: "launch_trajectory_runs",
+    metricLabel: "trajectory runs",
+    image:
+      "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1600&q=70",
+    hero: {
+      eyebrow: "Product · Launch Trajectory",
+      title: "Score launch trajectories before flight",
+      description:
+        "Reproducible scoring runs for delta-v efficiency and success probability across PSLV, GSLV, SSLV, and LVM3 mission profiles.",
+    },
+    primaryColumn: "vehicle",
+    orderBy: "created_at",
+    columns: [
+      { key: "mission", label: "Mission" },
+      { key: "delta_v_score", label: "Δv Score", format: "score" },
+      { key: "success_probability", label: "P(success)", format: "score" },
+      { key: "outcome", label: "Outcome", format: "badge" },
     ],
   },
 ];

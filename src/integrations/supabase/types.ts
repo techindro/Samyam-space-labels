@@ -259,6 +259,78 @@ export type Database = {
         }
         Relationships: []
       }
+      launch_trajectory_runs: {
+        Row: {
+          created_at: string
+          delta_v_score: number
+          id: string
+          mission: string
+          outcome: string
+          status: string
+          success_probability: number
+          updated_at: string
+          vehicle: string
+        }
+        Insert: {
+          created_at?: string
+          delta_v_score?: number
+          id?: string
+          mission: string
+          outcome?: string
+          status?: string
+          success_probability?: number
+          updated_at?: string
+          vehicle: string
+        }
+        Update: {
+          created_at?: string
+          delta_v_score?: number
+          id?: string
+          mission?: string
+          outcome?: string
+          status?: string
+          success_probability?: number
+          updated_at?: string
+          vehicle?: string
+        }
+        Relationships: []
+      }
+      lunar_surface_maps: {
+        Row: {
+          created_at: string
+          id: string
+          label_count: number
+          mission: string
+          region: string
+          resolution_m: number
+          sensor_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label_count?: number
+          mission: string
+          region: string
+          resolution_m?: number
+          sensor_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label_count?: number
+          mission?: string
+          region?: string
+          resolution_m?: number
+          sensor_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       mission_sim_runs: {
         Row: {
           created_at: string
@@ -293,6 +365,39 @@ export type Database = {
           outcome?: string | null
           owner_id?: string | null
           scenario?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      orbital_telemetry_streams: {
+        Row: {
+          anomaly_count: number
+          created_at: string
+          downlink_rate: number
+          id: string
+          mission: string
+          spacecraft: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          anomaly_count?: number
+          created_at?: string
+          downlink_rate?: number
+          id?: string
+          mission: string
+          spacecraft: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          anomaly_count?: number
+          created_at?: string
+          downlink_rate?: number
+          id?: string
+          mission?: string
+          spacecraft?: string
           status?: string
           updated_at?: string
         }
@@ -638,6 +743,42 @@ export type Database = {
           owner_id?: string | null
           quality_score?: number | null
           record_count?: number
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      space_debris_tracks: {
+        Row: {
+          altitude_km: number
+          conjunction_count: number
+          created_at: string
+          id: string
+          object_name: string
+          orbit_class: string
+          risk_level: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          altitude_km?: number
+          conjunction_count?: number
+          created_at?: string
+          id?: string
+          object_name: string
+          orbit_class: string
+          risk_level?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          altitude_km?: number
+          conjunction_count?: number
+          created_at?: string
+          id?: string
+          object_name?: string
+          orbit_class?: string
+          risk_level?: string
           status?: string
           updated_at?: string
         }
