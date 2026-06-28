@@ -44,17 +44,41 @@ const DeveloperTextToSpeech = () => {
     if (!inputText.trim()) return;
     setIsPlaying(true);
     const utterance = new SpeechSynthesisUtterance(inputText);
-    const voices = window.speechSynthesis.getVoices();
-    const voiceMeta = voices.find((v) => {
-      const isIndian = /en-IN|hi-IN|hi/i.test(v.lang) || /india|hindi|ravi|heera|priya|aditi|rishi/i.test(v.name);
-      if (!isIndian) return false;
-      if (selectedVoice === "meera" || selectedVoice === "priya") return /female|heera|priya|aditi|isha/i.test(v.name);
-      return /male|ravi|rishi|hemant/i.test(v.name) || !/female/i.test(v.name);
-    });
+    const allVoices = window.speechSynthesis.getVoices();
+
+    const wantHindi = selectedVoice === "priya" || selectedVoice === "ravi";
+    const wantFemale = selectedVoice === "meera" || selectedVoice === "priya";
+    const targetLang = wantHindi ? /hi-IN|hi[-_]|hindi/i : /en-IN|english.*india/i;
+
+    // Step 1: filter by target language family
+    const langPool = allVoices.filter(
+      (v) => targetLang.test(v.lang) || targetLang.test(v.name)
+    );
+    // Step 2: fallback to any Indian voice
+    const indianPool = langPool.length
+      ? langPool
+      : allVoices.filter(
+          (v) =>
+            /en-IN|hi-IN/i.test(v.lang) ||
+            /india|hindi|ravi|heera|priya|aditi|rishi|hemant|kalpana/i.test(v.name)
+        );
+    const pool = indianPool.length ? indianPool : allVoices;
+
+    const femaleRe = /female|heera|priya|aditi|isha|neerja|kalpana|swara|हिन्दी/i;
+    const maleRe = /\bmale\b|ravi|rishi|hemant|arjun/i;
+
+    let voiceMeta: SpeechSynthesisVoice | undefined;
+    if (wantFemale) {
+      voiceMeta = pool.find((v) => femaleRe.test(v.name)) ?? pool.find((v) => !maleRe.test(v.name));
+    } else {
+      voiceMeta = pool.find((v) => maleRe.test(v.name)) ?? pool.find((v) => !femaleRe.test(v.name));
+    }
+    voiceMeta = voiceMeta ?? pool[0];
+
     if (voiceMeta) utterance.voice = voiceMeta;
-    utterance.lang = voiceMeta?.lang || (selectedVoice === "priya" || selectedVoice === "ravi" ? "hi-IN" : "en-IN");
+    utterance.lang = voiceMeta?.lang || (wantHindi ? "hi-IN" : "en-IN");
     utterance.rate = 0.95;
-    utterance.pitch = selectedVoice === "meera" || selectedVoice === "priya" ? 1.1 : 0.95;
+    utterance.pitch = wantFemale ? 1.1 : 0.9;
     utterance.onend = () => setIsPlaying(false);
     utterance.onerror = () => setIsPlaying(false);
     window.speechSynthesis.speak(utterance);
