@@ -114,6 +114,42 @@ const flagship: {
     badge: "Defense",
     image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&w=800&q=70",
   },
+  {
+    key: "telemetry",
+    icon: Activity,
+    title: "Orbital Telemetry",
+    desc: "Real-time downlink anomaly detection across spacecraft subsystems — reviewer-signed labels for subsystem health, drift, and faults.",
+    metricLabel: "telemetry streams",
+    badge: "Space",
+    image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=70",
+  },
+  {
+    key: "debris",
+    icon: OrbitIcon,
+    title: "Space Debris Tracking",
+    desc: "Catalog resident space objects and score conjunction risk for collision avoidance planning across LEO, MEO, and GEO regimes.",
+    metricLabel: "tracked objects",
+    badge: "Space",
+    image: "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?auto=format&fit=crop&w=800&q=70",
+  },
+  {
+    key: "lunar",
+    icon: Moon,
+    title: "Lunar Surface Mapping",
+    desc: "Sub-meter terrain labels — craters, boulders, slopes, and landing hazards for orbiter and lander autonomy stacks.",
+    metricLabel: "lunar regions",
+    badge: "Space",
+    image: "https://images.unsplash.com/photo-1532800783378-1bed60adaf58?auto=format&fit=crop&w=800&q=70",
+  },
+  {
+    key: "launch",
+    icon: Rocket,
+    title: "Launch Trajectory Eval",
+    desc: "Reproducible scoring for delta-v efficiency and success probability across PSLV, GSLV, SSLV, and LVM3 mission profiles.",
+    metricLabel: "trajectory runs",
+    badge: "Space",
+    image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=800&q=70",
+  },
 ];
 
 const capabilities = [
