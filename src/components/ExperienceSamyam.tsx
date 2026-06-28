@@ -126,7 +126,7 @@ const ExperienceSamyam = () => {
     updateReply(index, "");
 
     const recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
+    recognition.lang = "en-IN";
     recognition.interimResults = true;
     recognition.continuous = false;
     recognitionRef.current = recognition;
