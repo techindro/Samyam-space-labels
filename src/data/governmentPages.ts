@@ -1,22 +1,25 @@
 import { Shield, Satellite, Radar, Eye, Landmark, Building2, Cpu, ShieldCheck, Globe2, LucideIcon } from "lucide-react";
-import modImg from "@/assets/gov/mod.jpg";
-import isroImg from "@/assets/gov/isro.jpg";
-import intelImg from "@/assets/gov/intel.jpg";
-import borderImg from "@/assets/gov/border.jpg";
-import governanceImg from "@/assets/gov/governance.jpg";
-import psuImg from "@/assets/gov/psu.jpg";
-import indiaaiImg from "@/assets/gov/indiaai.jpg";
-import tevalImg from "@/assets/gov/teval.jpg";
-import globalImg from "@/assets/gov/global.jpg";
-import modPartners from "@/assets/gov/partners/mod.jpg";
-import isroPartners from "@/assets/gov/partners/isro.jpg";
-import intelPartners from "@/assets/gov/partners/intel.jpg";
-import borderPartners from "@/assets/gov/partners/border.jpg";
-import governancePartners from "@/assets/gov/partners/governance.jpg";
-import psuPartners from "@/assets/gov/partners/psu.jpg";
-import indiaaiPartners from "@/assets/gov/partners/indiaai.jpg";
-import tevalPartners from "@/assets/gov/partners/teval.jpg";
-import globalPartners from "@/assets/gov/partners/global.jpg";
+
+// Real photography from Unsplash (no AI-generated assets).
+const modImg = "https://images.unsplash.com/photo-1579912437766-7896df6d3cd6?auto=format&fit=crop&w=1600&q=70"; // military operations
+const isroImg = "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1600&q=70"; // rocket launch
+const intelImg = "https://images.unsplash.com/photo-1551808525-51a94da548ce?auto=format&fit=crop&w=1600&q=70"; // surveillance / ops room
+const borderImg = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=70"; // coast guard / patrol
+const governanceImg = "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1600&q=70"; // government building India
+const psuImg = "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1600&q=70"; // factory / industry
+const indiaaiImg = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=70"; // datacenter / chips
+const tevalImg = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=70"; // analytics / testing
+const globalImg = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=70"; // earth from space
+
+const modPartners = "https://images.unsplash.com/photo-1569383746724-6f1b03ebfffa?auto=format&fit=crop&w=1200&q=70";
+const isroPartners = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=70";
+const intelPartners = "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=70";
+const borderPartners = "https://images.unsplash.com/photo-1565945887714-d5139f4eb0ce?auto=format&fit=crop&w=1200&q=70";
+const governancePartners = "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=70";
+const psuPartners = "https://images.unsplash.com/photo-1565043666747-69f6646db940?auto=format&fit=crop&w=1200&q=70";
+const indiaaiPartners = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=70";
+const tevalPartners = "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=70";
+const globalPartners = "https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&w=1200&q=70";
 
 export type GovernmentPage = {
   slug: string;
