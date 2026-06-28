@@ -178,6 +178,10 @@ const ProductsSection = () => {
     fusion: null,
     sim: null,
     probes: null,
+    telemetry: null,
+    debris: null,
+    lunar: null,
+    launch: null,
   });
 
   useEffect(() => {
@@ -191,6 +195,10 @@ const ProductsSection = () => {
       fusion: "sensor_fusion_datasets",
       sim: "mission_sim_runs",
       probes: "red_team_probes",
+      telemetry: "orbital_telemetry_streams",
+      debris: "space_debris_tracks",
+      lunar: "lunar_surface_maps",
+      launch: "launch_trajectory_runs",
     };
     const keys = Object.keys(tableByKey) as FlagshipKey[];
 
