@@ -55,6 +55,35 @@ const ExperienceSamyam = () => {
     setActiveAgent(null);
   }, []);
 
+  const pickIndianVoice = (preferFemale: boolean): SpeechSynthesisVoice | null => {
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices.length) return null;
+    const indian = voices.filter((v) =>
+      /(^|[-_])(en-IN|hi-IN|hi|IN)\b/i.test(v.lang) ||
+      /(india|hindi|ravi|heera|priya|aditi|kalpana|isha|neerja|rishi)/i.test(v.name)
+    );
+    const pool = indian.length ? indian : voices;
+    const female = pool.find((v) => /female|heera|priya|aditi|isha|neerja|kalpana|swara|google हिन्दी/i.test(v.name));
+    const male = pool.find((v) => /male|ravi|rishi|hemant|google.*india.*male/i.test(v.name)) ||
+                 pool.find((v) => !/female/i.test(v.name));
+    return (preferFemale ? female || male : male || female) || pool[0];
+  };
+
+  const speakWithIndianVoice = (index: number, reply: string) => {
+    const utterance = new SpeechSynthesisUtterance(reply);
+    // Female for agents 0 and 2, Male for agent 1 (alternating)
+    const preferFemale = index % 2 === 0;
+    const voice = pickIndianVoice(preferFemale);
+    if (voice) utterance.voice = voice;
+    utterance.lang = voice?.lang || "en-IN";
+    utterance.rate = 0.95;
+    utterance.pitch = preferFemale ? 1.1 : 0.95;
+    utteranceRef.current = utterance;
+    utterance.onend = () => { updateState(index, "idle"); setActiveAgent(null); };
+    utterance.onerror = () => { updateState(index, "idle"); setActiveAgent(null); };
+    window.speechSynthesis.speak(utterance);
+  };
+
   const processWithAI = async (index: number, message: string, agentType: string) => {
     updateState(index, "processing");
     try {
@@ -65,13 +94,14 @@ const ExperienceSamyam = () => {
       const reply = data?.reply || "Sorry, I couldn't process that.";
       updateReply(index, reply);
       updateState(index, "speaking");
-      const utterance = new SpeechSynthesisUtterance(reply);
-      utterance.rate = 1;
-      utterance.pitch = 1;
-      utteranceRef.current = utterance;
-      utterance.onend = () => { updateState(index, "idle"); setActiveAgent(null); };
-      utterance.onerror = () => { updateState(index, "idle"); setActiveAgent(null); };
-      window.speechSynthesis.speak(utterance);
+      // Ensure voices are loaded (some browsers load async)
+      if (!window.speechSynthesis.getVoices().length) {
+        await new Promise<void>((resolve) => {
+          const timer = setTimeout(() => resolve(), 800);
+          window.speechSynthesis.onvoiceschanged = () => { clearTimeout(timer); resolve(); };
+        });
+      }
+      speakWithIndianVoice(index, reply);
     } catch (err: any) {
       console.error("AI processing error:", err);
       toast({ variant: "destructive", title: "Processing error", description: err?.message || "Failed to get AI response." });
