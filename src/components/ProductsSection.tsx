@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import {
   Orbit,
+  Orbit as OrbitIcon,
   Mountain,
   AlertTriangle,
   Rocket,
@@ -19,6 +20,8 @@ import {
   Radar,
   Target,
   ShieldAlert,
+  Activity,
+  Moon,
 } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { supabase } from "@/integrations/supabase/client";
