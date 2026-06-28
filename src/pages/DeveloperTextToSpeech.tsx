@@ -44,7 +44,17 @@ const DeveloperTextToSpeech = () => {
     if (!inputText.trim()) return;
     setIsPlaying(true);
     const utterance = new SpeechSynthesisUtterance(inputText);
-    utterance.rate = 1;
+    const voices = window.speechSynthesis.getVoices();
+    const voiceMeta = voices.find((v) => {
+      const isIndian = /en-IN|hi-IN|hi/i.test(v.lang) || /india|hindi|ravi|heera|priya|aditi|rishi/i.test(v.name);
+      if (!isIndian) return false;
+      if (selectedVoice === "meera" || selectedVoice === "priya") return /female|heera|priya|aditi|isha/i.test(v.name);
+      return /male|ravi|rishi|hemant/i.test(v.name) || !/female/i.test(v.name);
+    });
+    if (voiceMeta) utterance.voice = voiceMeta;
+    utterance.lang = voiceMeta?.lang || (selectedVoice === "priya" || selectedVoice === "ravi" ? "hi-IN" : "en-IN");
+    utterance.rate = 0.95;
+    utterance.pitch = selectedVoice === "meera" || selectedVoice === "priya" ? 1.1 : 0.95;
     utterance.onend = () => setIsPlaying(false);
     utterance.onerror = () => setIsPlaying(false);
     window.speechSynthesis.speak(utterance);
