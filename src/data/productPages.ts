@@ -34,7 +34,11 @@ export type ProductPage = {
     | "geospatial_labels"
     | "sensor_fusion_datasets"
     | "mission_sim_runs"
-    | "red_team_probes";
+    | "red_team_probes"
+    | "orbital_telemetry_streams"
+    | "space_debris_tracks"
+    | "lunar_surface_maps"
+    | "launch_trajectory_runs";
   metricLabel: string;
   image: string;
   hero: { eyebrow: string; title: string; description: string };
