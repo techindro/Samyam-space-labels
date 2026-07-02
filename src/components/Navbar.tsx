@@ -6,7 +6,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2 } from "lucide-react";
 
-const navLinks = ["Space Tech", "Enterprise"];
+const navLinks: { label: string; href: string }[] = [
+  { label: "Space Tech", href: "/space-tech" },
+  { label: "Enterprise", href: "#" },
+];
 
 import { governmentPages } from "@/data/governmentPages";
 import { productPages } from "@/data/productPages";
@@ -164,8 +167,18 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
             </div>
 
             {navLinks.map((link) => (
-              <a key={link} href="#" className={`text-sm transition-colors ${linkClass}`}>
-                {link}
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => {
+                  if (link.href.startsWith("/")) {
+                    e.preventDefault();
+                    navigate(link.href);
+                  }
+                }}
+                className={`text-sm transition-colors ${linkClass}`}
+              >
+                {link.label}
               </a>
             ))}
 
