@@ -79,11 +79,72 @@ const capabilities = [
   },
 ];
 
+// Real, publicly available mission datasets (official sources)
 const missions = [
-  { label: "Cartosat-3 Telemetry", tag: "EO" },
-  { label: "Chandrayaan-3 Region Maps", tag: "Lunar" },
-  { label: "PSLV C-58 Trajectory Runs", tag: "Launch" },
-  { label: "LEO Debris Catalog", tag: "SSA" },
+  {
+    label: "Sentinel-2 L2A",
+    agency: "ESA Copernicus",
+    tag: "EO / Optical",
+    desc: "10 m multispectral surface reflectance, global 5-day revisit.",
+    href: "https://dataspace.copernicus.eu/explore-data/data-collections/sentinel-data/sentinel-2",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Sentinel-2_pillars.jpg/640px-Sentinel-2_pillars.jpg",
+  },
+  {
+    label: "Landsat 8/9 Collection 2",
+    agency: "USGS / NASA",
+    tag: "EO / Multispectral",
+    desc: "30 m calibrated Level-2 surface reflectance & thermal.",
+    href: "https://www.usgs.gov/landsat-missions/landsat-collection-2-level-2-science-products",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Landsat_9_-_artist_rendering.jpg/640px-Landsat_9_-_artist_rendering.jpg",
+  },
+  {
+    label: "Chandrayaan-2 TMC-2 / OHRC",
+    agency: "ISRO PRADAN",
+    tag: "Lunar",
+    desc: "Terrain Mapping Camera and 25 cm OHRC lunar imagery.",
+    href: "https://pradan.issdc.gov.in/ch2/",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Chandrayaan-2_at_launch_pad.jpg/640px-Chandrayaan-2_at_launch_pad.jpg",
+  },
+  {
+    label: "Space-Track TLE Catalog",
+    agency: "USSF 18th SDS",
+    tag: "SSA / Debris",
+    desc: "Public two-line elements for tracked resident space objects.",
+    href: "https://www.space-track.org/",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Debris-GEO1280.jpg/640px-Debris-GEO1280.jpg",
+  },
+  {
+    label: "SDO AIA / HMI",
+    agency: "NASA GSFC",
+    tag: "Heliophysics",
+    desc: "Full-disk EUV solar imagery and magnetograms, 12 s cadence.",
+    href: "https://sdo.gsfc.nasa.gov/data/",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Solar_Dynamics_Observatory_1.jpg/640px-Solar_Dynamics_Observatory_1.jpg",
+  },
+  {
+    label: "Sentinel-1 GRD SAR",
+    agency: "ESA Copernicus",
+    tag: "SAR",
+    desc: "C-band synthetic aperture radar, all-weather day/night.",
+    href: "https://dataspace.copernicus.eu/explore-data/data-collections/sentinel-data/sentinel-1",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Sentinel-1_pillars.jpg/640px-Sentinel-1_pillars.jpg",
+  },
+  {
+    label: "Bhuvan / RESOURCESAT-2A",
+    agency: "ISRO NRSC",
+    tag: "EO / India",
+    desc: "AWiFS, LISS-III & LISS-IV Indian sub-continent imagery.",
+    href: "https://bhuvan.nrsc.gov.in/",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/PSLV-C36_carrying_Resourcesat-2A_lifts_off_from_Sriharikota.jpg/640px-PSLV-C36_carrying_Resourcesat-2A_lifts_off_from_Sriharikota.jpg",
+  },
+  {
+    label: "MODIS Terra / Aqua",
+    agency: "NASA LAADS",
+    tag: "EO / Climate",
+    desc: "Daily global 250 m–1 km radiance & atmospheric products.",
+    href: "https://ladsweb.modaps.eosdis.nasa.gov/",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Terra_spacecraft_model.png/640px-Terra_spacecraft_model.png",
+  },
 ];
 
 const SpaceTech = () => {
