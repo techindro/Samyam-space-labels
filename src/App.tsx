@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import BookDemo from "./pages/BookDemo";
 import BuildAI from "./pages/BuildAI";
+import SpaceTech from "./pages/SpaceTech";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ResearchPapers from "./pages/ResearchPapers";
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/book-demo" element={<BookDemo />} />
           <Route path="/build-ai" element={<BuildAI />} />
+          <Route path="/space-tech" element={<SpaceTech />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/research/papers" element={<ResearchPapers />} />
