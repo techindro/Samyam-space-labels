@@ -402,7 +402,20 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
             </div>
 
             {navLinks.map((link) => (
-              <a key={link} href="#" className={`block text-sm ${linkClass}`}>{link}</a>
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => {
+                  if (link.href.startsWith("/")) {
+                    e.preventDefault();
+                    setMobileOpen(false);
+                    navigate(link.href);
+                  }
+                }}
+                className={`block text-sm ${linkClass}`}
+              >
+                {link.label}
+              </a>
             ))}
 
 
