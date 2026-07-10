@@ -28,6 +28,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const products = [
   {
@@ -228,6 +230,51 @@ const missions = [
   },
 ];
 
+const MissionImage = ({
+  src,
+  alt,
+  className,
+  containerClassName,
+  fallback = "/placeholder.svg",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  containerClassName?: string;
+  fallback?: string;
+}) => {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [loaded, setLoaded] = useState(false);
+  const [triedFallback, setTriedFallback] = useState(false);
+
+  return (
+    <div className={cn("relative overflow-hidden", containerClassName)}>
+      {!loaded && (
+        <Skeleton className="absolute inset-0 z-10 rounded-none bg-muted" />
+      )}
+      <img
+        src={imgSrc}
+        alt={alt}
+        loading="lazy"
+        className={cn(
+          "w-full h-full object-cover transition-opacity duration-500",
+          loaded ? "opacity-100" : "opacity-0",
+          className
+        )}
+        onLoad={() => setLoaded(true)}
+        onError={() => {
+          if (!triedFallback) {
+            setTriedFallback(true);
+            setImgSrc(fallback);
+          } else {
+            setLoaded(true);
+          }
+        }}
+      />
+    </div>
+  );
+};
+
 const SpaceTech = () => {
   const [open, setOpen] = useState(false);
   const [selectedMission, setSelectedMission] = useState<null | typeof missions[0]>(null);
@@ -377,7 +424,7 @@ const SpaceTech = () => {
       <section className="relative py-20 overflow-hidden">
         <ParallelWebBg />
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-10">
+          <div className="text-center mb-10 sm:mb-12">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3" style={{ fontFamily: "'Comfortaa', cursive" }}>
               live mission datasets
             </p>
@@ -392,45 +439,54 @@ const SpaceTech = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
-            {missions.map((m) => (
-              <button
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 max-w-6xl mx-auto">
+            {missions.map((m, i) => (
+              <motion.div
                 key={m.label}
-                type="button"
-                onClick={() => {
-                  setSelectedMission(m);
-                  setOpen(true);
-                }}
-                className="group text-left glass-card rounded-xl overflow-hidden border border-border/60 hover:border-cosmic-purple/50 transition-all hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-cosmic-purple/40"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                className="h-full"
               >
-                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-                  <img
-                    src={m.img}
-                    alt={`${m.label} — ${m.agency}`}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/placeholder.svg'; }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                  <span className="absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full bg-background/80 backdrop-blur border border-border text-foreground">
-                    {m.tag}
-                  </span>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-display text-sm font-semibold mb-1 group-hover:text-cosmic-purple-glow transition-colors">
-                    {m.label}
-                  </h3>
-                  <p className="text-[11px] uppercase tracking-wider text-cosmic-teal mb-2">{m.agency}</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mb-3">{m.desc}</p>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-cosmic-purple-glow">
-                    <Info className="h-3 w-3" /> View dataset details
-                  </span>
-                </div>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedMission(m);
+                    setOpen(true);
+                  }}
+                  className="group flex flex-col h-full w-full text-left glass-card rounded-xl overflow-hidden border border-border/60 hover:border-cosmic-purple/50 transition-all hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-cosmic-purple/40"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                    <MissionImage
+                      src={m.img}
+                      alt={`${m.label} — ${m.agency}`}
+                      containerClassName="w-full h-full"
+                      className="group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                    <span className="absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full bg-background/80 backdrop-blur border border-border text-foreground">
+                      {m.tag}
+                    </span>
+                  </div>
+                  <div className="flex flex-col flex-1 p-3 sm:p-4">
+                    <h3 className="font-display text-sm font-semibold mb-1 group-hover:text-cosmic-purple-glow transition-colors">
+                      {m.label}
+                    </h3>
+                    <p className="text-[11px] uppercase tracking-wider text-cosmic-teal mb-2">{m.agency}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 flex-1 mb-3">
+                      {m.desc}
+                    </p>
+                    <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-cosmic-purple-glow">
+                      <Info className="h-3 w-3" /> View dataset details
+                    </span>
+                  </div>
+                </button>
+              </motion.div>
             ))}
           </div>
 
-          <p className="text-center text-xs text-muted-foreground mt-6">
+          <p className="text-center text-xs text-muted-foreground mt-6 sm:mt-8">
             Imagery © respective agencies (ESA, NASA, USGS, ISRO). Links point to official public data portals.
           </p>
         </div>
@@ -438,22 +494,21 @@ const SpaceTech = () => {
 
       <Dialog open={open} onOpenChange={setOpen}>
         {selectedMission && (
-          <DialogContent className="max-w-2xl p-0 overflow-hidden border border-border/60 bg-card">
+          <DialogContent className="max-w-2xl w-[calc(100%-2rem)] p-0 overflow-hidden border border-border/60 bg-card">
             <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-              <img
+              <MissionImage
                 src={selectedMission.img}
                 alt={`${selectedMission.label} — ${selectedMission.agency}`}
-                className="w-full h-full object-cover"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/placeholder.svg'; }}
+                containerClassName="w-full h-full"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
               <span className="absolute top-3 left-3 text-[10px] px-2.5 py-1 rounded-full bg-background/80 backdrop-blur border border-border text-foreground">
                 {selectedMission.tag}
               </span>
             </div>
-            <div className="p-6 pt-0">
-              <DialogHeader className="text-left mt-[-3rem] relative z-10">
-                <DialogTitle className="font-display text-2xl sm:text-3xl font-bold text-foreground">
+            <div className="p-5 sm:p-6 pt-0">
+              <DialogHeader className="text-left mt-[-2.5rem] sm:mt-[-3rem] relative z-10">
+                <DialogTitle className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">
                   {selectedMission.label}
                 </DialogTitle>
                 <DialogDescription className="text-xs uppercase tracking-wider text-cosmic-teal">
