@@ -444,7 +444,7 @@ const SpaceTech = () => {
                 src={selectedMission.img}
                 alt={`${selectedMission.label} — ${selectedMission.agency}`}
                 className="w-full h-full object-cover"
-                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/placeholder.svg'; }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
               <span className="absolute top-3 left-3 text-[10px] px-2.5 py-1 rounded-full bg-background/80 backdrop-blur border border-border text-foreground">
