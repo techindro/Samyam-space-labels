@@ -7,14 +7,14 @@ import SatelliteScene from "@/components/SatelliteScene";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden star-field">
+    <section className="relative min-h-[85vh] py-16 sm:py-20 lg:py-24 flex items-center justify-center overflow-hidden star-field">
       <ParallelWebBg />
       {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-cosmic-purple/10 via-transparent to-background pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cosmic-purple/5 rounded-full blur-[120px]" />
-      <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-cosmic-teal/5 rounded-full blur-[100px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,90vw)] h-[min(800px,90vw)] bg-cosmic-purple/5 rounded-full blur-[120px]" />
+      <div className="absolute top-1/3 right-1/4 w-[min(400px,60vw)] h-[min(400px,60vw)] bg-cosmic-teal/5 rounded-full blur-[100px]" />
 
-      <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 sm:gap-12 items-center relative z-10">
         {/* Text */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -26,7 +26,7 @@ const HeroSection = () => {
             <Sparkles className="h-4 w-4 text-cosmic-teal" />
             Building AI for space & defense
           </div>
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+          <h1 className="font-display text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6">
             Breakthrough AI
             <br />
             <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
