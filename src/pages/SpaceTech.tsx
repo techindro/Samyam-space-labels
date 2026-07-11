@@ -16,6 +16,9 @@ import {
   Cpu,
   ExternalLink,
   Info,
+  Camera,
+  Prism,
+  Layers,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
