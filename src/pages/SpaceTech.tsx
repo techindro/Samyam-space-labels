@@ -450,6 +450,67 @@ const SpaceTech = () => {
         </div>
       </section>
 
+      {/* Multimodal capabilities */}
+      <section className="relative py-24 overflow-hidden">
+        <ParallelWebBg />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-teal/5 to-transparent pointer-events-none" />
+        <div className="container mx-auto px-4 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-3" style={{ fontFamily: "'Comfortaa', cursive" }}>
+              multimodal labeling
+            </p>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+              Label every{" "}
+              <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
+                sensor modality
+              </span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              From single-band optical to fused multi-sensor stacks — four labeling lanes built for satellite and aerial workflows.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {multimodalCapabilities.map((m, i) => (
+              <motion.div
+                key={m.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="glass-card h-full rounded-2xl border border-border/40 bg-card/40 backdrop-blur-sm p-6 hover:border-cosmic-teal/40 hover:bg-card/60 transition-all duration-300 flex flex-col"
+              >
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cosmic-purple/20 to-cosmic-teal/20 flex items-center justify-center mb-5">
+                  <m.icon className="w-6 h-6 text-cosmic-teal" />
+                </div>
+                <h3 className="font-display text-lg font-semibold text-foreground mb-2">
+                  {m.title}
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-5 flex-1">
+                  {m.benefit}
+                </p>
+                <div className="pt-4 border-t border-border/40">
+                  <p className="text-xs font-semibold text-foreground mb-2">Use cases</p>
+                  <ul className="space-y-1.5">
+                    {m.useCases.map((use) => (
+                      <li key={use} className="flex items-start gap-2 text-xs text-muted-foreground">
+                        <span className="mt-1 h-1 w-1 rounded-full bg-cosmic-teal flex-shrink-0" />
+                        {use}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Missions strip */}
       <section className="relative py-20 overflow-hidden">
         <ParallelWebBg />
