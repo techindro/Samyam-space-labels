@@ -94,6 +94,33 @@ const capabilities = [
   },
 ];
 
+const multimodalCapabilities = [
+  {
+    icon: Camera,
+    title: "Optical Imagery",
+    benefit: "Sub-pixel annotation across RGB, multispectral and high-resolution EO scenes.",
+    useCases: ["Land-use mapping", "Infrastructure monitoring", "Disaster damage assessment"],
+  },
+  {
+    icon: Radar,
+    title: "SAR",
+    benefit: "All-weather, day/night labeling that cuts through clouds and darkness.",
+    useCases: ["Maritime surveillance", "Flood extent mapping", "Change detection"],
+  },
+  {
+    icon: Palette,
+    title: "Hyperspectral",
+    benefit: "Material and spectral signature classification from tens to hundreds of narrow bands.",
+    useCases: ["Crop health analysis", "Mineral exploration", "Anomaly detection"],
+  },
+  {
+    icon: Layers,
+    title: "Sensor Fusion",
+    benefit: "Time-aligned, multi-source datasets that combine EO, SAR, IR and telemetry.",
+    useCases: ["Multi-intelligence fusion", "Autonomy validation", "Mission simulation"],
+  },
+];
+
 // Real, publicly available mission datasets (official sources)
 const missions = [
   {
