@@ -17,7 +17,7 @@ import {
   ExternalLink,
   Info,
   Camera,
-  Prism,
+  Palette,
   Layers,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
