@@ -338,6 +338,59 @@ const Learn = () => {
           </div>
         </section>
 
+        {/* FAQ */}
+        <section className="relative py-24 overflow-hidden border-t border-border/30">
+          <div className="container mx-auto px-4 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-14"
+            >
+              <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4" style={{ fontFamily: "'Comfortaa', cursive" }}>
+                FAQ
+              </p>
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-5">
+                Common Questions
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Quick answers about labeling, delivery and quality assurance.
+              </p>
+            </motion.div>
+
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto"
+            >
+              {faqs.map((faq) => (
+                <motion.div
+                  key={faq.question}
+                  variants={itemVariants}
+                  className="glass-card rounded-xl p-6"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-cosmic-purple/10 flex items-center justify-center mt-0.5">
+                      <HelpCircle className="w-4 h-4 text-cosmic-purple-glow" />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-base font-semibold text-foreground mb-2">
+                        {faq.question}
+                      </h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
         {/* Next steps */}
         <section className="relative py-24 overflow-hidden">
           <ParallelWebBg />
