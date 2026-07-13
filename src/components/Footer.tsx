@@ -1,11 +1,36 @@
 import { Linkedin, Instagram, Facebook, Youtube } from "lucide-react";
+import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
-const footerLinks = {
-  Products: ["Orbital Data Labeling", "Terrain Classification", "Anomaly Detection", "Mission Analytics", "Space Data Engine"],
-  Resources: ["Documentation", "API Reference", "Case Studies", "Blog", "Webinars", "Learn"],
-  Company: ["About", "Careers", "Press", "Partners", "Contact"],
-  Legal: ["Privacy Policy", "Terms of Service", "Security", "Cookie Policy"],
+const footerLinks: Record<string, { label: string; href: string }[]> = {
+  Products: [
+    { label: "Orbital Data Labeling", href: "#" },
+    { label: "Terrain Classification", href: "#" },
+    { label: "Anomaly Detection", href: "#" },
+    { label: "Mission Analytics", href: "#" },
+    { label: "Space Data Engine", href: "#" },
+  ],
+  Resources: [
+    { label: "Documentation", href: "#" },
+    { label: "API Reference", href: "#" },
+    { label: "Case Studies", href: "#" },
+    { label: "Blog", href: "#" },
+    { label: "Webinars", href: "#" },
+    { label: "Learn", href: "/learn" },
+  ],
+  Company: [
+    { label: "About", href: "#" },
+    { label: "Careers", href: "#" },
+    { label: "Press", href: "#" },
+    { label: "Partners", href: "#" },
+    { label: "Contact", href: "#" },
+  ],
+  Legal: [
+    { label: "Privacy Policy", href: "#" },
+    { label: "Terms of Service", href: "#" },
+    { label: "Security", href: "#" },
+    { label: "Cookie Policy", href: "#" },
+  ],
 };
 
 const Footer = () => {
@@ -29,23 +54,23 @@ const Footer = () => {
             <div key={category}>
               <h4 className="font-display text-sm font-semibold mb-4 text-foreground">{category}</h4>
               <ul className="space-y-2">
-              {links.map((link) => (
-                <li key={link.label}>
-                  {link.href === "#" ? (
-                    <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                      {link.label}
-                    </span>
-                  ) : link.href.startsWith("/") ? (
-                    <Link to={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      {link.label}
-                    </Link>
-                  ) : (
-                    <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      {link.label}
-                    </a>
-                  )}
-                </li>
-              ))}
+                {links.map((link) => (
+                  <li key={link.label}>
+                    {link.href === "#" ? (
+                      <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                        {link.label}
+                      </span>
+                    ) : link.href.startsWith("/") ? (
+                      <Link to={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {link.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
               </ul>
             </div>
           ))}
