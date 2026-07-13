@@ -3,7 +3,7 @@ import ParallelWebBg from "@/components/ParallelWebBg";
 
 const footerLinks = {
   Products: ["Orbital Data Labeling", "Terrain Classification", "Anomaly Detection", "Mission Analytics", "Space Data Engine"],
-  Resources: ["Documentation", "API Reference", "Case Studies", "Blog", "Webinars"],
+  Resources: ["Documentation", "API Reference", "Case Studies", "Blog", "Webinars", "Learn"],
   Company: ["About", "Careers", "Press", "Partners", "Contact"],
   Legal: ["Privacy Policy", "Terms of Service", "Security", "Cookie Policy"],
 };
