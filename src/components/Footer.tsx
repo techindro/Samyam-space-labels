@@ -29,13 +29,23 @@ const Footer = () => {
             <div key={category}>
               <h4 className="font-display text-sm font-semibold mb-4 text-foreground">{category}</h4>
               <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                      {link}
+              {links.map((link) => (
+                <li key={link.label}>
+                  {link.href === "#" ? (
+                    <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                      {link.label}
+                    </span>
+                  ) : link.href.startsWith("/") ? (
+                    <Link to={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                      {link.label}
                     </a>
-                  </li>
-                ))}
+                  )}
+                </li>
+              ))}
               </ul>
             </div>
           ))}
