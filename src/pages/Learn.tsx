@@ -101,6 +101,29 @@ const nextSteps = [
   },
 ];
 
+const faqs = [
+  {
+    question: "How does the satellite data labeling process work?",
+    answer:
+      "You upload raw imagery, SAR, hyperspectral cubes or fused sensor streams. Our platform converts them into tasks, applies AI-assisted annotation tools, routes edge cases to expert reviewers, and exports training-ready labels in standard formats like COCO, GeoJSON and YOLO.",
+  },
+  {
+    question: "What is the typical turnaround time?",
+    answer:
+      "Turnaround depends on volume and complexity. Small batches often finish in 24–48 hours. Large-scale missions with custom ontologies are scoped into milestones so you receive validated labels continuously rather than all at once.",
+  },
+  {
+    question: "How does Samyam ensure data quality?",
+    answer:
+      "Every label passes automated checks for topology, class consistency and coordinate alignment, followed by human review for ambiguous cases. We measure inter-annotator agreement, track IoU/mAP against ground truth, and route low-confidence samples back for re-labeling.",
+  },
+  {
+    question: "Can we bring our own labeling team and tools?",
+    answer:
+      "Yes. Samyam supports hybrid workflows: your annotators can work inside our tooling while reviewers and ML engineers monitor progress, enforce schemas and export directly to your training pipelines.",
+  },
+];
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
