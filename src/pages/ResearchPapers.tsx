@@ -3,7 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
-import { FileText, Calendar, Tag, ExternalLink } from "lucide-react";
+import { FileText, Calendar, Tag, ExternalLink, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ResearchPapers = () => {
   const { data: papers, isLoading } = useQuery({
