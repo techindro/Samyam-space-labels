@@ -13,6 +13,7 @@ import Learn from "./pages/Learn";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ResearchPapers from "./pages/ResearchPapers";
+import SamyamLmPaper from "./pages/SamyamLmPaper";
 import ResearchBlog from "./pages/ResearchBlog";
 import FrontierLeaderboards from "./pages/FrontierLeaderboards";
 import PreferenceLeaderboard from "./pages/PreferenceLeaderboard";
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/research/papers" element={<ResearchPapers />} />
+          <Route path="/research/papers/samyamlm" element={<SamyamLmPaper />} />
           <Route path="/research/blog" element={<ResearchBlog />} />
           <Route path="/research/frontier-leaderboards" element={<FrontierLeaderboards />} />
           <Route path="/research/preference-leaderboard" element={<PreferenceLeaderboard />} />
