@@ -338,6 +338,60 @@ const Learn = () => {
           </div>
         </section>
 
+        {/* Research paper spotlight */}
+        <section className="relative py-24 overflow-hidden border-t border-border/30">
+          <ParallelWebBg />
+          <div className="absolute inset-0 bg-gradient-to-b from-cosmic-purple/5 via-transparent to-transparent pointer-events-none" />
+          <div className="container mx-auto px-4 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="max-w-5xl mx-auto glass-card rounded-2xl p-6 sm:p-10"
+            >
+              <div className="grid lg:grid-cols-[1.3fr_1fr] gap-8 items-center">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cosmic-purple/10 border border-cosmic-purple/20 text-cosmic-purple-glow text-xs tracking-widest uppercase mb-4">
+                    <BookOpen className="w-3.5 h-3.5" /> Research behind the platform
+                  </div>
+                  <h2 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-3 leading-snug">
+                    SamyamLM: satellite-based labeling for Indian-language AI
+                  </h2>
+                  <p className="text-muted-foreground text-sm sm:text-base leading-relaxed mb-6">
+                    Our research paper details how Samyam anchors Hindi and Indic-language datasets in satellite imagery and geospatial context — powering LLMs, vision-language models and autonomous driving stacks trained on Indian data.
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <Button asChild className="rounded-full bg-foreground text-background hover:bg-foreground/90">
+                      <Link to="/research/papers/samyamlm">
+                        Read the paper <ArrowRight className="w-4 h-4 ml-2" />
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="rounded-full">
+                      <a href="https://github.com/techindro/SamyamLm-Data-Engine" target="_blank" rel="noopener noreferrer">
+                        <Github className="w-4 h-4 mr-2" /> Data Engine
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+                <ul className="space-y-3">
+                  {[
+                    "Satellite imagery + geospatial streams as primary inputs",
+                    "Hindi and Indian languages as first-class modalities",
+                    "Benchmarked on Hindi VQA, scene understanding & driving",
+                    "Layered QA — automated checks plus expert review",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-muted-foreground text-sm">
+                      <CheckCircle2 className="w-5 h-5 text-cosmic-teal shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
         {/* FAQ */}
         <section className="relative py-24 overflow-hidden border-t border-border/30">
           <div className="container mx-auto px-4 relative z-10">
