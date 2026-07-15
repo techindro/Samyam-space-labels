@@ -5,6 +5,7 @@ import SolutionsSection from "@/components/SolutionsSection";
 import AgenticSection from "@/components/AgenticSection";
 import ProductsSection from "@/components/ProductsSection";
 import LearnAISection from "@/components/LearnAISection";
+import FeaturedResearch from "@/components/FeaturedResearch";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CaseStudiesSection from "@/components/CaseStudiesSection";
 import ComplianceSection from "@/components/ComplianceSection";
@@ -23,6 +24,7 @@ const Index = () => {
         <ScrollReveal><AgenticSection /></ScrollReveal>
         <ScrollReveal><ProductsSection /></ScrollReveal>
         <ScrollReveal><LearnAISection /></ScrollReveal>
+        <ScrollReveal><FeaturedResearch /></ScrollReveal>
         <ScrollReveal><TestimonialsSection /></ScrollReveal>
         <ScrollReveal><CaseStudiesSection /></ScrollReveal>
         <ScrollReveal><ComplianceSection /></ScrollReveal>

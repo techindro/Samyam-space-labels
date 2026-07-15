@@ -3,7 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
-import { FileText, Calendar, Tag, ExternalLink } from "lucide-react";
+import { FileText, Calendar, Tag, ExternalLink, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ResearchPapers = () => {
   const { data: papers, isLoading } = useQuery({
@@ -67,9 +68,17 @@ const ResearchPapers = () => {
                             ))}
                           </div>
                         )}
+                        {paper.title?.toLowerCase().includes("samyamlm") && (
+                          <Link
+                            to="/research/papers/samyamlm"
+                            className="inline-flex items-center gap-1 mt-4 text-sm text-cosmic-teal-glow hover:text-cosmic-teal transition-colors"
+                          >
+                            Read full paper <ArrowRight className="h-3.5 w-3.5" />
+                          </Link>
+                        )}
                       </div>
-                      {paper.pdf_url && (
-                        <a href={paper.pdf_url} className="shrink-0 p-2 rounded-lg bg-secondary hover:bg-secondary/80 text-muted-foreground transition-colors">
+                      {paper.pdf_url && paper.pdf_url !== "#" && (
+                        <a href={paper.pdf_url} target="_blank" rel="noopener noreferrer" className="shrink-0 p-2 rounded-lg bg-secondary hover:bg-secondary/80 text-muted-foreground transition-colors">
                           <ExternalLink className="h-4 w-4" />
                         </a>
                       )}
