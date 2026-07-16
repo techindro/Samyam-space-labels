@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,13 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Lock, Mail, User, KeyRound, ArrowLeft } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
+
+const safeNext = (raw: string | null): string | null => {
+  if (!raw) return null;
+  // same-origin relative path only
+  if (!raw.startsWith("/") || raw.startsWith("//")) return null;
+  return raw;
+};
 
 type AuthMode = "login" | "signup" | "otp-request" | "otp-verify";
 
@@ -22,6 +29,9 @@ const Auth = () => {
   const [captcha, setCaptcha] = useState(generateCaptcha());
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nextPath = safeNext(searchParams.get("next"));
+  const goNext = () => navigate(nextPath ?? "/dashboard");
   const { toast } = useToast();
 
   function generateCaptcha() {
@@ -52,7 +62,7 @@ const Auth = () => {
       toast({ title: "Login failed", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Welcome back!" });
-      navigate("/dashboard");
+      goNext();
     }
   };
 
@@ -103,7 +113,7 @@ const Auth = () => {
       toast({ title: "Verification failed", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Welcome!" });
-      navigate("/dashboard");
+      goNext();
     }
   };
 
