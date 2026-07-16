@@ -28,6 +28,7 @@ import DeveloperSpeechToText from "./pages/DeveloperSpeechToText";
 import DeveloperDocumentDigitisation from "./pages/DeveloperDocumentDigitisation";
 import GovernmentPage from "./pages/GovernmentPage";
 import ProductPage from "./pages/ProductPage";
+import OAuthConsent from "./pages/OAuthConsent";
 import AutoScrollReveal from "./components/AutoScrollReveal";
 
 const queryClient = new QueryClient();
@@ -62,6 +63,7 @@ const App = () => (
           <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
           <Route path="/government/:slug" element={<GovernmentPage />} />
           <Route path="/products/:slug" element={<ProductPage />} />
+          <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
