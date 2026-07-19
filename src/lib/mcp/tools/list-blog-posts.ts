@@ -23,8 +23,8 @@ export default defineTool({
     }
     const { data, error } = await supabaseForUser(ctx)
       .from("research_blog_posts")
-      .select("id, title, excerpt, authors, tags, published_date, slug")
-      .order("published_date", { ascending: false })
+      .select("id, title, excerpt, author, published_at, slug")
+      .order("published_at", { ascending: false })
       .limit(limit ?? 20);
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     return {

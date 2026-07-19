@@ -19,6 +19,11 @@ export default defineConfig(({ mode }) => ({
     strictPort: true
   },
   plugins: [react(), mode === "development" && componentTagger(), mcpPlugin()].filter(Boolean),
+  optimizeDeps: {
+    esbuildOptions: {
+      sourcemap: false,
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
