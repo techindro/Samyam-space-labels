@@ -30,6 +30,7 @@ import GovernmentPage from "./pages/GovernmentPage";
 import ProductPage from "./pages/ProductPage";
 import OAuthConsent from "./pages/OAuthConsent";
 import AutoScrollReveal from "./components/AutoScrollReveal";
+import AnnotationTool from "./pages/AnnotationTool";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,10 @@ const App = () => (
           <Route path="/government/:slug" element={<GovernmentPage />} />
           <Route path="/products/:slug" element={<ProductPage />} />
           <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
+          {/* Annotation Tool — demo mode (no auth) */}
+          <Route path="/annotate/demo" element={<AnnotationTool />} />
+          {/* Annotation Tool — task-specific (protected) */}
+          <Route path="/annotate/:taskId" element={<ProtectedRoute><AnnotationTool /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
