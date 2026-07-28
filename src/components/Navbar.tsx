@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
-import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2 } from "lucide-react";
+import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2, Tag, Square, Hexagon } from "lucide-react";
 
 const navLinks: { label: string; href: string }[] = [
   { label: "Space Tech", href: "/space-tech" },
@@ -161,6 +161,34 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                         </div>
                       </a>
                     ))}
+                  </div>
+
+                  {/* ── Annotation Tool CTA ── */}
+                  <div className="mt-3 pt-3 border-t border-border/40">
+                    <a
+                      href="/annotate/demo"
+                      onClick={(e) => { e.preventDefault(); setProductsOpen(false); navigate("/annotate/demo"); }}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
+                        isDark
+                          ? 'bg-cosmic-purple/15 hover:bg-cosmic-purple/25 text-white border border-cosmic-purple/20 hover:border-cosmic-purple/40'
+                          : 'bg-cosmic-purple/5 hover:bg-cosmic-purple/10 text-foreground border border-cosmic-purple/20 hover:border-cosmic-purple/40'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1 text-cosmic-purple shrink-0">
+                        <Square size={13} />
+                        <Hexagon size={13} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold">Annotation Workspace</span>
+                          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-cosmic-purple/20 text-cosmic-purple font-bold">NEW</span>
+                        </div>
+                        <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>
+                          BBox · Polygon · Undo/Redo · COCO Export
+                        </span>
+                      </div>
+                      <ArrowRight size={14} className="text-cosmic-purple opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
+                    </a>
                   </div>
                 </div>
               )}

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, Loader2, X, Database, BarChart3, Search } from "lucide-react";
+import { Mic, MicOff, Volume2, Loader2, X, Database, BarChart3, Search, ArrowRight } from "lucide-react";
 import { useState, useCallback, useRef } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -9,16 +10,19 @@ const agents = [
     title: "Data Annotation",
     description: "Label & annotate datasets for space and defense AI models",
     icon: Database,
+    href: "/annotate/demo",
   },
   {
     title: "Model Evaluation",
     description: "Benchmark and evaluate AI model performance metrics",
     icon: BarChart3,
+    href: "/research/frontier-leaderboards",
   },
   {
     title: "Dataset Query",
     description: "Explore and search curated training datasets",
     icon: Search,
+    href: "/space-tech",
   },
 ];
 
@@ -236,11 +240,26 @@ const ExperienceSamyam = () => {
 
                   {/* Title & description */}
                   <h3 className="text-lg font-semibold font-display mb-2">{agent.title}</h3>
-                  <p className={`text-sm mb-6 leading-relaxed ${
+                  <p className={`text-sm mb-3 leading-relaxed ${
                     isActive ? "text-primary-foreground/70" : "text-muted-foreground"
                   }`}>
                     {agent.description}
                   </p>
+
+                  {/* Quick-access link */}
+                  {agent.href && (
+                    <Link
+                      to={agent.href}
+                      className={`inline-flex items-center gap-1 text-xs font-medium mb-4 transition-colors ${
+                        isActive
+                          ? "text-primary-foreground/60 hover:text-primary-foreground"
+                          : "text-cosmic-purple hover:text-cosmic-purple/80"
+                      }`}
+                    >
+                      {i === 0 ? "Open Annotation Tool" : "Explore"}
+                      <ArrowRight size={11} />
+                    </Link>
+                  )}
 
                   {/* Spacer */}
                   <div className="flex-1" />
