@@ -26,7 +26,7 @@ const cases = [
     desc: "Helping an emerging constellation operator build AI-driven health checks across their initial fleet of LEO satellites.",
     image: caseMonitoring,
     stats: "Early-stage deployment",
-    href: "/research/labs",
+    href: "/case-studies/machine-learning",
     problem:
       "LEO satellite constellations generate gigabytes of raw telemetry and optical sensor logs every second. Identifying thermal anomalies, solar panel degradation, and thruster misfires manually leads to slow response times and orbital decay risk.",
     approach:
@@ -46,7 +46,7 @@ const cases = [
     desc: "Building labeled datasets of orbital objects to train detection models for space situational awareness applications.",
     image: caseDebris,
     stats: "Custom annotation pipeline",
-    href: "/research/papers",
+    href: "/case-studies/orbital-debris",
     problem:
       "Small orbital debris fragments moving at 7.8 km/s pose catastrophic collision risks to space assets. Radar and optical tracking data suffer from high noise, sensor clutter, and unpredictable solar illumination.",
     approach:
@@ -66,7 +66,7 @@ const cases = [
     desc: "Delivering high-quality labeled satellite imagery for earth observation research with consistent annotation standards.",
     image: caseLabeled,
     stats: "100K+ images labeled",
-    href: "/space-tech",
+    href: "/case-studies/satellite-annotation",
     problem:
       "Earth observation models require multi-spectral polygon segmentation across varying resolution bands (5m to 30m) covering diverse Indian terrain, monsoon conditions, and urban density.",
     approach:
