@@ -16,7 +16,11 @@ export default defineConfig(({ mode }) => ({
 
   preview: {
     host: true,
-    strictPort: true
+    strictPort: true,
+    allowedHosts: [
+      "samyam-space-labels-1.onrender.com",
+      ".onrender.com"
+    ]
   },
   plugins: [react(), mode === "development" && componentTagger(), mcpPlugin()].filter(Boolean),
   optimizeDeps: {
