@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 
 const COOKIE_KEY = "samyam_cookie_consent";
 
-type ConsentState = "accepted" | "declined" | null;
-
 const CookieConsent = () => {
   const [visible, setVisible] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);

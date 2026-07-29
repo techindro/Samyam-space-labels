@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2, Tag, Square, Hexagon } from "lucide-react";
+import { governmentPages } from "@/data/governmentPages";
+import { productPages } from "@/data/productPages";
 
 const navLinks: { label: string; href: string }[] = [
   { label: "Space Tech", href: "/space-tech" },
   { label: "Enterprise", href: "#" },
 ];
-
-import { governmentPages } from "@/data/governmentPages";
-import { productPages } from "@/data/productPages";
 
 const governmentLinks = governmentPages.map((p) => ({
   label: p.label,
