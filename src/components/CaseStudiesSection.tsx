@@ -62,34 +62,39 @@ const CaseStudiesSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="glass-card rounded-xl overflow-hidden group cursor-pointer hover:border-cosmic-teal/40 transition-all block"
             >
-              <div className="h-44 relative overflow-hidden">
-                <img
-                  src={c.image}
-                  alt={c.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
-                <span className="absolute bottom-3 left-4 text-xs font-semibold text-cosmic-teal bg-background/70 px-2 py-1 rounded">
-                  {c.stats}
-                </span>
-              </div>
-              <div className="p-6">
-                <Badge variant="outline" className="mb-3 text-cosmic-teal border-cosmic-teal/30 text-xs">
-                  {c.tag}
-                </Badge>
-                <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-cosmic-teal transition-colors">
-                  {c.title}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-4">{c.desc}</p>
-                <Link
-                  to={c.href}
-                  className="text-cosmic-teal text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all"
-                >
-                  Read more <ArrowRight className="h-3 w-3" />
-                </Link>
-              </div>
+              <Link
+                to={c.href}
+                className="glass-card rounded-xl overflow-hidden group cursor-pointer hover:border-cosmic-teal/40 transition-all block h-full flex flex-col justify-between"
+              >
+                <div>
+                  <div className="h-44 relative overflow-hidden">
+                    <img
+                      src={c.image}
+                      alt={c.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+                    <span className="absolute bottom-3 left-4 text-xs font-semibold text-cosmic-teal bg-background/70 px-2 py-1 rounded">
+                      {c.stats}
+                    </span>
+                  </div>
+                  <div className="p-6">
+                    <Badge variant="outline" className="mb-3 text-cosmic-teal border-cosmic-teal/30 text-xs">
+                      {c.tag}
+                    </Badge>
+                    <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-cosmic-teal transition-colors">
+                      {c.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm mb-4 leading-relaxed">{c.desc}</p>
+                  </div>
+                </div>
+                <div className="p-6 pt-0">
+                  <span className="text-cosmic-teal text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Read more <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
