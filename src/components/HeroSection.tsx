@@ -38,19 +38,12 @@ const HeroSection = () => {
             designed for space agencies, defense teams, and enterprises working on 
             next-generation applications.
           </p>
-          <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center lg:justify-start">
-            <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0 text-base px-6">
-              <Link to="/annotate/demo">
-                Try Live Labeling Demo <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0 text-base px-8">
+              <Link to="/book-demo">Book a Demo <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary/50 text-base px-6">
-              <Link to="/build-ai">
-                Build AI <Sparkles className="h-4 w-4 ml-2 text-cosmic-teal" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="ghost" className="text-muted-foreground hover:text-foreground text-base px-5">
-              <Link to="/book-demo">Book a Demo</Link>
+            <Button asChild size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary/50 text-base px-8">
+              <Link to="/build-ai">Build AI <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
           </div>
         </motion.div>
