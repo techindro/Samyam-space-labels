@@ -88,7 +88,7 @@ const ExperienceSamyam = () => {
     window.speechSynthesis.speak(utterance);
   };
 
-  const processWithAI = async (index: number, message: string, agentType: string) => {
+  const processWithAI = useCallback(async (index: number, message: string, agentType: string) => {
     updateState(index, "processing");
     try {
       const { data, error } = await supabase.functions.invoke("voice-agent", {
@@ -112,7 +112,8 @@ const ExperienceSamyam = () => {
       updateState(index, "idle");
       setActiveAgent(null);
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeAgent, stopEverything, toast]);
 
   const handleSpeak = useCallback(async (index: number) => {
     if (activeAgent === index) { stopEverything(index); return; }
@@ -165,7 +166,7 @@ const ExperienceSamyam = () => {
       updateState(index, "idle");
       setActiveAgent(null);
     }
-  }, [activeAgent, stopEverything, toast]);
+  }, [activeAgent, stopEverything, toast, processWithAI]);
 
   const getButtonLabel = (state: AgentState) => {
     switch (state) {

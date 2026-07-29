@@ -142,6 +142,7 @@ export default function AnnotationTool() {
           state.setAnnotations(result.annotations as Annotation[]);
         }
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
 
   // ── Keyboard shortcuts ──
@@ -156,7 +157,6 @@ export default function AnnotationTool() {
         if ((e.ctrlKey || e.metaKey) && e.key === "z") { e.preventDefault(); state.undo(); }
         if ((e.ctrlKey || e.metaKey) && e.key === "y") { e.preventDefault(); state.redo(); }
       }
-      if ((e.ctrlKey || e.metaKey) && e.key === "s") { e.preventDefault(); handleSave(); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
