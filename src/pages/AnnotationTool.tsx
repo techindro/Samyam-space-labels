@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAnnotationState, DEFAULT_LABELS, type Annotation } from "@/components/annotation/useAnnotationState";
+import { samyamApi } from "@/lib/samyamApi";
 import AnnotationCanvas   from "@/components/annotation/AnnotationCanvas";
 import AnnotationToolbar  from "@/components/annotation/AnnotationToolbar";
 import LabelPanel         from "@/components/annotation/LabelPanel";
@@ -56,7 +57,30 @@ export default function AnnotationTool() {
   // Annotation state for Vision
   const state = useAnnotationState();
 
-  // ── Audio Modality State ──
+  const [runningAi, setRunningAi] = useState(false);
+
+  const handleAiPrelabel = useCallback(async () => {
+    setRunningAi(true);
+    toast({ title: "🤖 Running CLIP AI Pre-labeling...", description: "Querying FastAPI / PyTorch Vision-Language Engine" });
+    const candidateLabels = state.labels.map(l => l.name);
+    const results = await samyamApi.runClipPrelabel(imageUrl, candidateLabels);
+    setRunningAi(false);
+
+    results.forEach((r) => {
+      const targetLabel = state.labels.find(l => l.name === r.label) || state.activeLabel;
+      state.addAnnotation({
+        id: `ai-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        type: "bbox",
+        label: targetLabel.name,
+        color: targetLabel.color,
+        bbox: r.bbox,
+      });
+    });
+
+    toast({ title: "✓ AI Pre-labeling Complete!", description: `Generated ${results.length} bounding box annotations via CLIP engine.` });
+  }, [imageUrl, state, toast]);
+
+  // ── Actions Header Buttons ──
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const [audioDuration, setAudioDuration] = useState(15.4);
@@ -279,6 +303,19 @@ export default function AnnotationTool() {
             <span>क/A</span>
             <span className="hidden sm:inline">Hindi Keyboard</span>
           </Button>
+          {/* AI Pre-label Button */}
+          {activeModality === "vision" && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleAiPrelabel}
+              disabled={runningAi}
+              className="h-7 px-2.5 text-xs border-cosmic-purple/60 text-cosmic-purple hover:bg-cosmic-purple/20 gap-1 font-semibold"
+            >
+              {runningAi ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              <span>AI Pre-label</span>
+            </Button>
+          )}
 
           {activeModality === "vision" && (
             <button title="Change image URL" onClick={() => setShowUrlBox(v => !v)} className="text-white/40 hover:text-white transition-colors mr-2">
