@@ -25,6 +25,15 @@ const statusColors: Record<string, string> = {
 const DEMO_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/ISS-44_Jeff_Williams_takes_a_nadir-looking_view_of_Earth.jpg/1280px-ISS-44_Jeff_Williams_takes_a_nadir-looking_view_of_Earth.jpg";
 const DEMO_AUDIO = "https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg";
 
+const DEVANAGARI_CHARS = [
+  "क", "ख", "ग", "घ", "ङ", "च", "छ", "ज", "झ", "ञ",
+  "ट", "ठ", "ड", "ढ", "ण", "त", "थ", "द", "ध", "न",
+  "प", "फ", "ब", "भ", "म", "य", "र", "ल", "व", "श",
+  "ष", "स", "ह", "अ", "आ", "इ", "ई", "उ", "ऊ", "ऋ",
+  "ए", "ऐ", "ओ", "औ", "ं", "ः", "ँ", "्", "ा", "ि",
+  "ी", "ु", "ू", "े", "ै", "ो", "ौ", "ऑटो-रिक्शा", "गड्ढा", "मवेशी"
+];
+
 export type Modality = "vision" | "audio" | "video" | "text_rlhf" | "sar_radar";
 
 export default function AnnotationTool() {
@@ -33,6 +42,7 @@ export default function AnnotationTool() {
   const { toast }  = useToast();
 
   const [activeModality, setActiveModality] = useState<Modality>("vision");
+  const [showHindiKb, setShowHindiKb] = useState(false);
 
   // Task data
   const [task,       setTask]       = useState<Record<string, any> | null>(null);
@@ -257,6 +267,19 @@ export default function AnnotationTool() {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Devanagari Keyboard Toggle */}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setShowHindiKb(v => !v)}
+            className={`h-7 px-2.5 text-xs border-white/20 gap-1 transition-colors ${
+              showHindiKb ? "bg-cosmic-teal text-black font-bold border-cosmic-teal" : "text-white/80 hover:text-white"
+            }`}
+          >
+            <span>क/A</span>
+            <span className="hidden sm:inline">Hindi Keyboard</span>
+          </Button>
+
           {activeModality === "vision" && (
             <button title="Change image URL" onClick={() => setShowUrlBox(v => !v)} className="text-white/40 hover:text-white transition-colors mr-2">
               <ImageIcon size={16} />
@@ -271,6 +294,33 @@ export default function AnnotationTool() {
           </Button>
         </div>
       </header>
+
+      {/* ── Devanagari (Hindi) On-Screen Keyboard Drawer ── */}
+      {showHindiKb && (
+        <div className="shrink-0 bg-[#121225] border-b border-cosmic-teal/40 p-3 shadow-xl z-20">
+          <div className="flex items-center justify-between mb-2 px-1">
+            <span className="text-xs font-semibold text-cosmic-teal flex items-center gap-1.5">
+              <span>⌨️</span> Devanagari (देवनागरी/हिन्दी) On-Screen Keyboard Pad
+            </span>
+            <span className="text-[10px] text-white/50">Click any character to copy to clipboard & insert into annotations</span>
+            <button onClick={() => setShowHindiKb(false)} className="text-white/40 hover:text-white text-xs">✕ Close</button>
+          </div>
+          <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto pr-1">
+            {DEVANAGARI_CHARS.map((char, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  navigator.clipboard.writeText(char);
+                  toast({ title: `Copied '${char}'` });
+                }}
+                className="px-2.5 py-1 rounded bg-white/10 hover:bg-cosmic-teal hover:text-black font-mono text-sm text-white transition-colors border border-white/5"
+              >
+                {char}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Image URL Input ── */}
       {showUrlBox && activeModality === "vision" && (

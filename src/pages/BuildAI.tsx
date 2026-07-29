@@ -5,6 +5,7 @@ import DataEngineExplainer from "@/components/DataEngineExplainer";
 import DataEngineSection from "@/components/DataEngineSection";
 import AnnotationTypesSection from "@/components/AnnotationTypesSection";
 import QuickStartGuide from "@/components/QuickStartGuide";
+import TechStackSection from "@/components/TechStackSection";
 import LiveDemosSection from "@/components/LiveDemosSection";
 import BuildAICaseStudies from "@/components/BuildAICaseStudies";
 import ResourcesSection from "@/components/ResourcesSection";
@@ -21,6 +22,7 @@ const BuildAI = () => {
         <DataEngineSection />
         <AnnotationTypesSection />
         <QuickStartGuide />
+        <TechStackSection />
         <LiveDemosSection />
         <BuildAICaseStudies />
         <ResourcesSection />
