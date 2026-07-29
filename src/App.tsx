@@ -31,6 +31,13 @@ import ProductPage from "./pages/ProductPage";
 import OAuthConsent from "./pages/OAuthConsent";
 import AutoScrollReveal from "./components/AutoScrollReveal";
 import AnnotationTool from "./pages/AnnotationTool";
+import Pricing from "./pages/Pricing";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Docs from "./pages/Docs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -69,9 +76,17 @@ const App = () => (
           <Route path="/annotate/demo" element={<AnnotationTool />} />
           {/* Annotation Tool — task-specific (protected) */}
           <Route path="/annotate/:taskId" element={<ProtectedRoute><AnnotationTool /></ProtectedRoute>} />
+          {/* New Pages */}
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/docs" element={<Docs />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <CookieConsent />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

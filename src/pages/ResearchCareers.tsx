@@ -6,8 +6,51 @@ import ParallelWebBg from "@/components/ParallelWebBg";
 import { Briefcase, MapPin, Clock, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const FALLBACK_CAREERS = [
+  {
+    id: "fc-1",
+    title: "Senior Computer Vision Engineer — Satellite Imagery & SAR",
+    department: "Perception & ML",
+    location: "Remote",
+    type: "Full-time",
+    description: "Lead the design and training of custom segmentation and change-detection models for multi-spectral space data.",
+    requirements: ["PyTorch", "CUDA", "GeoTIFF / GDAL", "SAR / Multispectral", "5+ YOE"],
+    apply_url: "/contact",
+  },
+  {
+    id: "fc-2",
+    title: "Staff ML Infrastructure Engineer — Distributed Edge Inference",
+    department: "Infrastructure",
+    location: "Remote / Intern",
+    type: "Full-time / Internship",
+    description: "Build high-throughput dataset versioning and model evaluation runtimes targeting edge accelerators.",
+    requirements: ["Rust", "Python", "Ray / Kubernetes", "TensorRT", "4+ YOE"],
+    apply_url: "/contact",
+  },
+  {
+    id: "fc-3",
+    title: "AI Data Operations Lead — Geospatial Annotation",
+    department: "Operations",
+    location: "Remote",
+    type: "Full-time",
+    description: "Manage domain-expert annotation pipelines for geospatial, radar, and astronomical datasets.",
+    requirements: ["Geospatial GIS", "Quality Assurance", "Team Management", "3+ YOE"],
+    apply_url: "/contact",
+  },
+  {
+    id: "fc-4",
+    title: "Research Scientist Intern — Multimodal Space Foundation Models",
+    department: "Samyam Labs",
+    location: "Remote / Intern",
+    type: "Internship",
+    description: "Publish cutting-edge research on vision-language models for satellite telemetry and orbital observation.",
+    requirements: ["PhD or Master's in CS/AI", "NeurIPS / CVPR record", "Transformers", "Distributed Training"],
+    apply_url: "/contact",
+  },
+];
+
 const ResearchCareers = () => {
-  const { data: careers, isLoading } = useQuery({
+  const { data: rawCareers, isLoading } = useQuery({
     queryKey: ["research-careers"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -18,6 +61,8 @@ const ResearchCareers = () => {
       return data;
     },
   });
+
+  const careers = (rawCareers && rawCareers.length > 0) ? rawCareers : FALLBACK_CAREERS;
 
   return (
     <div className="min-h-screen bg-background">
@@ -31,7 +76,7 @@ const ResearchCareers = () => {
             <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4 flex items-center gap-3">
               <Briefcase className="h-10 w-10 text-cosmic-purple" /> Research Careers
             </h1>
-            <p className="text-muted-foreground text-lg mb-12">Join our team and shape the future of AI.</p>
+            <p className="text-muted-foreground text-lg mb-12">Join our team and shape the future of space AI.</p>
 
             {isLoading ? (
               <div className="space-y-4">
@@ -39,17 +84,17 @@ const ResearchCareers = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {careers?.map((career) => (
+                {careers.map((career) => (
                   <div key={career.id} className="glass-card rounded-xl p-6 hover:border-cosmic-teal/40 transition-all">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <h3 className="text-lg font-display font-semibold text-foreground mb-2">{career.title}</h3>
                         <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground mb-3">
-                          {career.department && <span className="px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">{career.department}</span>}
+                          {career.department && <span className="px-2 py-0.5 rounded-full bg-secondary font-medium text-foreground/80">{career.department}</span>}
                           {career.location && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{career.location}</span>}
                           {career.type && <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{career.type}</span>}
                         </div>
-                        {career.description && <p className="text-muted-foreground text-sm mb-3">{career.description}</p>}
+                        {career.description && <p className="text-muted-foreground text-sm mb-3 leading-relaxed">{career.description}</p>}
                         {career.requirements && career.requirements.length > 0 && (
                           <div className="flex flex-wrap gap-2">
                             {career.requirements.map((req: string, i: number) => (
@@ -59,7 +104,7 @@ const ResearchCareers = () => {
                         )}
                       </div>
                       {career.apply_url && (
-                        <Button size="sm" variant="outline" asChild className="shrink-0">
+                        <Button size="sm" variant="outline" asChild className="shrink-0 bg-background border-border/60 hover:bg-secondary">
                           <a href={career.apply_url}>
                             Apply <ExternalLink className="h-3 w-3 ml-1" />
                           </a>
@@ -68,9 +113,6 @@ const ResearchCareers = () => {
                     </div>
                   </div>
                 ))}
-                {careers?.length === 0 && (
-                  <p className="text-center text-muted-foreground py-12">No open positions at the moment.</p>
-                )}
               </div>
             )}
           </div>

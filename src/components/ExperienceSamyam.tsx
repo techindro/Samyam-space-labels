@@ -275,7 +275,7 @@ const ExperienceSamyam = () => {
                       >
                         {transcripts[i] && (
                           <p className={`text-xs italic mb-1.5 ${isActive ? "text-primary-foreground/50" : "text-muted-foreground"}`}>
-                            "{transcripts[i]}"
+                            {`"${transcripts[i]}"`}
                           </p>
                         )}
                         {replies[i] && (

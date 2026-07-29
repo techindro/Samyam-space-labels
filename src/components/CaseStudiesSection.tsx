@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import caseMonitoring from "@/assets/case-satellite-monitoring.jpg";
 import caseDebris from "@/assets/case-debris-tracking.jpg";
 import caseLabeled from "@/assets/case-labeled-images.jpg";
@@ -13,6 +14,7 @@ const cases = [
     desc: "Helping an emerging constellation operator build AI-driven health checks across their initial fleet of LEO satellites.",
     image: caseMonitoring,
     stats: "Early-stage deployment",
+    href: "/research/labs",
   },
   {
     tag: "Defense",
@@ -20,6 +22,7 @@ const cases = [
     desc: "Building labeled datasets of orbital objects to train detection models for space situational awareness applications.",
     image: caseDebris,
     stats: "Custom annotation pipeline",
+    href: "/research/papers",
   },
   {
     tag: "Data",
@@ -27,6 +30,7 @@ const cases = [
     desc: "Delivering high-quality labeled satellite imagery for earth observation research with consistent annotation standards.",
     image: caseLabeled,
     stats: "100K+ images labeled",
+    href: "/space-tech",
   },
 ];
 
@@ -58,7 +62,7 @@ const CaseStudiesSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="glass-card rounded-xl overflow-hidden group cursor-pointer hover:border-cosmic-teal/40 transition-all"
+              className="glass-card rounded-xl overflow-hidden group cursor-pointer hover:border-cosmic-teal/40 transition-all block"
             >
               <div className="h-44 relative overflow-hidden">
                 <img
@@ -79,9 +83,12 @@ const CaseStudiesSection = () => {
                   {c.title}
                 </h3>
                 <p className="text-muted-foreground text-sm mb-4">{c.desc}</p>
-                <span className="text-cosmic-teal text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                <Link
+                  to={c.href}
+                  className="text-cosmic-teal text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all"
+                >
                   Read more <ArrowRight className="h-3 w-3" />
-                </span>
+                </Link>
               </div>
             </motion.div>
           ))}

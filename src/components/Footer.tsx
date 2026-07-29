@@ -4,32 +4,32 @@ import ParallelWebBg from "@/components/ParallelWebBg";
 
 const footerLinks: Record<string, { label: string; href: string }[]> = {
   Products: [
-    { label: "Orbital Data Labeling", href: "#" },
-    { label: "Terrain Classification", href: "#" },
-    { label: "Anomaly Detection", href: "#" },
-    { label: "Mission Analytics", href: "#" },
-    { label: "Space Data Engine", href: "#" },
+    { label: "Orbital Data Labeling", href: "/products/geospatial-labeling" },
+    { label: "Space Debris Tracking", href: "/products/space-debris-tracking" },
+    { label: "Mission Simulation", href: "/products/mission-simulation" },
+    { label: "Model Evaluation", href: "/products/model-evaluation" },
+    { label: "Space Data Engine", href: "/products/data-engine" },
   ],
   Resources: [
-    { label: "Documentation", href: "#" },
-    { label: "API Reference", href: "#" },
-    { label: "Case Studies", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "Webinars", href: "#" },
+    { label: "Documentation", href: "/docs" },
+    { label: "API Reference", href: "/developers/text-to-speech" },
+    { label: "Research Papers", href: "/research/papers" },
+    { label: "Blog", href: "/research/blog" },
+    { label: "Frontier Leaderboards", href: "/research/frontier-leaderboards" },
     { label: "Learn", href: "/learn" },
   ],
   Company: [
-    { label: "About", href: "#" },
-    { label: "Careers", href: "#" },
+    { label: "About", href: "/about" },
+    { label: "Careers", href: "/research/careers" },
     { label: "Press", href: "#" },
     { label: "Partners", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "Contact", href: "/contact" },
   ],
   Legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Service", href: "#" },
-    { label: "Security", href: "#" },
-    { label: "Cookie Policy", href: "#" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Security", href: "/privacy" },
+    { label: "Cookie Policy", href: "/privacy" },
   ],
 };
 
@@ -41,7 +41,7 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="#" className="text-[28px] font-medium tracking-wide text-foreground lowercase" style={{ fontFamily: "'Comfortaa', cursive" }}>
+            <a href="/" className="text-[28px] font-medium tracking-wide text-foreground lowercase" style={{ fontFamily: "'Comfortaa', cursive" }}>
               samyam
             </a>
             <p className="text-sm text-muted-foreground mt-3 leading-relaxed">

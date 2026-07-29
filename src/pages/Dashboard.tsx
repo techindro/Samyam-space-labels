@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { User, Mail, Edit3, Save, LogOut, ArrowLeft, Camera } from "lucide-react";
+import { User, Mail, Edit3, Save, LogOut, ArrowLeft, Camera, Key, Copy, Check, Plus, Trash2, Layers, ExternalLink } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
 const Dashboard = () => {
@@ -17,6 +17,8 @@ const Dashboard = () => {
   const [fullName, setFullName] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [apiKeys, setApiKeys] = useState<{ id: string; name: string; key: string; created: string }[]>([]);
+  const [copiedKeyId, setCopiedKeyId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -46,6 +48,15 @@ const Dashboard = () => {
       }
     };
     fetchProfile();
+
+    const storedKeys = localStorage.getItem(`samyam_apikeys_${user.id}`);
+    if (storedKeys) {
+      try {
+        setApiKeys(JSON.parse(storedKeys));
+      } catch (e) {
+        console.error("Failed to parse stored API keys", e);
+      }
+    }
   }, [user]);
 
   const handleSave = async () => {
@@ -192,6 +203,80 @@ const Dashboard = () => {
                 <InfoRow icon={<Mail className="h-4 w-4" />} label="Email" value={user.email} />
               </div>
             )}
+          </div>
+
+          <div className="glass-card rounded-2xl p-6 shadow-xl mt-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Key className="h-5 w-5 text-cosmic-teal" />
+                <h2 className="text-lg font-bold font-display">API Keys</h2>
+              </div>
+              <Button size="sm" onClick={() => {
+                const newKey = `sk_live_sam_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
+                const updated = [...apiKeys, { id: Date.now().toString(), name: `Key ${apiKeys.length + 1}`, key: newKey, created: new Date().toLocaleDateString() }];
+                setApiKeys(updated);
+                localStorage.setItem(`samyam_apikeys_${user.id}`, JSON.stringify(updated));
+                toast({ title: "API Key Generated", description: "Your new API key is ready to use." });
+              }} className="gap-1 bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0">
+                <Plus className="h-3.5 w-3.5" /> Generate Key
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4">Use these keys to authenticate requests with Samyam Voice, STT, and Vision APIs.</p>
+
+            {apiKeys.length === 0 ? (
+              <div className="text-center py-6 border border-dashed border-border/50 rounded-xl bg-secondary/20">
+                <p className="text-sm text-muted-foreground">No API keys created yet. Generate one above to start building.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {apiKeys.map((k) => (
+                  <div key={k.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl bg-secondary/40 border border-border/30 gap-2">
+                    <div>
+                      <p className="text-xs font-semibold">{k.name} <span className="text-[10px] text-muted-foreground font-normal ml-2">Created {k.created}</span></p>
+                      <code className="text-xs font-mono text-cosmic-teal">{k.key}</code>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={() => {
+                        navigator.clipboard.writeText(k.key);
+                        setCopiedKeyId(k.id);
+                        setTimeout(() => setCopiedKeyId(null), 2000);
+                        toast({ title: "Copied!", description: "API Key copied to clipboard." });
+                      }}>
+                        {copiedKeyId === k.id ? <Check className="h-3.5 w-3.5 text-cosmic-teal" /> : <Copy className="h-3.5 w-3.5" />}
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-destructive hover:text-destructive" onClick={() => {
+                        const updated = apiKeys.filter(x => x.id !== k.id);
+                        setApiKeys(updated);
+                        localStorage.setItem(`samyam_apikeys_${user.id}`, JSON.stringify(updated));
+                        toast({ title: "API Key deleted" });
+                      }}>
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="glass-card rounded-2xl p-6 shadow-xl mt-6">
+            <h2 className="text-lg font-bold font-display mb-4">Quick Workspaces</h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <button onClick={() => navigate("/annotate/demo")} className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/60 border border-border/30 transition-colors text-left group">
+                <div>
+                  <p className="text-sm font-semibold group-hover:text-cosmic-teal transition-colors">Annotation Tool</p>
+                  <p className="text-xs text-muted-foreground">Launch workspace demo</p>
+                </div>
+                <Layers className="h-4 w-4 text-muted-foreground group-hover:text-cosmic-teal transition-colors" />
+              </button>
+              <button onClick={() => navigate("/docs")} className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/60 border border-border/30 transition-colors text-left group">
+                <div>
+                  <p className="text-sm font-semibold group-hover:text-cosmic-teal transition-colors">Developer Docs</p>
+                  <p className="text-xs text-muted-foreground">API guides & references</p>
+                </div>
+                <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-cosmic-teal transition-colors" />
+              </button>
+            </div>
           </div>
 
           <div className="glass-card rounded-2xl p-6 shadow-xl mt-6">

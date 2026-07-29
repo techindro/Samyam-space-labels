@@ -46,6 +46,8 @@ const Auth = () => {
   const [captcha, setCaptcha] = useState(generateCaptcha());
   const [loading, setLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState<"google" | "github" | null>(null);
+  // Set VITE_OAUTH_ENABLED=true in .env once Google/GitHub are configured in Supabase dashboard
+  const oauthEnabled = import.meta.env.VITE_OAUTH_ENABLED === "true";
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const nextPath = safeNext(searchParams.get("next"));
@@ -178,11 +180,13 @@ const Auth = () => {
 
           {mode === "login" && (
             <form onSubmit={handleLogin} className="space-y-4">
-              {/* OAuth Buttons */}
-              <OAuthButtons oauthLoading={oauthLoading} onOAuth={handleOAuthLogin} />
-
-              {/* Divider */}
-              <OrDivider />
+              {/* OAuth Buttons — only shown when providers are enabled in Supabase */}
+              {oauthEnabled && (
+                <>
+                  <OAuthButtons oauthLoading={oauthLoading} onOAuth={handleOAuthLogin} />
+                  <OrDivider />
+                </>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="email" className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email</Label>
@@ -204,11 +208,13 @@ const Auth = () => {
 
           {mode === "signup" && (
             <form onSubmit={handleSignup} className="space-y-4">
-              {/* OAuth Buttons */}
-              <OAuthButtons oauthLoading={oauthLoading} onOAuth={handleOAuthLogin} />
-
-              {/* Divider */}
-              <OrDivider />
+              {/* OAuth Buttons — only shown when providers are enabled in Supabase */}
+              {oauthEnabled && (
+                <>
+                  <OAuthButtons oauthLoading={oauthLoading} onOAuth={handleOAuthLogin} />
+                  <OrDivider />
+                </>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="fullName" className="flex items-center gap-2"><User className="w-4 h-4" /> Full Name</Label>

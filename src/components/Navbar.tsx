@@ -45,9 +45,9 @@ const developerApis = [
 ];
 
 const developerResources = [
-  { label: "Documentation", icon: Book, href: "#" },
-  { label: "API Pricing", icon: CreditCard, href: "#" },
-  { label: "Join Community", icon: MessagesSquare, href: "#" },
+  { label: "Documentation", icon: Book, href: "/docs" },
+  { label: "API Pricing", icon: CreditCard, href: "/pricing" },
+  { label: "Join Community", icon: MessagesSquare, href: "https://discord.gg/samyam" },
 ];
 
 const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
@@ -302,7 +302,17 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                           <a
                             key={label}
                             href={href}
-                            onClick={(e) => { e.preventDefault(); setDevelopersOpen(false); }}
+                            target={href.startsWith("http") ? "_blank" : undefined}
+                            rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                            onClick={(e) => {
+                              if (!href.startsWith("http") && href !== "#") {
+                                e.preventDefault();
+                                setDevelopersOpen(false);
+                                navigate(href);
+                              } else if (href.startsWith("http")) {
+                                setDevelopersOpen(false);
+                              }
+                            }}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                           >
                             <div className={`p-1.5 rounded-lg ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
@@ -451,8 +461,8 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
             <div className="pt-2 pb-2">
               <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Developers</p>
               <div className="space-y-1">
-                {developerApis.map(({ label, subtitle, icon: Icon }) => (
-                  <a key={label} href="#" onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}
+                {developerApis.map(({ label, subtitle, icon: Icon, href }) => (
+                  <a key={label} href={href} onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate(href); }}
                     className={`flex items-center gap-2 px-2 py-2 rounded-lg text-xs transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                   >
                     <Icon className="h-3.5 w-3.5 shrink-0" />
