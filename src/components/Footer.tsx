@@ -21,8 +21,8 @@ const footerLinks: Record<string, { label: string; href: string }[]> = {
   Company: [
     { label: "About", href: "/about" },
     { label: "Careers", href: "/research/careers" },
-    { label: "Press", href: "#" },
-    { label: "Partners", href: "#" },
+    { label: "Press", href: "/about" },
+    { label: "Partners", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
   Legal: [
