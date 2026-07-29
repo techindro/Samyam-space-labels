@@ -1,42 +1,30 @@
 import { motion } from "framer-motion";
-import { Play, ArrowRight, Waypoints, Car, HeartPulse, GraduationCap, Tag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Play, ArrowRight, Waypoints, Car, HeartPulse, GraduationCap } from "lucide-react";
 
 const demos = [
-  {
-    title: "Multimodal Workspace",
-    description: "Interactive 2D Vision, Audio, Video Frame Tracking, RLHF & SAR Radar annotator.",
-    icon: Tag,
-    href: "/annotate/demo",
-    isInternal: true,
-  },
   {
     title: "Indian Road Detector",
     description: "AI-powered road detection & segmentation for Indian road infrastructure.",
     icon: Waypoints,
     href: "https://huggingface.co/spaces/techindro/SamyamLm-Demo",
-    isInternal: false,
   },
   {
     title: "Self Driving Car",
     description: "Real-time object detection and lane segmentation for autonomous vehicles.",
     icon: Car,
     href: "https://huggingface.co/spaces/techindro/SamyamLm-SelfDriving",
-    isInternal: false,
   },
   {
     title: "Health Detector",
     description: "Medical imaging analysis and diagnostic AI for healthcare applications.",
     icon: HeartPulse,
     href: "https://huggingface.co/spaces/techindro/SamyamLm-Health",
-    isInternal: false,
   },
   {
     title: "Education Detector",
     description: "Content analysis and educational material classification using NLP & vision.",
     icon: GraduationCap,
     href: "https://huggingface.co/spaces/techindro/SamyamLm-Education",
-    isInternal: false,
   },
 ];
 
@@ -66,8 +54,8 @@ const LiveDemosSection = () => {
           </p>
         </motion.div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 max-w-7xl mx-auto">
+        {/* 4 Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {demos.map((demo, i) => {
             const Icon = demo.icon;
             return (
@@ -84,7 +72,7 @@ const LiveDemosSection = () => {
                     <Icon className="h-5 w-5" />
                   </div>
 
-                  <h3 className="font-display text-base font-bold mb-2 text-foreground leading-snug">
+                  <h3 className="font-display text-lg font-bold mb-2 text-foreground leading-snug">
                     {demo.title}
                   </h3>
 
@@ -93,25 +81,15 @@ const LiveDemosSection = () => {
                   </p>
                 </div>
 
-                {demo.isInternal ? (
-                  <Link
-                    to={demo.href}
-                    className="w-full py-2.5 px-4 rounded-full bg-foreground text-background font-medium text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
-                  >
-                    <span>Try Demo</span>
-                    <ArrowRight size={13} />
-                  </Link>
-                ) : (
-                  <a
-                    href={demo.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2.5 px-4 rounded-full bg-foreground text-background font-medium text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
-                  >
-                    <span>Try Demo</span>
-                    <ArrowRight size={13} />
-                  </a>
-                )}
+                <a
+                  href={demo.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 px-4 rounded-full bg-foreground text-background font-medium text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                >
+                  <span>Try Demo</span>
+                  <ArrowRight size={13} />
+                </a>
               </motion.div>
             );
           })}
