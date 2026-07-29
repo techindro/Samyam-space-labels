@@ -50,48 +50,48 @@ const App = () => (
       <Sonner />
       <ErrorBoundary>
         <BrowserRouter>
-        <AutoScrollReveal />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/book-demo" element={<BookDemo />} />
-          <Route path="/build-ai" element={<BuildAI />} />
-          <Route path="/space-tech" element={<SpaceTech />} />
-          <Route path="/learn" element={<Learn />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/research/papers" element={<ResearchPapers />} />
-          <Route path="/research/papers/samyamlm" element={<SamyamLmPaper />} />
-          <Route path="/research/blog" element={<ResearchBlog />} />
-          <Route path="/research/frontier-leaderboards" element={<FrontierLeaderboards />} />
-          <Route path="/research/preference-leaderboard" element={<PreferenceLeaderboard />} />
-          <Route path="/research/labs" element={<ResearchLabs />} />
-          <Route path="/research/careers" element={<ResearchCareers />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-          <Route path="/developers/text-to-speech" element={<DeveloperTextToSpeech />} />
-          <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
-          <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
-          <Route path="/government/:slug" element={<GovernmentPage />} />
-          <Route path="/products/:slug" element={<ProductPage />} />
-          <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
-          {/* Annotation Tool — demo mode (no auth) */}
-          <Route path="/annotate/demo" element={<AnnotationTool />} />
-          {/* Annotation Tool — task-specific (protected) */}
-          <Route path="/annotate/:taskId" element={<ProtectedRoute><AnnotationTool /></ProtectedRoute>} />
-          {/* New Pages */}
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/docs" element={<Docs />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
-          <Route path="/case-studies" element={<CaseStudyDetail />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <CookieConsent />
+          <AutoScrollReveal />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/book-demo" element={<BookDemo />} />
+            <Route path="/build-ai" element={<BuildAI />} />
+            <Route path="/space-tech" element={<SpaceTech />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/research/papers" element={<ResearchPapers />} />
+            <Route path="/research/papers/samyamlm" element={<SamyamLmPaper />} />
+            <Route path="/research/blog" element={<ResearchBlog />} />
+            <Route path="/research/frontier-leaderboards" element={<FrontierLeaderboards />} />
+            <Route path="/research/preference-leaderboard" element={<PreferenceLeaderboard />} />
+            <Route path="/research/labs" element={<ResearchLabs />} />
+            <Route path="/research/careers" element={<ResearchCareers />} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+            <Route path="/developers/text-to-speech" element={<DeveloperTextToSpeech />} />
+            <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
+            <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
+            <Route path="/government/:slug" element={<GovernmentPage />} />
+            <Route path="/products/:slug" element={<ProductPage />} />
+            <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
+            {/* Annotation Tool — demo mode (no auth) */}
+            <Route path="/annotate/demo" element={<AnnotationTool />} />
+            {/* Annotation Tool — task-specific (protected) */}
+            <Route path="/annotate/:taskId" element={<ProtectedRoute><AnnotationTool /></ProtectedRoute>} />
+            {/* New Pages */}
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/docs" element={<Docs />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
+            <Route path="/case-studies" element={<CaseStudyDetail />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <CookieConsent />
         </BrowserRouter>
       </ErrorBoundary>
     </TooltipProvider>
