@@ -26,18 +26,21 @@ const HeroSection = () => {
             <Sparkles className="h-4 w-4 text-cosmic-teal" />
             Building AI for space & defense
           </div>
-          <h1 className="font-display text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6">
+          
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
             Breakthrough AI
             <br />
             <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
               for Space & Beyond
             </span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-xl mb-8 mx-auto lg:mx-0">
+
+          <p className="text-lg text-muted-foreground max-w-xl mb-8 mx-auto lg:mx-0 leading-relaxed">
             Samyam provides high-quality data labeling, model evaluation, and AI tools 
             designed for space agencies, defense teams, and enterprises working on 
             next-generation applications.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0 text-base px-8">
               <Link to="/book-demo">Book a Demo <ArrowRight className="h-4 w-4 ml-2" /></Link>
@@ -48,12 +51,12 @@ const HeroSection = () => {
           </div>
         </motion.div>
 
-        {/* India-Inspired Orb Visual */}
+        {/* 3D Interactive Satellite & Earth Scene */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="flex items-center justify-center"
+          className="flex items-center justify-center min-h-[420px]"
         >
           <SatelliteScene />
         </motion.div>
