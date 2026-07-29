@@ -21,17 +21,17 @@ const BuildAIHero = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/50 bg-secondary/50 text-sm text-muted-foreground mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/50 bg-secondary/50 text-sm text-muted-foreground mb-6 font-sans">
             <Sparkles className="h-4 w-4 text-cosmic-teal" />
-            <span style={{ fontFamily: "'Comfortaa', cursive" }}>build ai</span>
+            <span>build ai</span>
           </div>
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+          <h1 className="font-sans text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6 tracking-tight">
             Powering{" "}
             <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
               Frontier AI
             </span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto font-sans">
             Next generation AI powered by world-class data.
           </p>
         </motion.div>
@@ -45,18 +45,18 @@ const BuildAIHero = () => {
             transition={{ duration: 0.7, delay: 0.3 }}
           >
             <div className="glass-card rounded-xl overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-border/30">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-border/30 font-sans">
                 <div className="w-3 h-3 rounded-full bg-red-500/80" />
                 <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                 <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                <span className="text-muted-foreground text-sm ml-3 font-display">AI Text Generator</span>
+                <span className="text-muted-foreground text-sm ml-3 font-sans">AI Text Generator</span>
               </div>
               <div className="p-6 min-h-[280px]">
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-secondary/50"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-secondary/50 font-sans"
                 >
                   <span className="text-xl">🤖</span>
                   <span className="text-foreground/80 text-sm">Why is hum</span>
@@ -76,23 +76,23 @@ const BuildAIHero = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
           >
-            <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-3" style={{ fontFamily: "'Comfortaa', cursive" }}>
+            <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-3 font-sans">
               generative ai
             </p>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight">
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight tracking-tight">
               Powering the next generation of{" "}
               <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
                 Generative AI
               </span>
             </h2>
-            <p className="text-muted-foreground text-base leading-relaxed mb-8">
+            <p className="text-muted-foreground text-base leading-relaxed mb-8 font-sans">
               Samyam's Generative AI Data Engine powers advanced LLMs and generative models through world-class RLHF, data generation, model evaluation, safety, and alignment.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0 text-base px-8">
+              <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0 text-base px-8 font-sans">
                 <Link to="/book-demo">Book a Demo <ArrowRight className="h-4 w-4 ml-2" /></Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary/50 text-base px-8">
+              <Button asChild size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary/50 text-base px-8 font-sans">
                 <Link to="/build-ai">Build AI <ArrowRight className="h-4 w-4 ml-2" /></Link>
               </Button>
             </div>

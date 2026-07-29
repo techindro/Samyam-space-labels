@@ -191,13 +191,10 @@ const BuildAICaseStudies = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <p
-            className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4"
-            style={{ fontFamily: "'Comfortaa', cursive" }}
-          >
+          <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4 font-sans">
             case studies
           </p>
-          <h2 className="font-display text-4xl sm:text-5xl font-bold mb-4">
+          <h2 className="font-sans text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
             From The{" "}
             <span className="bg-gradient-to-r from-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
               AI Knowledge Hub
