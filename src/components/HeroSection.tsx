@@ -27,7 +27,7 @@ const HeroSection = () => {
             Building AI for space & defense
           </div>
           
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
+          <h1 className="font-sans text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6 tracking-tight">
             Breakthrough AI
             <br />
             <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
