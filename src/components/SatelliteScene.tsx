@@ -241,19 +241,127 @@ function Satellite() {
 
   return (
     <group ref={orbit}>
-      <group ref={body} position={[2.35, 0.3, 0]} scale={0.28}>
+      <group ref={body} position={[2.85, 0.35, 0]} scale={0.34}>
         <mesh castShadow>
           <boxGeometry args={[1.1, 1.1, 1.5]} />
           <meshStandardMaterial color="#d9c98a" metalness={0.85} roughness={0.35} />
         </mesh>
+        <mesh>
+          <boxGeometry args={[1.115, 1.115, 1.515]} />
+          <meshStandardMaterial color="#c79a3d" metalness={0.95} roughness={0.22} emissive="#3a2400" emissiveIntensity={0.18} transparent opacity={0.92} />
+        </mesh>
+        <mesh position={[0, 0.4, 0]}>
+          <boxGeometry args={[1.13, 0.16, 1.53]} />
+          <meshStandardMaterial color="#1a1a1a" metalness={0.5} roughness={0.6} />
+        </mesh>
+        <mesh position={[0, -0.4, 0]}>
+          <boxGeometry args={[1.13, 0.12, 1.53]} />
+          <meshStandardMaterial color="#e8e8e8" metalness={0.4} roughness={0.5} />
+        </mesh>
+
+        <mesh position={[-1.5, 0, 0]}>
+          <boxGeometry args={[1.9, 0.05, 0.08]} />
+          <meshStandardMaterial color="#9a9a9a" metalness={0.85} roughness={0.25} />
+        </mesh>
+        <mesh position={[1.5, 0, 0]}>
+          <boxGeometry args={[1.9, 0.05, 0.08]} />
+          <meshStandardMaterial color="#9a9a9a" metalness={0.85} roughness={0.25} />
+        </mesh>
+
         {[-3.1, 3.1].map((px) => (
           <group key={px} position={[px, 0, 0]}>
             <mesh castShadow>
               <boxGeometry args={[2.4, 0.04, 1.3]} />
-              <meshStandardMaterial color="#0e2466" metalness={0.7} roughness={0.28} />
+              <meshStandardMaterial color="#0e2466" metalness={0.7} roughness={0.28} emissive="#06163f" emissiveIntensity={0.25} />
             </mesh>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <mesh key={`v${i}`} position={[-1.05 + i * 0.3, 0.022, 0]}>
+                <boxGeometry args={[0.005, 0.001, 1.28]} />
+                <meshBasicMaterial color="#3a5cb8" />
+              </mesh>
+            ))}
+            {Array.from({ length: 4 }).map((_, i) => (
+              <mesh key={`h${i}`} position={[0, 0.022, -0.5 + i * 0.33]}>
+                <boxGeometry args={[2.38, 0.001, 0.005]} />
+                <meshBasicMaterial color="#3a5cb8" />
+              </mesh>
+            ))}
           </group>
         ))}
+
+        <group position={[0, 0.78, 0.25]} rotation={[-0.35, 0, 0]}>
+          <mesh>
+            <cylinderGeometry args={[0.04, 0.04, 0.45, 12]} />
+            <meshStandardMaterial color="#b5b5b5" metalness={0.9} roughness={0.25} />
+          </mesh>
+          <mesh position={[0, 0.32, 0]} rotation={[Math.PI, 0, 0]}>
+            <sphereGeometry args={[0.42, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2.6]} />
+            <meshStandardMaterial color="#ededed" metalness={0.7} roughness={0.3} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[0, 0.4, 0]}>
+            <cylinderGeometry args={[0.04, 0.04, 0.18, 12]} />
+            <meshStandardMaterial color="#888" metalness={0.8} roughness={0.3} />
+          </mesh>
+          <mesh position={[0, 0.5, 0]}>
+            <sphereGeometry args={[0.06, 16, 16]} />
+            <meshStandardMaterial color="#222" metalness={0.5} roughness={0.5} />
+          </mesh>
+        </group>
+
+        <mesh position={[0.3, -0.7, -0.5]} rotation={[0.4, 0, 0.2]}>
+          <cylinderGeometry args={[0.012, 0.012, 0.7, 8]} />
+          <meshStandardMaterial color="#ccc" metalness={0.7} roughness={0.3} />
+        </mesh>
+        <mesh position={[-0.3, -0.7, -0.5]} rotation={[0.4, 0, -0.2]}>
+          <cylinderGeometry args={[0.012, 0.012, 0.7, 8]} />
+          <meshStandardMaterial color="#ccc" metalness={0.7} roughness={0.3} />
+        </mesh>
+
+        <mesh position={[0.35, 0.55, -0.7]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.09, 0.09, 0.18, 16]} />
+          <meshStandardMaterial color="#1a1a1a" metalness={0.6} roughness={0.5} />
+        </mesh>
+        <mesh position={[-0.35, 0.55, -0.7]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.09, 0.09, 0.18, 16]} />
+          <meshStandardMaterial color="#1a1a1a" metalness={0.6} roughness={0.5} />
+        </mesh>
+
+        <mesh position={[0, -0.35, 0.78]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.18, 0.22, 0.22, 32]} />
+          <meshStandardMaterial color="#080808" metalness={0.95} roughness={0.08} emissive="#001a3a" emissiveIntensity={0.5} />
+        </mesh>
+        <mesh position={[0, -0.35, 0.9]}>
+          <cylinderGeometry args={[0.16, 0.16, 0.02, 32]} />
+          <meshStandardMaterial color="#3aa0ff" metalness={0.9} roughness={0.1} emissive="#1a4a9f" emissiveIntensity={0.6} />
+        </mesh>
+
+        <group position={[0, 0.15, 0.762]}>
+          <mesh position={[0, 0.07, 0]}>
+            <planeGeometry args={[0.42, 0.08]} />
+            <meshStandardMaterial color="#FF9933" roughness={0.6} metalness={0.1} />
+          </mesh>
+          <mesh>
+            <planeGeometry args={[0.42, 0.08]} />
+            <meshStandardMaterial color="#FFFFFF" roughness={0.6} metalness={0.1} />
+          </mesh>
+          <mesh position={[0, -0.07, 0]}>
+            <planeGeometry args={[0.42, 0.08]} />
+            <meshStandardMaterial color="#138808" roughness={0.6} metalness={0.1} />
+          </mesh>
+          <mesh position={[0, 0, 0.001]}>
+            <ringGeometry args={[0.022, 0.032, 24]} />
+            <meshBasicMaterial color="#000080" />
+          </mesh>
+        </group>
+
+        <mesh position={[0.45, 0.45, 0.76]}>
+          <sphereGeometry args={[0.022, 8, 8]} />
+          <meshBasicMaterial color="#22ff66" />
+        </mesh>
+        <mesh position={[-0.45, 0.45, 0.76]}>
+          <sphereGeometry args={[0.022, 8, 8]} />
+          <meshBasicMaterial color="#ff3366" />
+        </mesh>
       </group>
     </group>
   );
@@ -261,10 +369,10 @@ function Satellite() {
 
 function OrbitRing() {
   const q = useQuality();
-  const seg = q.tier === "low" ? 96 : 144;
+  const seg = q.tier === "low" ? 96 : q.tier === "med" ? 144 : 192;
   return (
     <mesh rotation={[Math.PI / 2.2, 0, 0]}>
-      <ringGeometry args={[2.33, 2.36, seg]} />
+      <ringGeometry args={[2.78, 2.81, seg]} />
       <meshBasicMaterial color="#88c4ff" transparent opacity={0.12} side={THREE.DoubleSide} />
     </mesh>
   );
@@ -293,17 +401,41 @@ function CinematicDrift({ userActive }: { userActive: React.MutableRefObject<boo
   return null;
 }
 
+// Adaptive DPR: drop pixel ratio if FPS dips, raise it back if smooth
+function AdaptivePerf() {
+  const { gl } = useThree();
+  const fps = useRef({ frames: 0, last: performance.now(), dpr: 0 });
+  useFrame(() => {
+    fps.current.frames++;
+    const now = performance.now();
+    if (now - fps.current.last >= 1000) {
+      const f = fps.current.frames;
+      fps.current.frames = 0;
+      fps.current.last = now;
+      const cur = gl.getPixelRatio();
+      if (f < 40 && cur > 1) gl.setPixelRatio(Math.max(1, cur - 0.25));
+      else if (f > 55 && cur < Math.min(window.devicePixelRatio, 2)) {
+        gl.setPixelRatio(Math.min(window.devicePixelRatio, 2, cur + 0.25));
+      }
+    }
+  });
+  return null;
+}
+
 const SceneContents = () => {
   const q = useQuality();
   const userActive = useRef(false);
   return (
     <>
       <CinematicDrift userActive={userActive} />
+      <AdaptivePerf />
       <ambientLight intensity={0.55} />
       <directionalLight position={[6, 3, 4]} intensity={1.6} color="#fff4dc" castShadow={q.shadows} />
       <directionalLight position={[-5, -2, -3]} intensity={0.7} color="#88aaff" />
+      <pointLight position={[0, 0, -6]} intensity={0.5} color="#3a6cff" />
 
       <Stars radius={120} depth={60} count={q.starsCount} factor={3.5} saturation={0} fade speed={0.1} />
+      <Stars radius={50} depth={30} count={q.starsCount2} factor={1.5} saturation={0} fade speed={0.25} />
 
       <Earth />
       <OrbitRing />
@@ -361,7 +493,16 @@ const SatelliteScene = () => {
   const [hasWebGL, setHasWebGL] = useState(true);
 
   useEffect(() => {
-    setHasWebGL(checkWebGLSupport());
+    // Avoid preemptive execution that might fail on fingerprint-protected browsers due to dummy canvas context limit.
+    // WebGLBoundary will automatically handle real rendering errors at runtime.
+    try {
+      const isSupported = checkWebGLSupport();
+      if (!isSupported) {
+        setHasWebGL(false);
+      }
+    } catch (e) {
+      setHasWebGL(false);
+    }
   }, []);
 
   const [mode, setMode] = useState<Mode>(() => {
@@ -370,6 +511,7 @@ const SatelliteScene = () => {
   });
 
   const quality = useMemo(() => pickQuality(!!isMobile, mode), [isMobile, mode]);
+  const isSaver = mode === "saver" || (mode === "auto" && quality.tier === "low");
 
   if (!hasWebGL) {
     return <OrbFallback2D />;
@@ -377,6 +519,7 @@ const SatelliteScene = () => {
 
   return (
     <div className="relative w-full max-w-[520px] aspect-square mx-auto">
+      {/* Soft ambient glow only — no dark blackout circle */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(24,95%,55%)]/10 via-transparent to-[hsl(145,60%,38%)]/10 blur-[40px]" />
       </div>
@@ -384,7 +527,7 @@ const SatelliteScene = () => {
       <WebGLBoundary fallback={<OrbFallback2D />}>
         <Canvas
           key={`${quality.tier}-${quality.texSize}`}
-          camera={{ position: [0, 0.6, 8.4], fov: 38 }}
+          camera={{ position: [0, 0.6, 7.4], fov: 40 }}
           dpr={quality.dpr}
           gl={{ antialias: quality.tier !== "low", alpha: true, powerPreference: "high-performance" }}
           shadows={quality.shadows}
@@ -396,21 +539,26 @@ const SatelliteScene = () => {
         </Canvas>
       </WebGLBoundary>
 
+      {/* Quality toggle */}
       <div className="absolute top-3 right-3 z-10 flex items-center gap-1 rounded-full border border-white/15 bg-black/30 backdrop-blur-md p-1 text-[11px]">
         <button
           onClick={() => setMode("high")}
-          className={`flex items-center gap-1 px-2 py-1 rounded-full transition ${mode === "high" ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
+          className={`flex items-center gap-1 px-2 py-1 rounded-full transition ${!isSaver ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
           title="High quality"
         >
           <Zap className="h-3 w-3" /> High
         </button>
         <button
           onClick={() => setMode("saver")}
-          className={`flex items-center gap-1 px-2 py-1 rounded-full transition ${mode === "saver" ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
+          className={`flex items-center gap-1 px-2 py-1 rounded-full transition ${isSaver ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
           title="Battery saver"
         >
           <Battery className="h-3 w-3" /> Saver
         </button>
+      </div>
+
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[11px] tracking-wide text-white/60 pointer-events-none select-none">
+        drag to orbit
       </div>
     </div>
   );

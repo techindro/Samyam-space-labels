@@ -4,7 +4,39 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
-import { Menu, X, ArrowRight, LogOut, User, ChevronDown, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, Shield, Mic, MessageSquareText, ScanText, Book, CreditCard, MessagesSquare, Rocket, Landmark, Satellite, Radar, Eye, Cpu, ShieldCheck, Building2, Globe2, Tag, Square, Hexagon } from "lucide-react";
+import {
+  Menu,
+  X,
+  ArrowRight,
+  LogOut,
+  User,
+  ChevronDown,
+  FileText,
+  BookOpen,
+  Trophy,
+  Users,
+  FlaskConical,
+  Briefcase,
+  Shield,
+  Mic,
+  MessageSquareText,
+  ScanText,
+  Book,
+  CreditCard,
+  MessageSquare,
+  Rocket,
+  Landmark,
+  Satellite,
+  Radar,
+  Eye,
+  Cpu,
+  ShieldCheck,
+  Building2,
+  Globe,
+  Tag,
+  Square,
+  Hexagon,
+} from "lucide-react";
 import { governmentPages } from "@/data/governmentPages";
 import { productPages } from "@/data/productPages";
 
@@ -46,7 +78,7 @@ const developerApis = [
 const developerResources = [
   { label: "Documentation", icon: Book, href: "/docs" },
   { label: "API Pricing", icon: CreditCard, href: "/pricing" },
-  { label: "Join Community", icon: MessagesSquare, href: "https://discord.gg/samyam" },
+  { label: "Join Community", icon: MessageSquare, href: "https://discord.gg/samyam" },
 ];
 
 const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
