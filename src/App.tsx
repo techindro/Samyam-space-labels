@@ -39,6 +39,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import CookieConsent from "./components/CookieConsent";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -47,7 +48,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <ErrorBoundary>
+        <BrowserRouter>
         <AutoScrollReveal />
         <Routes>
           <Route path="/" element={<Index />} />
@@ -90,7 +92,8 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
         <CookieConsent />
-      </BrowserRouter>
+        </BrowserRouter>
+      </ErrorBoundary>
     </TooltipProvider>
   </QueryClientProvider>
 );
