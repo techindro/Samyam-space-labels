@@ -1,114 +1,141 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Play, Route, Car, HeartPulse, GraduationCap } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ParallelWebBg from "@/components/ParallelWebBg";
+import { Sparkles, ArrowUpRight, Play, ExternalLink, Tag, ShieldCheck, HeartPulse, GraduationCap, Car } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const demos = [
   {
-    icon: Route,
+    title: "Multimodal Labeling Workspace",
+    tagline: "Live Interactive Demo",
+    description: "Interactive 2D Vision, Audio Diarization, Video Frame Tracking, RLHF Preference & SAR Radar annotator.",
+    icon: Tag,
+    badge: "5 Modalities",
+    color: "from-cosmic-purple/30 to-cosmic-teal/20",
+    border: "border-cosmic-purple/40",
+    href: "/annotate/demo",
+    isInternal: true,
+  },
+  {
     title: "Indian Road Detector",
-    description: "AI-powered road detection & segmentation for Indian road infrastructure.",
-    url: "https://huggingface.co/spaces/techindro/SamyamLm-Demo",
+    tagline: "Hugging Face Space",
+    description: "AI-powered road detection & pothole segmentation tailored for Indian road conditions and weather.",
+    icon: ShieldCheck,
+    badge: "Live Model",
+    color: "from-orange-500/20 to-transparent",
+    border: "border-orange-500/30",
+    href: "https://huggingface.co/spaces/techindro/SamyamLm-Demo",
+    isInternal: false,
   },
   {
+    title: "Self Driving Car Vision",
+    tagline: "Hugging Face Space",
+    description: "Real-time 47-class object detection (auto-rickshaws, cattle, tempos) and lane tracking for autonomous driving.",
     icon: Car,
-    title: "Self Driving Car",
-    description: "Real-time object detection and lane segmentation for autonomous vehicles.",
-    url: "https://huggingface.co/spaces/techindro/SamyamLm-SelfDriving",
+    badge: "47 Classes",
+    color: "from-blue-500/20 to-transparent",
+    border: "border-blue-500/30",
+    href: "https://huggingface.co/spaces/techindro/SamyamLm-SelfDriving",
+    isInternal: false,
   },
   {
-    icon: HeartPulse,
     title: "Health Detector",
-    description: "Medical imaging analysis and diagnostic AI for healthcare applications.",
-    url: "https://huggingface.co/spaces/techindro/SamyamLm-Health",
+    tagline: "Hugging Face Space",
+    description: "Medical imaging analysis and diagnostic computer vision models for public healthcare initiatives.",
+    icon: HeartPulse,
+    badge: "Medical AI",
+    color: "from-red-500/20 to-transparent",
+    border: "border-red-500/30",
+    href: "https://huggingface.co/spaces/techindro/SamyamLm-Health",
+    isInternal: false,
   },
   {
-    icon: GraduationCap,
     title: "Education Detector",
-    description: "Content analysis and educational material classification using NLP & vision.",
-    url: "https://huggingface.co/spaces/techindro/SamyamLm-Education",
+    tagline: "Hugging Face Space",
+    description: "Devanagari script NLP analysis, textbook digitisation, and educational material classification.",
+    icon: GraduationCap,
+    badge: "Indic NLP",
+    color: "from-green-500/20 to-transparent",
+    border: "border-green-500/30",
+    href: "https://huggingface.co/spaces/techindro/SamyamLm-Education",
+    isInternal: false,
   },
 ];
 
 const LiveDemosSection = () => {
   return (
-    <section className="relative py-24 overflow-hidden">
-      <ParallelWebBg />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cosmic-purple/5 to-transparent pointer-events-none" />
-
+    <section className="py-24 relative overflow-hidden">
       <div className="container mx-auto px-4 relative z-10">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-16 max-w-2xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/50 bg-secondary/50 text-sm text-muted-foreground mb-6">
-            <Play className="h-4 w-4 text-cosmic-teal" />
-            <span style={{ fontFamily: "'Comfortaa', cursive" }}>try it live</span>
+          <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full border border-border bg-secondary/50">
+            <Sparkles className="h-3.5 w-3.5 text-cosmic-teal" />
+            <span className="text-xs font-medium tracking-widest uppercase text-muted-foreground">Interactive AI Demos</span>
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Live Demos
+          <h2 className="font-display text-4xl sm:text-5xl font-bold mb-4">
+            Experience{" "}
+            <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
+              Samyam Models
+            </span>{" "}
+            Live
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Experience our AI models in action. Open any demo below to test directly in your browser.
+          <p className="text-muted-foreground text-base">
+            Test our AI perception models and multimodal labeling tools live in your browser — zero setup required.
           </p>
         </motion.div>
 
-        {/* Demo Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-          {demos.map((demo, i) => (
-            <motion.div
-              key={demo.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-            >
-              <div className="glass-card h-full rounded-2xl border border-border/40 bg-card/40 backdrop-blur-sm p-7 hover:border-cosmic-teal/40 hover:bg-card/60 transition-all duration-300 flex flex-col">
-                {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cosmic-purple/20 to-cosmic-teal/20 flex items-center justify-center mb-5">
-                  <demo.icon className="w-6 h-6 text-cosmic-teal" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {demos.map((demo, i) => {
+            const Icon = demo.icon;
+            return (
+              <motion.div
+                key={demo.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08 }}
+                className={`glass-card rounded-2xl p-6 border ${demo.border} flex flex-col justify-between group hover:shadow-[0_0_30px_rgba(139,92,246,0.15)] transition-all`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 rounded-xl bg-secondary shrink-0">
+                      <Icon className="h-5 w-5 text-foreground" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-secondary border border-border/50 text-muted-foreground">
+                      {demo.badge}
+                    </span>
+                  </div>
+
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-cosmic-teal mb-1">{demo.tagline}</p>
+                  <h3 className="font-display text-xl font-bold mb-2 group-hover:text-cosmic-teal transition-colors">{demo.title}</h3>
+                  <p className="text-muted-foreground text-xs leading-relaxed mb-6">{demo.description}</p>
                 </div>
 
-                {/* Title */}
-                <h3 className="font-display text-lg font-semibold text-foreground mb-3 leading-snug">
-                  {demo.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-muted-foreground text-sm leading-relaxed mb-7 flex-1">
-                  {demo.description}
-                </p>
-
-                {/* CTA */}
-                <Button
-                  asChild
-                  className="w-full h-11 rounded-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 text-sm font-semibold shadow-lg shadow-cosmic-purple/20"
-                >
-                  <a href={demo.url} target="_blank" rel="noopener noreferrer">
-                    Try Demo <ArrowRight className="w-4 h-4 ml-2" />
+                {demo.isInternal ? (
+                  <Link
+                    to={demo.href}
+                    className="inline-flex items-center justify-between w-full p-3 rounded-xl bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground font-semibold text-xs border-0 hover:opacity-90 transition-opacity"
+                  >
+                    <span>Launch Interactive Demo</span>
+                    <Play className="h-3.5 w-3.5 fill-current" />
+                  </Link>
+                ) : (
+                  <a
+                    href={demo.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-between w-full p-3 rounded-xl bg-secondary/80 hover:bg-secondary text-foreground font-semibold text-xs border border-border/50 transition-colors"
+                  >
+                    <span>Open Hugging Face Space</span>
+                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
                   </a>
-                </Button>
-              </div>
-            </motion.div>
-          ))}
+                )}
+              </motion.div>
+            );
+          })}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="text-center mt-14"
-        >
-          <p className="text-muted-foreground/60 text-sm">
-            All demos run on Hugging Face Spaces. No installation required.
-          </p>
-        </motion.div>
       </div>
     </section>
   );
