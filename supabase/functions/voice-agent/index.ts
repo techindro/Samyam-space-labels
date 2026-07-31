@@ -178,12 +178,12 @@ serve(async (req) => {
       );
     }
 
-    const apiKey = Deno.env.get("AI_API_KEY") || Deno.env.get("GEMINI_API_KEY") || Deno.env.get("LOVABLE_API_KEY");
+    const apiKey = Deno.env.get("AI_API_KEY") || Deno.env.get("GEMINI_API_KEY") || Deno.env.get("OPENAI_API_KEY");
     if (!apiKey) {
-      throw new Error("AI_API_KEY or GEMINI_API_KEY is not configured");
+      throw new Error("AI_API_KEY, GEMINI_API_KEY, or OPENAI_API_KEY is not configured");
     }
 
-    const aiGatewayUrl = Deno.env.get("AI_GATEWAY_URL") || "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const aiGatewayUrl = Deno.env.get("AI_GATEWAY_URL") || "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
 
     // Set up Supabase client with user's authentication headers if available
     const authHeader = req.headers.get("Authorization") || "";
