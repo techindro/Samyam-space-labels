@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Cpu, ShieldCheck, Download, Play, CheckCircle2, Terminal } from "lucide-react";
+import { Cpu, Download, Play, CheckCircle2, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -123,9 +123,9 @@ export default function SpaceEdgeExporter() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Cpu className="h-6 w-6 text-teal-400 shrink-0" />
+            <Cpu className="h-6 w-6 text-white shrink-0" />
             <h2 className="text-xl font-bold font-display text-slate-100">On-Orbit Space Edge AI Model Exporter</h2>
-            <span className="bg-purple-950/60 text-purple-300 border border-purple-800/50 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
+            <span className="bg-white/10 text-white border border-white/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
               Radiation-Hardened Edge Spec
             </span>
           </div>
@@ -166,18 +166,18 @@ export default function SpaceEdgeExporter() {
                   onClick={() => setSelectedHw(hw)}
                   className={`p-4 rounded-xl border cursor-pointer transition-all ${
                     isSelected
-                      ? "bg-teal-950/40 border-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.25)]"
+                      ? "bg-white/10 border-white shadow-md"
                       : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-slate-100">{hw.name}</span>
-                    {isSelected && <CheckCircle2 size={16} className="text-teal-400 shrink-0" />}
+                    {isSelected && <CheckCircle2 size={16} className="text-white shrink-0" />}
                   </div>
                   <p className="text-[11px] text-slate-400 mb-2">{hw.architecture}</p>
                   <div className="flex items-center justify-between text-[10px] font-mono">
-                    <span className="text-yellow-400 font-semibold">⚡ Max Power: {hw.maxPowerWatts}W</span>
-                    <span className="text-purple-300 font-semibold">🛡️ {hw.radHardRating.split(" ")[0]} {hw.radHardRating.split(" ")[1]}</span>
+                    <span className="text-white font-semibold">⚡ Max Power: {hw.maxPowerWatts}W</span>
+                    <span className="text-white/90 font-semibold">🛡️ {hw.radHardRating.split(" ")[0]} {hw.radHardRating.split(" ")[1]}</span>
                   </div>
                 </div>
               );
@@ -202,7 +202,7 @@ export default function SpaceEdgeExporter() {
                     onClick={() => setPrecision(p)}
                     className={`py-2 text-xs font-mono font-bold rounded-lg border transition-all ${
                       precision === p
-                        ? "bg-purple-600 text-white border-purple-500 shadow-md shadow-purple-900/50"
+                        ? "bg-white text-slate-950 border-white shadow-md font-bold"
                         : "bg-slate-950 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700"
                     }`}
                   >
@@ -216,7 +216,7 @@ export default function SpaceEdgeExporter() {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-300 font-medium">Structured Pruning</span>
-                <span className="font-mono text-teal-400 font-bold">{pruningRatio}% Sparsity</span>
+                <span className="font-mono text-white font-bold">{pruningRatio}% Sparsity</span>
               </div>
               <input
                 type="range"
@@ -225,7 +225,7 @@ export default function SpaceEdgeExporter() {
                 step={5}
                 value={pruningRatio}
                 onChange={(e) => setPruningRatio(Number(e.target.value))}
-                className="w-full accent-teal-400 cursor-pointer"
+                className="w-full accent-white cursor-pointer"
               />
               <p className="text-[10px] text-slate-400">Reduces RAM & FLASH footprint for CubeSat constraints.</p>
             </div>
@@ -235,7 +235,7 @@ export default function SpaceEdgeExporter() {
           <div className="bg-slate-950/80 rounded-lg p-3.5 border border-slate-800 space-y-2 font-mono text-[11px]">
             <div className="flex justify-between">
               <span className="text-slate-400">Est. Latency:</span>
-              <span className="text-teal-400 font-bold">{precision === "INT8" ? "7.1 ms" : precision === "FP16" ? "11.4 ms" : "23.8 ms"}</span>
+              <span className="text-white font-bold">{precision === "INT8" ? "7.1 ms" : precision === "FP16" ? "11.4 ms" : "23.8 ms"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">RAM Footprint:</span>
@@ -243,7 +243,7 @@ export default function SpaceEdgeExporter() {
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Thermal Budget:</span>
-              <span className="text-yellow-400 font-bold">PASS (8.4W / {selectedHw.maxPowerWatts}W)</span>
+              <span className="text-white font-bold">PASS (8.4W / {selectedHw.maxPowerWatts}W)</span>
             </div>
           </div>
         </div>
@@ -254,21 +254,21 @@ export default function SpaceEdgeExporter() {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-bold font-mono text-slate-300 flex items-center gap-1.5">
-              <Terminal size={14} className="text-teal-400" /> Build Console Output
+              <Terminal size={14} className="text-white" /> Build Console Output
             </h4>
             {compiled && (
               <Button
                 size="sm"
                 onClick={handleDownloadPayload}
-                className="bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs h-8 border-0"
+                className="bg-white hover:bg-slate-100 text-slate-950 font-bold text-xs h-8 border border-slate-200 shadow-sm rounded-full px-4"
               >
-                <Download size={13} className="mr-1.5" /> Download Space Payload (.json / ONNX)
+                <Download size={13} className="mr-1.5 text-slate-950" /> Download Space Payload (.json / ONNX)
               </Button>
             )}
           </div>
-          <div className="bg-slate-950 rounded-xl border border-slate-800 p-4 font-mono text-xs text-teal-400 leading-relaxed space-y-1 max-h-48 overflow-y-auto">
+          <div className="bg-slate-950 rounded-xl border border-slate-800 p-4 font-mono text-xs text-white leading-relaxed space-y-1 max-h-48 overflow-y-auto">
             {logs.map((log, i) => (
-              <div key={i} className={log.includes("PASSED") || log.includes("Success") ? "text-green-400 font-bold" : "text-slate-300"}>
+              <div key={i} className={log.includes("PASSED") || log.includes("Success") ? "text-white font-bold" : "text-white/80"}>
                 {log}
               </div>
             ))}
