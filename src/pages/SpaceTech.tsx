@@ -647,9 +647,9 @@ const SpaceTech = () => {
             ))}
           </div>
 
-          <div className="text-center mb-8">
-            <h3 className="font-display text-xl font-bold text-slate-100">Curated Verifiable Mission Datasets</h3>
-            <p className="text-xs text-muted-foreground mt-1">Select any mission dataset below to inspect spatial resolution, spectral bands, and access methods.</p>
+          <div className="text-center mb-10 pt-6">
+            <h3 className="font-display text-2xl font-bold text-slate-100 mb-2">Curated Verifiable Mission Datasets</h3>
+            <p className="text-sm text-slate-300 max-w-xl mx-auto">Select any mission dataset below to inspect spatial resolution, spectral bands, and access methods.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 max-w-6xl mx-auto">
@@ -668,38 +668,39 @@ const SpaceTech = () => {
                     setSelectedMission(m);
                     setOpen(true);
                   }}
-                  className="group flex flex-col h-full w-full text-left glass-card rounded-xl overflow-hidden border border-border/60 hover:border-cosmic-purple/50 transition-all hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-cosmic-purple/40"
+                  className="group flex flex-col h-full w-full text-left bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 hover:border-cyan-400/80 shadow-2xl transition-all hover:-translate-y-1.5 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 select-none"
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
                     <MissionImage
                       src={m.img}
                       alt={`${m.label} — ${m.agency}`}
                       containerClassName="w-full h-full"
                       className="group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                    <span className="absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full bg-background/80 backdrop-blur border border-border text-foreground">
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                    <span className="absolute top-2.5 left-2.5 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-900/90 backdrop-blur border border-slate-800 text-cyan-300">
                       {m.tag}
                     </span>
                   </div>
-                  <div className="flex flex-col flex-1 p-3 sm:p-4">
-                    <h3 className="font-display text-sm font-semibold mb-1 group-hover:text-cosmic-purple-glow transition-colors">
+                  <div className="flex flex-col flex-1 p-4 bg-slate-950 space-y-2">
+                    <h3 className="font-display text-sm font-bold text-slate-100 group-hover:text-cyan-400 transition-colors">
                       {m.label}
                     </h3>
-                    <p className="text-[11px] uppercase tracking-wider text-cosmic-teal mb-2">{m.agency}</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 flex-1 mb-3">
+                    <p className="text-[11px] uppercase tracking-wider font-mono font-semibold text-cyan-400">{m.agency}</p>
+                    <p className="text-xs text-slate-300 leading-relaxed line-clamp-2 flex-1">
                       {m.desc}
                     </p>
-                    <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-cosmic-purple-glow">
-                      <Info className="h-3 w-3" /> View dataset details
-                    </span>
+                    <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs font-bold text-cyan-400 group-hover:text-cyan-300">
+                      <span>View dataset specs</span>
+                      <Info className="h-3.5 w-3.5" />
+                    </div>
                   </div>
                 </button>
               </motion.div>
             ))}
           </div>
 
-          <p className="text-center text-xs text-muted-foreground mt-6 sm:mt-8">
+          <p className="text-center text-xs text-slate-400 mt-6 sm:mt-8">
             Imagery © respective agencies (ESA, NASA, USGS, ISRO). Links point to official public data portals.
           </p>
         </div>
@@ -707,51 +708,51 @@ const SpaceTech = () => {
 
       <Dialog open={open} onOpenChange={setOpen}>
         {selectedMission && (
-          <DialogContent className="max-w-2xl w-[calc(100%-2rem)] p-0 overflow-hidden border border-border/60 bg-card">
-            <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+          <DialogContent className="max-w-2xl w-[calc(100%-2rem)] p-0 overflow-hidden border border-slate-800 bg-slate-950 text-slate-100 shadow-2xl rounded-2xl">
+            <div className="relative aspect-[16/9] overflow-hidden bg-slate-900">
               <MissionImage
                 src={selectedMission.img}
                 alt={`${selectedMission.label} — ${selectedMission.agency}`}
                 containerClassName="w-full h-full"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
-              <span className="absolute top-3 left-3 text-[10px] px-2.5 py-1 rounded-full bg-background/80 backdrop-blur border border-border text-foreground">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+              <span className="absolute top-3 left-3 text-[10px] font-mono font-bold px-3 py-1 rounded-full bg-slate-900/90 backdrop-blur border border-slate-800 text-cyan-300">
                 {selectedMission.tag}
               </span>
             </div>
-            <div className="p-5 sm:p-6 pt-0">
+            <div className="p-5 sm:p-6 pt-0 bg-slate-950">
               <DialogHeader className="text-left mt-[-2.5rem] sm:mt-[-3rem] relative z-10">
-                <DialogTitle className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">
+                <DialogTitle className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-slate-100">
                   {selectedMission.label}
                 </DialogTitle>
-                <DialogDescription className="text-xs uppercase tracking-wider text-cosmic-teal">
+                <DialogDescription className="text-xs font-mono font-semibold uppercase tracking-wider text-cyan-400">
                   {selectedMission.agency}
                 </DialogDescription>
               </DialogHeader>
               <div className="mt-4 space-y-5">
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">Description</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{selectedMission.desc}</p>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Description</h4>
+                  <p className="text-sm text-slate-300 leading-relaxed">{selectedMission.desc}</p>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-2">Key fields</h4>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Key fields & Specifications</h4>
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {selectedMission.keyFields.map((field) => (
-                      <li key={field} className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-cosmic-teal flex-shrink-0" />
+                      <li key={field} className="flex items-start gap-2 text-xs font-mono text-slate-300 bg-slate-900/80 p-2 rounded-lg border border-slate-800">
+                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-cyan-400 flex-shrink-0" />
                         {field}
                       </li>
                     ))}
                   </ul>
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground mb-1">How to access</h4>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{selectedMission.access}</p>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">How to access</h4>
+                  <p className="text-sm text-slate-300 leading-relaxed">{selectedMission.access}</p>
                 </div>
-                <div className="flex items-center gap-3 pt-2">
-                  <Button asChild className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0">
+                <div className="flex items-center gap-3 pt-3 border-t border-slate-800">
+                  <Button asChild className="bg-white hover:bg-slate-100 text-slate-950 font-bold text-xs rounded-full px-6 py-2.5 shadow-md">
                     <a href={selectedMission.href} target="_blank" rel="noopener noreferrer">
-                      Open source portal <ExternalLink className="h-4 w-4 ml-2" />
+                      Open source portal <ExternalLink className="h-3.5 w-3.5 ml-2 text-slate-950" />
                     </a>
                   </Button>
                 </div>
