@@ -427,10 +427,10 @@ export default function AnnotationTool() {
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2.5">
-                    <Mic className="h-5 w-5 text-teal-400" />
+                    <Mic className="h-5 w-5 text-sky-400" />
                     <h3 className="text-white font-bold text-lg font-display tracking-tight">Audio Waveform & Segment Annotator</h3>
                   </div>
-                  <span className="text-xs font-mono text-teal-400 bg-teal-500/10 px-3.5 py-1 rounded-full border border-teal-500/30 font-semibold">
+                  <span className="text-xs font-mono text-sky-400 bg-blue-500/10 px-3.5 py-1 rounded-full border border-blue-500/30 font-semibold">
                     Sample: Satellite_Downlink_Audio.wav (44.1kHz, Mono)
                   </span>
                 </div>
@@ -446,7 +446,7 @@ export default function AnnotationTool() {
                         style={{ height: `${h}%` }}
                         className={`w-1.5 rounded-full transition-all duration-150 ${
                           active
-                            ? "bg-teal-400 shadow-[0_0_12px_rgba(45,212,191,0.8)]"
+                            ? "bg-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.8)]"
                             : "bg-[#25293d] hover:bg-[#3b415e]"
                         }`}
                       />
@@ -469,7 +469,7 @@ export default function AnnotationTool() {
                     </button>
                     <div>
                       <p className="text-xs text-slate-400 font-medium">Timestamp Scrubber</p>
-                      <p className="text-base font-mono text-teal-400 font-bold tracking-wider">
+                      <p className="text-base font-mono text-sky-400 font-bold tracking-wider">
                         00:{audioCurrentTime.toFixed(1).padStart(4, "0")} <span className="text-slate-600">/</span> 00:{audioDuration.toFixed(1)}
                       </p>
                     </div>
@@ -488,7 +488,7 @@ export default function AnnotationTool() {
                       setAudioSegments([...audioSegments, newSeg]);
                       toast({ title: "Added Audio Segment" });
                     }}
-                    className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs border-0 shadow-[0_0_15px_rgba(20,184,166,0.4)] px-4 py-2"
+                    className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs border-0 shadow-[0_0_15px_rgba(59,130,246,0.4)] px-4 py-2"
                   >
                     <Plus size={15} className="mr-1.5" /> Add Segment Here
                   </Button>
@@ -496,7 +496,7 @@ export default function AnnotationTool() {
               </div>
 
               <div className="text-xs text-slate-400 bg-[#0b0c16] p-3.5 rounded-xl border border-[#23263d] flex items-center gap-2">
-                <span className="text-teal-400 font-bold">💡 Tip:</span> Click on waveform bars to scrub time. Add speaker tags and transcripts to export diarization datasets.
+                <span className="text-sky-400 font-bold">💡 Tip:</span> Click on waveform bars to scrub time. Add speaker tags and transcripts to export diarization datasets.
               </div>
             </div>
 
@@ -504,9 +504,9 @@ export default function AnnotationTool() {
             <div className="w-full md:w-96 bg-[#131524] rounded-2xl p-6 border border-[#272b44] shadow-2xl flex flex-col">
               <h4 className="text-white font-bold text-sm mb-4 flex items-center justify-between">
                 <span className="flex items-center gap-2">
-                  <Tag size={15} className="text-teal-400" /> Audio Segments
+                  <Tag size={15} className="text-sky-400" /> Audio Segments
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-teal-500/15 text-teal-400 text-xs font-mono font-bold border border-teal-500/30">
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-500/15 text-sky-400 text-xs font-mono font-bold border border-blue-500/30">
                   {audioSegments.length}
                 </span>
               </h4>
@@ -514,7 +514,7 @@ export default function AnnotationTool() {
                 {audioSegments.map((seg) => (
                   <div key={seg.id} className="p-4 rounded-xl bg-[#0c0d18] border border-[#22253b] hover:border-[#343956] transition-all space-y-2.5">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-mono text-teal-400 font-bold bg-teal-500/10 px-2.5 py-0.5 rounded border border-teal-500/30">{seg.start} - {seg.end}</span>
+                      <span className="font-mono text-sky-400 font-bold bg-blue-500/10 px-2.5 py-0.5 rounded border border-blue-500/30">{seg.start} - {seg.end}</span>
                       <span className="px-2.5 py-0.5 rounded bg-white/15 text-white font-bold text-[10px] uppercase border border-white/30">
                         {seg.tag}
                       </span>
@@ -528,7 +528,7 @@ export default function AnnotationTool() {
                         const val = e.target.value;
                         setAudioSegments(audioSegments.map(s => s.id === seg.id ? { ...s, transcript: val } : s));
                       }}
-                      className="w-full text-xs bg-[#05060b] text-slate-100 p-3 rounded-lg border border-[#2b304a] outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 resize-none h-16 transition-all font-sans"
+                      className="w-full text-xs bg-[#05060b] text-slate-100 p-3 rounded-lg border border-[#2b304a] outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 resize-none h-16 transition-all font-sans"
                     />
                     <button
                       onClick={() => setAudioSegments(audioSegments.filter(s => s.id !== seg.id))}
@@ -549,7 +549,7 @@ export default function AnnotationTool() {
             <div className="flex-1 bg-[#131524] rounded-2xl p-6 border border-[#272b44] shadow-2xl flex flex-col justify-between">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
-                  <VideoIcon className="h-5 w-5 text-teal-400" />
+                  <VideoIcon className="h-5 w-5 text-sky-400" />
                   <h3 className="text-white font-bold text-lg font-display">Video & Object Tracking Timeline</h3>
                 </div>
                 <span className="text-xs font-mono text-white bg-white/15 px-3.5 py-1 rounded-full border border-white/30 font-bold">
@@ -560,7 +560,7 @@ export default function AnnotationTool() {
               {/* Video Frame Canvas Simulator */}
               <div className="h-72 bg-[#06070d] rounded-xl border border-[#23263d] relative overflow-hidden flex items-center justify-center mb-6 shadow-inner">
                 <img src={DEMO_IMAGE} alt="Video Frame" className="w-full h-full object-cover opacity-75" />
-                <div className="absolute top-12 left-24 border-2 border-teal-400 bg-teal-500/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-teal-300 shadow-[0_0_15px_rgba(45,212,191,0.5)]">
+                <div className="absolute top-12 left-24 border-2 border-sky-400 bg-blue-500/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-sky-300 shadow-[0_0_15px_rgba(56,189,248,0.5)]">
                   Track #401: Orbital Debris [Frame {videoFrame}]
                 </div>
                 <div className="absolute bottom-16 right-36 border-2 border-white bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-white shadow-[0_0_15px_rgba(255,255,255,0.4)]">
@@ -588,14 +588,14 @@ export default function AnnotationTool() {
               {/* Tracks Table */}
               <div className="bg-[#0b0c16] rounded-xl border border-[#23263d] p-4">
                 <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Tag size={13} className="text-teal-400" /> Tracked Objects Across Frames
+                  <Tag size={13} className="text-sky-400" /> Tracked Objects Across Frames
                 </h4>
                 <div className="space-y-2.5 text-xs">
                   {videoTracks.map((vt) => (
                     <div key={vt.id} className="flex items-center justify-between p-3 rounded-lg bg-[#06070d] border border-[#23263d] hover:border-[#383e5c] transition-all">
                       <span className="font-bold text-white">{vt.name}</span>
                       <span className="text-slate-300 bg-[#1e2238] px-2.5 py-0.5 rounded text-[11px] font-medium">{vt.class}</span>
-                      <span className="font-mono text-teal-400 font-bold">Frames {vt.startFrame}-{vt.endFrame}</span>
+                      <span className="font-mono text-sky-400 font-bold">Frames {vt.startFrame}-{vt.endFrame}</span>
                       <span className="font-mono text-slate-400">{vt.bbox}</span>
                     </div>
                   ))}
@@ -612,7 +612,7 @@ export default function AnnotationTool() {
             <div className="flex-1 bg-[#131524] rounded-2xl p-6 border border-[#272b44] shadow-2xl space-y-6">
               <div>
                 <h3 className="text-white font-bold text-lg font-display mb-2 flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-teal-400" /> Prompt & Entity Tagging (NER)
+                  <Sparkles className="h-5 w-5 text-sky-400" /> Prompt & Entity Tagging (NER)
                 </h3>
                 <p className="text-xs text-slate-400 mb-4">Highlight tokens to tag Named Entities or evaluate model alignment.</p>
                 <div className="p-5 rounded-xl bg-[#06070d] border border-[#23263d] text-sm leading-relaxed text-slate-100 font-medium shadow-inner">
@@ -665,13 +665,13 @@ export default function AnnotationTool() {
                     onClick={() => setRlhfRank("B")}
                     className={`p-5 rounded-xl border cursor-pointer transition-all ${
                       rlhfRank === "B"
-                        ? "bg-teal-500/20 border-teal-400 shadow-[0_0_25px_rgba(20,184,166,0.35)] scale-[1.02]"
+                        ? "bg-blue-500/20 border-blue-400 shadow-[0_0_25px_rgba(59,130,246,0.35)] scale-[1.02]"
                         : "bg-[#06070d] border-[#23263d] hover:border-[#3b4160] text-white"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold text-teal-400 uppercase tracking-wider">Model Response B</span>
-                      {rlhfRank === "B" && <CheckCircle size={16} className="text-teal-400" />}
+                      <span className="text-xs font-bold text-sky-400 uppercase tracking-wider">Model Response B</span>
+                      {rlhfRank === "B" && <CheckCircle size={16} className="text-sky-400" />}
                     </div>
                     <p className="text-xs text-slate-100 leading-relaxed mb-4 font-medium">
                       "Satellite is fine. No issues detected in orbit."
@@ -695,7 +695,7 @@ export default function AnnotationTool() {
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2.5">
-                    <Radar className="h-5 w-5 text-teal-400" />
+                    <Radar className="h-5 w-5 text-sky-400" />
                     <h3 className="text-white font-bold text-lg font-display">Polarimetric SAR Radar & Multispectral Fusion</h3>
                   </div>
                   <div className="flex items-center gap-2">
@@ -719,7 +719,7 @@ export default function AnnotationTool() {
                 <div className="h-80 bg-[#06070d] rounded-xl border border-[#23263d] relative overflow-hidden flex items-center justify-center mb-6 shadow-inner">
                   <img src={DEMO_IMAGE} alt="SAR Radar" className="w-full h-full object-cover mix-blend-difference" style={{ opacity: opacityOverlay / 100 }} />
                   <div className="absolute top-4 left-4 bg-[#0a0b14]/90 backdrop-blur-md p-4 rounded-xl border border-[#282c44] text-xs font-mono space-y-1.5 text-slate-100 shadow-xl">
-                    <div>Polarization: <span className="text-teal-400 font-bold">{selectedBand}</span></div>
+                    <div>Polarization: <span className="text-sky-400 font-bold">{selectedBand}</span></div>
                     <div>Wavelength: <span className="text-white font-bold">5.55 cm (C-band)</span></div>
                     <div>Incidence Angle: <span className="text-amber-400 font-bold">38.2°</span></div>
                   </div>
@@ -729,7 +729,7 @@ export default function AnnotationTool() {
                 <div className="space-y-2 bg-[#0b0c16] p-4 rounded-xl border border-[#23263d]">
                   <div className="flex justify-between text-xs text-slate-300 font-semibold">
                     <span>Optical Base Layer</span>
-                    <span className="text-teal-400">SAR Radar Overlay ({opacityOverlay}%)</span>
+                    <span className="text-sky-400">SAR Radar Overlay ({opacityOverlay}%)</span>
                   </div>
                   <input
                     type="range"
@@ -737,7 +737,7 @@ export default function AnnotationTool() {
                     max={100}
                     value={opacityOverlay}
                     onChange={(e) => setOpacityOverlay(Number(e.target.value))}
-                    className="w-full accent-teal-400 cursor-pointer h-2 bg-[#25293d] rounded-lg"
+                    className="w-full accent-sky-400 cursor-pointer h-2 bg-[#25293d] rounded-lg"
                   />
                 </div>
               </div>
