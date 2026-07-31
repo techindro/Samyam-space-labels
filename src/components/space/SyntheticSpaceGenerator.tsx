@@ -217,9 +217,9 @@ export default function SyntheticSpaceGenerator() {
           <Button
             size="sm"
             onClick={handleExportSyntheticDataset}
-            className="bg-gradient-to-r from-purple-600 to-teal-500 text-white font-bold text-xs border-0 shadow-lg shadow-teal-500/20 hover:opacity-90 transition-opacity"
+            className="bg-white hover:bg-slate-100 text-slate-950 font-bold text-xs border border-slate-200 shadow-md rounded-full px-5 py-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
-            <Download className="h-3.5 w-3.5 mr-1.5" /> Export Synthetic Dataset
+            <Download className="h-3.5 w-3.5 mr-1.5 text-slate-950" /> Export Synthetic Dataset
           </Button>
         </div>
       </div>

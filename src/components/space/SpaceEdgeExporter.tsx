@@ -136,15 +136,15 @@ export default function SpaceEdgeExporter() {
         <Button
           onClick={handleCompile}
           disabled={isCompiling}
-          className="bg-gradient-to-r from-purple-600 to-teal-500 text-white font-bold border-0 shadow-lg shadow-teal-500/20 hover:opacity-90 transition-opacity"
+          className="bg-white hover:bg-slate-100 text-slate-950 font-bold text-xs border border-slate-200 shadow-md rounded-full px-6 py-2.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
           {isCompiling ? (
             <>
-              <Terminal className="h-4 w-4 mr-2 animate-spin" /> Compiling Engine...
+              <Terminal className="h-4 w-4 mr-2 animate-spin text-slate-950" /> Compiling Engine...
             </>
           ) : (
             <>
-              <Play className="h-4 w-4 mr-2" /> Compile Space Payload
+              <Play className="h-4 w-4 mr-2 fill-slate-950 text-slate-950" /> Compile Space Payload
             </>
           )}
         </Button>
