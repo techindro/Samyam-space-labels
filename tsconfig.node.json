@@ -19,5 +19,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "mcp-local-server.ts"]
+  "include": ["vite.config.ts"]
 }
