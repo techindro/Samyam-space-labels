@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Cpu, Zap, ShieldCheck, Download, Layers, Play, CheckCircle2, AlertTriangle, HardDrive, Terminal } from "lucide-react";
+import { Cpu, ShieldCheck, Download, Play, CheckCircle2, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -118,25 +118,25 @@ export default function SpaceEdgeExporter() {
   };
 
   return (
-    <div className="glass-card rounded-2xl p-6 border border-white/10 space-y-6 text-white select-none">
+    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-6 text-slate-100 shadow-2xl select-none">
       {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-border/60 pb-5">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Cpu className="h-6 w-6 text-cosmic-teal" />
-            <h2 className="text-xl font-bold font-display text-foreground">On-Orbit Space Edge AI Model Exporter</h2>
-            <span className="bg-cosmic-purple/20 text-cosmic-purple border border-cosmic-purple/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
+            <Cpu className="h-6 w-6 text-teal-400 shrink-0" />
+            <h2 className="text-xl font-bold font-display text-slate-100">On-Orbit Space Edge AI Model Exporter</h2>
+            <span className="bg-purple-950/60 text-purple-300 border border-purple-800/50 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
               Radiation-Hardened Edge Spec
             </span>
           </div>
-          <p className="text-xs text-muted-foreground font-sans">
+          <p className="text-xs text-slate-400 font-sans">
             Compile vision & detection models directly into radiation-shielded TensorRT/ONNX payloads for satellite deployment.
           </p>
         </div>
         <Button
           onClick={handleCompile}
           disabled={isCompiling}
-          className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white font-bold border-0 shadow-lg shadow-cosmic-teal/20 hover:opacity-90 transition-opacity"
+          className="bg-gradient-to-r from-purple-600 to-teal-500 text-white font-bold border-0 shadow-lg shadow-teal-500/20 hover:opacity-90 transition-opacity"
         >
           {isCompiling ? (
             <>
@@ -154,44 +154,47 @@ export default function SpaceEdgeExporter() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Hardware Selector */}
         <div className="lg:col-span-2 space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-white/60">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
             Select Space-Grade Target Hardware
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {SPACE_HARDWARE.map((hw) => (
-              <div
-                key={hw.id}
-                onClick={() => setSelectedHw(hw)}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                  selectedHw.id === hw.id
-                    ? "bg-cosmic-teal/15 border-cosmic-teal shadow-[0_0_15px_rgba(20,184,166,0.25)]"
-                    : "bg-white/5 border-white/10 hover:border-white/20"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-white">{hw.name}</span>
-                  {selectedHw.id === hw.id && <CheckCircle2 size={16} className="text-cosmic-teal shrink-0" />}
+            {SPACE_HARDWARE.map((hw) => {
+              const isSelected = selectedHw.id === hw.id;
+              return (
+                <div
+                  key={hw.id}
+                  onClick={() => setSelectedHw(hw)}
+                  className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                    isSelected
+                      ? "bg-teal-950/40 border-teal-500 shadow-[0_0_15px_rgba(20,184,166,0.25)]"
+                      : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-bold text-slate-100">{hw.name}</span>
+                    {isSelected && <CheckCircle2 size={16} className="text-teal-400 shrink-0" />}
+                  </div>
+                  <p className="text-[11px] text-slate-400 mb-2">{hw.architecture}</p>
+                  <div className="flex items-center justify-between text-[10px] font-mono">
+                    <span className="text-yellow-400 font-semibold">⚡ Max Power: {hw.maxPowerWatts}W</span>
+                    <span className="text-purple-300 font-semibold">🛡️ {hw.radHardRating.split(" ")[0]} {hw.radHardRating.split(" ")[1]}</span>
+                  </div>
                 </div>
-                <p className="text-[11px] text-white/50 mb-2">{hw.architecture}</p>
-                <div className="flex items-center justify-between text-[10px] font-mono">
-                  <span className="text-yellow-400">⚡ Max Power: {hw.maxPowerWatts}W</span>
-                  <span className="text-cosmic-purple">🛡️ {hw.radHardRating.split(" ")[0]} {hw.radHardRating.split(" ")[1]}</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* Quantization & Pruning Controls */}
-        <div className="glass-card rounded-xl p-5 border border-white/10 space-y-5 flex flex-col justify-between">
+        <div className="bg-slate-900/70 rounded-xl p-5 border border-slate-800 space-y-5 flex flex-col justify-between">
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-white/60 mb-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
               Quantization & Optimization
             </h3>
 
             {/* Precision buttons */}
             <div className="space-y-2 mb-4">
-              <label className="text-xs text-white/70 block">Target Precision</label>
+              <label className="text-xs text-slate-300 font-medium block">Target Precision</label>
               <div className="grid grid-cols-3 gap-2">
                 {(["FP32", "FP16", "INT8"] as const).map((p) => (
                   <button
@@ -199,8 +202,8 @@ export default function SpaceEdgeExporter() {
                     onClick={() => setPrecision(p)}
                     className={`py-2 text-xs font-mono font-bold rounded-lg border transition-all ${
                       precision === p
-                        ? "bg-cosmic-purple text-white border-cosmic-purple shadow-md shadow-cosmic-purple/30"
-                        : "bg-white/5 text-white/60 border-white/10 hover:text-white"
+                        ? "bg-purple-600 text-white border-purple-500 shadow-md shadow-purple-900/50"
+                        : "bg-slate-950 text-slate-300 border-slate-800 hover:text-white hover:border-slate-700"
                     }`}
                   >
                     {p}
@@ -212,8 +215,8 @@ export default function SpaceEdgeExporter() {
             {/* Pruning slider */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/70">Structured Pruning</span>
-                <span className="font-mono text-cosmic-teal font-bold">{pruningRatio}% Sparsity</span>
+                <span className="text-slate-300 font-medium">Structured Pruning</span>
+                <span className="font-mono text-teal-400 font-bold">{pruningRatio}% Sparsity</span>
               </div>
               <input
                 type="range"
@@ -222,24 +225,24 @@ export default function SpaceEdgeExporter() {
                 step={5}
                 value={pruningRatio}
                 onChange={(e) => setPruningRatio(Number(e.target.value))}
-                className="w-full accent-cosmic-teal cursor-pointer"
+                className="w-full accent-teal-400 cursor-pointer"
               />
-              <p className="text-[10px] text-white/40">Reduces RAM & FLASH footprint for CubeSat constraints.</p>
+              <p className="text-[10px] text-slate-400">Reduces RAM & FLASH footprint for CubeSat constraints.</p>
             </div>
           </div>
 
           {/* Quick Metrics */}
-          <div className="bg-black/40 rounded-lg p-3 border border-white/10 space-y-1.5 font-mono text-[11px]">
+          <div className="bg-slate-950/80 rounded-lg p-3.5 border border-slate-800 space-y-2 font-mono text-[11px]">
             <div className="flex justify-between">
-              <span className="text-white/50">Est. Latency:</span>
-              <span className="text-cosmic-teal font-bold">{precision === "INT8" ? "7.1 ms" : precision === "FP16" ? "11.4 ms" : "23.8 ms"}</span>
+              <span className="text-slate-400">Est. Latency:</span>
+              <span className="text-teal-400 font-bold">{precision === "INT8" ? "7.1 ms" : precision === "FP16" ? "11.4 ms" : "23.8 ms"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-white/50">RAM Footprint:</span>
-              <span className="text-white font-bold">{precision === "INT8" ? "142 MB" : "380 MB"}</span>
+              <span className="text-slate-400">RAM Footprint:</span>
+              <span className="text-slate-100 font-bold">{precision === "INT8" ? "142 MB" : "380 MB"}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-white/50">Thermal Budget:</span>
+              <span className="text-slate-400">Thermal Budget:</span>
               <span className="text-yellow-400 font-bold">PASS (8.4W / {selectedHw.maxPowerWatts}W)</span>
             </div>
           </div>
@@ -250,22 +253,22 @@ export default function SpaceEdgeExporter() {
       {(logs.length > 0 || compiled) && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold font-mono text-white/70 flex items-center gap-1.5">
-              <Terminal size={14} className="text-cosmic-teal" /> Build Console Output
+            <h4 className="text-xs font-bold font-mono text-slate-300 flex items-center gap-1.5">
+              <Terminal size={14} className="text-teal-400" /> Build Console Output
             </h4>
             {compiled && (
               <Button
                 size="sm"
                 onClick={handleDownloadPayload}
-                className="bg-cosmic-teal hover:bg-cosmic-teal/90 text-black font-bold text-xs h-8 border-0"
+                className="bg-teal-400 hover:bg-teal-300 text-slate-950 font-bold text-xs h-8 border-0"
               >
                 <Download size={13} className="mr-1.5" /> Download Space Payload (.json / ONNX)
               </Button>
             )}
           </div>
-          <div className="bg-black/80 rounded-xl border border-white/15 p-4 font-mono text-xs text-cosmic-teal leading-relaxed space-y-1 max-h-48 overflow-y-auto">
+          <div className="bg-slate-950 rounded-xl border border-slate-800 p-4 font-mono text-xs text-teal-400 leading-relaxed space-y-1 max-h-48 overflow-y-auto">
             {logs.map((log, i) => (
-              <div key={i} className={log.includes("PASSED") || log.includes("Success") ? "text-green-400 font-bold" : "text-white/80"}>
+              <div key={i} className={log.includes("PASSED") || log.includes("Success") ? "text-green-400 font-bold" : "text-slate-300"}>
                 {log}
               </div>
             ))}
