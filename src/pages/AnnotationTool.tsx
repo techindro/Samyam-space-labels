@@ -238,7 +238,7 @@ export default function AnnotationTool() {
   );
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-b from-[#080814] via-[#0c0c1b] to-[#06060f] overflow-hidden select-none">
+    <div className="dark h-screen flex flex-col bg-gradient-to-b from-[#080814] via-[#0c0c1b] to-[#06060f] text-white overflow-hidden select-none">
 
       {/* ── Top Bar ── */}
       <header className="shrink-0 flex items-center justify-between gap-3 px-4 h-14 border-b border-cosmic-purple/20 bg-[#0c0c1b]/95 backdrop-blur-md z-20 shadow-xl">
@@ -259,7 +259,7 @@ export default function AnnotationTool() {
         </div>
 
         {/* Modality Switcher Tabs */}
-        <div className="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/10">
+        <div className="flex items-center gap-1 bg-black/50 p-1 rounded-xl border border-white/15 shadow-inner">
           {[
             { id: "vision", label: "2D Vision", icon: ImageIcon },
             { id: "audio", label: "Audio & Speech", icon: Mic },
@@ -276,9 +276,9 @@ export default function AnnotationTool() {
                   setActiveModality(m.id as Modality);
                   toast({ title: `Switched to ${m.label} Modality` });
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
                   active
-                    ? "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white shadow-[0_0_15px_rgba(139,92,246,0.4)] scale-105"
+                    ? "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white shadow-[0_0_15px_rgba(139,92,246,0.5)] scale-105"
                     : "text-white/60 hover:text-white hover:bg-white/10"
                 }`}
               >
@@ -294,10 +294,9 @@ export default function AnnotationTool() {
           {/* Devanagari Keyboard Toggle */}
           <Button
             size="sm"
-            variant="outline"
             onClick={() => setShowHindiKb(v => !v)}
-            className={`h-7 px-2.5 text-xs border-white/20 gap-1 transition-colors ${
-              showHindiKb ? "bg-cosmic-teal text-black font-bold border-cosmic-teal" : "text-white/80 hover:text-white"
+            className={`h-7 px-2.5 text-xs gap-1 transition-colors border ${
+              showHindiKb ? "bg-cosmic-teal text-black font-bold border-cosmic-teal shadow-[0_0_10px_rgba(20,184,166,0.4)]" : "bg-white/5 border-white/20 text-white/80 hover:text-white hover:bg-white/10"
             }`}
           >
             <span>क/A</span>
@@ -307,10 +306,9 @@ export default function AnnotationTool() {
           {activeModality === "vision" && (
             <Button
               size="sm"
-              variant="outline"
               onClick={handleAiPrelabel}
               disabled={runningAi}
-              className="h-7 px-2.5 text-xs border-cosmic-purple/60 text-cosmic-purple hover:bg-cosmic-purple/20 gap-1 font-semibold"
+              className="h-7 px-2.5 text-xs bg-cosmic-purple/10 border border-cosmic-purple/60 text-cosmic-purple hover:bg-cosmic-purple/20 gap-1 font-semibold"
             >
               {runningAi ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
               <span>AI Pre-label</span>
@@ -322,10 +320,10 @@ export default function AnnotationTool() {
               <ImageIcon size={16} />
             </button>
           )}
-          <Button size="sm" variant="outline" onClick={handleExport} className="h-7 px-3 text-xs border-white/20 text-white/70 hover:text-white hover:border-white/40 gap-1.5">
+          <Button size="sm" onClick={handleExport} className="h-7 px-3 text-xs bg-white/5 border border-white/20 text-white/80 hover:text-white hover:bg-white/15 gap-1.5">
             <Download size={13} /> Export JSON
           </Button>
-          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-cosmic-purple hover:bg-cosmic-purple/90 text-white border-0 gap-1.5">
+          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-gradient-to-r from-cosmic-purple to-cosmic-teal hover:opacity-90 text-white border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]">
             {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
             Save
           </Button>
@@ -425,50 +423,54 @@ export default function AnnotationTool() {
         {activeModality === "audio" && (
           <div className="flex-1 flex flex-col md:flex-row p-6 gap-6 overflow-y-auto">
             {/* Left: Waveform Player & Controls */}
-            <div className="flex-1 glass-card rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+            <div className="flex-1 bg-[#0c0c1e]/90 backdrop-blur-xl rounded-2xl p-6 border border-white/15 shadow-2xl flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
                     <Mic className="h-5 w-5 text-cosmic-teal" />
-                    <h3 className="text-white font-semibold text-lg">Audio Waveform & Segment Annotator</h3>
+                    <h3 className="text-white font-bold text-lg font-display">Audio Waveform & Segment Annotator</h3>
                   </div>
-                  <span className="text-xs font-mono text-white/50 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                  <span className="text-xs font-mono text-cosmic-teal bg-cosmic-teal/10 px-3 py-1 rounded-full border border-cosmic-teal/30">
                     Sample: Satellite_Downlink_Audio.wav (44.1kHz, Mono)
                   </span>
                 </div>
 
                 {/* Simulated Waveform Visualizer */}
-                <div className="h-32 bg-black/40 rounded-xl border border-white/10 relative overflow-hidden flex items-center justify-around px-4 gap-1 mb-6">
+                <div className="h-36 bg-black/60 rounded-xl border border-white/15 relative overflow-hidden flex items-center justify-around px-4 gap-1 mb-6 shadow-inner">
                   {Array.from({ length: 64 }).map((_, i) => {
-                    const h = Math.abs(Math.sin(i * 0.4) * 80) + 10;
+                    const h = Math.abs(Math.sin(i * 0.4) * 80) + 12;
                     const active = (i / 64) * audioDuration <= audioCurrentTime;
                     return (
                       <div
                         key={i}
                         style={{ height: `${h}%` }}
-                        className={`w-1.5 rounded-full transition-colors ${active ? "bg-cosmic-teal" : "bg-white/20"}`}
+                        className={`w-1.5 rounded-full transition-all duration-150 ${
+                          active
+                            ? "bg-cosmic-teal shadow-[0_0_10px_rgba(20,184,166,0.8)]"
+                            : "bg-white/20 hover:bg-white/40"
+                        }`}
                       />
                     );
                   })}
                   <div
                     style={{ left: `${(audioCurrentTime / audioDuration) * 100}%` }}
-                    className="absolute top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_10px_#ef4444]"
+                    className="absolute top-0 bottom-0 w-0.5 bg-red-500 shadow-[0_0_12px_#ef4444]"
                   />
                 </div>
 
                 {/* Controls */}
-                <div className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/10 mb-6">
+                <div className="flex items-center justify-between bg-black/50 p-4 rounded-xl border border-white/15 mb-6">
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                      className="p-3 rounded-full bg-cosmic-purple text-white hover:opacity-90 transition-opacity"
+                      className="p-3.5 rounded-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:scale-105 transition-transform"
                     >
-                      {isPlayingAudio ? <Pause size={18} /> : <Play size={18} />}
+                      {isPlayingAudio ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
                     </button>
                     <div>
-                      <p className="text-xs text-white/50">Timestamp</p>
-                      <p className="text-sm font-mono text-white font-semibold">
-                        00:{audioCurrentTime.toFixed(1).padStart(4, "0")} / 00:{audioDuration.toFixed(1)}
+                      <p className="text-xs text-white/60 font-medium">Timestamp Scrubber</p>
+                      <p className="text-base font-mono text-cosmic-teal font-bold tracking-wider">
+                        00:{audioCurrentTime.toFixed(1).padStart(4, "0")} <span className="text-white/40">/</span> 00:{audioDuration.toFixed(1)}
                       </p>
                     </div>
                   </div>
@@ -486,46 +488,53 @@ export default function AnnotationTool() {
                       setAudioSegments([...audioSegments, newSeg]);
                       toast({ title: "Added Audio Segment" });
                     }}
-                    className="bg-cosmic-teal hover:bg-cosmic-teal/90 text-black font-semibold text-xs border-0"
+                    className="bg-cosmic-teal hover:bg-cosmic-teal/90 text-black font-bold text-xs border-0 shadow-[0_0_15px_rgba(20,184,166,0.4)] px-4 py-2"
                   >
-                    <Plus size={14} className="mr-1" /> Add Segment Here
+                    <Plus size={15} className="mr-1.5" /> Add Segment Here
                   </Button>
                 </div>
               </div>
 
-              <div className="text-xs text-white/40">
-                Tip: Click on waveform bars to scrub time. Add speaker tags and transcripts to export diarization datasets.
+              <div className="text-xs text-white/50 bg-white/5 p-3 rounded-lg border border-white/10 flex items-center gap-2">
+                <span className="text-cosmic-teal font-bold">💡 Tip:</span> Click on waveform bars to scrub time. Add speaker tags and transcripts to export diarization datasets.
               </div>
             </div>
 
             {/* Right: Audio Segments List */}
-            <div className="w-full md:w-96 glass-card rounded-2xl p-6 border border-white/10 flex flex-col">
-              <h4 className="text-white font-semibold text-sm mb-4 flex items-center gap-2">
-                <Tag size={14} className="text-cosmic-teal" /> Audio Segments ({audioSegments.length})
+            <div className="w-full md:w-96 bg-[#0c0c1e]/90 backdrop-blur-xl rounded-2xl p-6 border border-white/15 shadow-2xl flex flex-col">
+              <h4 className="text-white font-bold text-sm mb-4 flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Tag size={15} className="text-cosmic-teal" /> Audio Segments
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-cosmic-teal/20 text-cosmic-teal text-xs font-mono font-bold">
+                  {audioSegments.length}
+                </span>
               </h4>
-              <div className="space-y-3 flex-1 overflow-y-auto pr-1">
+              <div className="space-y-3.5 flex-1 overflow-y-auto pr-1">
                 {audioSegments.map((seg) => (
-                  <div key={seg.id} className="p-3.5 rounded-xl bg-white/5 border border-white/10 space-y-2">
+                  <div key={seg.id} className="p-4 rounded-xl bg-black/50 border border-white/15 hover:border-white/30 transition-all space-y-2.5">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-mono text-cosmic-teal font-semibold">{seg.start} - {seg.end}</span>
-                      <span className="px-2 py-0.5 rounded bg-cosmic-purple/20 text-cosmic-purple font-semibold text-[10px] uppercase">
+                      <span className="font-mono text-cosmic-teal font-bold bg-cosmic-teal/10 px-2 py-0.5 rounded border border-cosmic-teal/30">{seg.start} - {seg.end}</span>
+                      <span className="px-2 py-0.5 rounded bg-cosmic-purple/20 text-cosmic-purple font-bold text-[10px] uppercase border border-cosmic-purple/30">
                         {seg.tag}
                       </span>
                     </div>
-                    <p className="text-xs text-white font-medium">{seg.speaker}</p>
+                    <p className="text-xs text-white font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-cosmic-purple" /> {seg.speaker}
+                    </p>
                     <textarea
                       value={seg.transcript}
                       onChange={(e) => {
                         const val = e.target.value;
                         setAudioSegments(audioSegments.map(s => s.id === seg.id ? { ...s, transcript: val } : s));
                       }}
-                      className="w-full text-xs bg-black/40 text-white/80 p-2 rounded border border-white/10 outline-none focus:border-cosmic-teal resize-none h-14"
+                      className="w-full text-xs bg-black/60 text-white p-2.5 rounded-lg border border-white/20 outline-none focus:border-cosmic-teal focus:ring-1 focus:ring-cosmic-teal resize-none h-16 transition-all"
                     />
                     <button
                       onClick={() => setAudioSegments(audioSegments.filter(s => s.id !== seg.id))}
-                      className="text-[10px] text-red-400 hover:underline flex items-center gap-1"
+                      className="text-[11px] text-red-400 hover:text-red-300 transition-colors flex items-center gap-1 font-medium"
                     >
-                      <Trash2 size={10} /> Delete segment
+                      <Trash2 size={12} /> Delete segment
                     </button>
                   </div>
                 ))}
@@ -537,33 +546,33 @@ export default function AnnotationTool() {
         {/* 3. VIDEO TRACKING MODALITY */}
         {activeModality === "video" && (
           <div className="flex-1 flex flex-col p-6 gap-6 overflow-y-auto">
-            <div className="flex-1 glass-card rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+            <div className="flex-1 bg-[#0c0c1e]/90 backdrop-blur-xl rounded-2xl p-6 border border-white/15 shadow-2xl flex flex-col justify-between">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <VideoIcon className="h-5 w-5 text-cosmic-purple" />
-                  <h3 className="text-white font-semibold text-lg">Video & Object Tracking Timeline</h3>
+                  <h3 className="text-white font-bold text-lg font-display">Video & Object Tracking Timeline</h3>
                 </div>
-                <span className="text-xs font-mono text-white/50 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                <span className="text-xs font-mono text-cosmic-purple bg-cosmic-purple/10 px-3 py-1 rounded-full border border-cosmic-purple/30 font-bold">
                   Frame {videoFrame} / {totalVideoFrames} (30 FPS)
                 </span>
               </div>
 
               {/* Video Frame Canvas Simulator */}
-              <div className="h-64 bg-black/60 rounded-xl border border-white/10 relative overflow-hidden flex items-center justify-center mb-6">
-                <img src={DEMO_IMAGE} alt="Video Frame" className="w-full h-full object-cover opacity-60" />
-                <div className="absolute top-12 left-24 border-2 border-cosmic-teal bg-cosmic-teal/10 rounded px-2 py-1 text-[10px] font-mono text-cosmic-teal">
+              <div className="h-72 bg-black/80 rounded-xl border border-white/15 relative overflow-hidden flex items-center justify-center mb-6 shadow-inner">
+                <img src={DEMO_IMAGE} alt="Video Frame" className="w-full h-full object-cover opacity-70" />
+                <div className="absolute top-12 left-24 border-2 border-cosmic-teal bg-cosmic-teal/20 backdrop-blur-sm rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-cosmic-teal shadow-[0_0_15px_rgba(20,184,166,0.4)]">
                   Track #401: Orbital Debris [Frame {videoFrame}]
                 </div>
-                <div className="absolute bottom-16 right-36 border-2 border-cosmic-purple bg-cosmic-purple/10 rounded px-2 py-1 text-[10px] font-mono text-cosmic-purple">
+                <div className="absolute bottom-16 right-36 border-2 border-cosmic-purple bg-cosmic-purple/20 backdrop-blur-sm rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-cosmic-purple shadow-[0_0_15px_rgba(139,92,246,0.4)]">
                   Track #402: Satellite Alpha [Frame {videoFrame}]
                 </div>
               </div>
 
               {/* Timeline Scrubber */}
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-xs text-white/50 font-mono">
+              <div className="space-y-2 mb-6 bg-black/50 p-4 rounded-xl border border-white/15">
+                <div className="flex justify-between text-xs text-white/70 font-mono font-semibold">
                   <span>Frame 0</span>
-                  <span>Frame {videoFrame}</span>
+                  <span className="text-cosmic-purple">Frame {videoFrame}</span>
                   <span>Frame {totalVideoFrames}</span>
                 </div>
                 <input
@@ -572,20 +581,22 @@ export default function AnnotationTool() {
                   max={totalVideoFrames}
                   value={videoFrame}
                   onChange={(e) => setVideoFrame(Number(e.target.value))}
-                  className="w-full accent-cosmic-purple cursor-pointer"
+                  className="w-full accent-cosmic-purple cursor-pointer h-2 bg-white/10 rounded-lg"
                 />
               </div>
 
               {/* Tracks Table */}
-              <div className="bg-white/5 rounded-xl border border-white/10 p-4">
-                <h4 className="text-xs font-semibold text-white mb-3">Tracked Objects Across Frames</h4>
+              <div className="bg-black/50 rounded-xl border border-white/15 p-4">
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Tag size={13} className="text-cosmic-teal" /> Tracked Objects Across Frames
+                </h4>
                 <div className="space-y-2 text-xs">
                   {videoTracks.map((vt) => (
-                    <div key={vt.id} className="flex items-center justify-between p-2 rounded bg-black/40 border border-white/10">
-                      <span className="font-medium text-white">{vt.name}</span>
-                      <span className="text-white/50">{vt.class}</span>
-                      <span className="font-mono text-cosmic-teal">Frames {vt.startFrame}-{vt.endFrame}</span>
-                      <span className="font-mono text-white/40">{vt.bbox}</span>
+                    <div key={vt.id} className="flex items-center justify-between p-3 rounded-lg bg-black/60 border border-white/10 hover:border-white/25 transition-all">
+                      <span className="font-bold text-white">{vt.name}</span>
+                      <span className="text-white/60 bg-white/10 px-2 py-0.5 rounded text-[11px]">{vt.class}</span>
+                      <span className="font-mono text-cosmic-teal font-semibold">Frames {vt.startFrame}-{vt.endFrame}</span>
+                      <span className="font-mono text-white/50">{vt.bbox}</span>
                     </div>
                   ))}
                 </div>
@@ -598,23 +609,23 @@ export default function AnnotationTool() {
         {activeModality === "text_rlhf" && (
           <div className="flex-1 flex flex-col md:flex-row p-6 gap-6 overflow-y-auto">
             {/* Prompt & NER */}
-            <div className="flex-1 glass-card rounded-2xl p-6 border border-white/10 space-y-6">
+            <div className="flex-1 bg-[#0c0c1e]/90 backdrop-blur-xl rounded-2xl p-6 border border-white/15 shadow-2xl space-y-6">
               <div>
-                <h3 className="text-white font-semibold text-lg mb-2 flex items-center gap-2">
+                <h3 className="text-white font-bold text-lg font-display mb-2 flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-cosmic-teal" /> Prompt & Entity Tagging (NER)
                 </h3>
-                <p className="text-xs text-white/50 mb-4">Highlight tokens to tag Named Entities or evaluate model alignment.</p>
-                <div className="p-4 rounded-xl bg-black/40 border border-white/10 text-sm leading-relaxed text-white">
+                <p className="text-xs text-white/60 mb-4">Highlight tokens to tag Named Entities or evaluate model alignment.</p>
+                <div className="p-5 rounded-xl bg-black/60 border border-white/15 text-sm leading-relaxed text-white font-medium shadow-inner">
                   {rlhfPrompt}
                 </div>
               </div>
 
               <div>
-                <h4 className="text-xs font-semibold text-white/70 mb-3">Extracted Entities</h4>
-                <div className="flex flex-wrap gap-2">
+                <h4 className="text-xs font-bold text-white/80 uppercase tracking-wider mb-3">Extracted Entities</h4>
+                <div className="flex flex-wrap gap-2.5">
                   {nerTokens.map((tok, i) => (
-                    <span key={i} className={`px-2.5 py-1 rounded-md text-xs font-mono border ${tok.color}`}>
-                      {tok.text} <span className="text-[10px] opacity-70">[{tok.tag}]</span>
+                    <span key={i} className={`px-3 py-1.5 rounded-lg text-xs font-mono border font-semibold shadow-sm ${tok.color}`}>
+                      {tok.text} <span className="text-[10px] opacity-80 font-normal">[{tok.tag}]</span>
                     </span>
                   ))}
                 </div>
@@ -622,56 +633,56 @@ export default function AnnotationTool() {
             </div>
 
             {/* RLHF Preference Ranking */}
-            <div className="flex-1 glass-card rounded-2xl p-6 border border-white/10 space-y-6 flex flex-col justify-between">
+            <div className="flex-1 bg-[#0c0c1e]/90 backdrop-blur-xl rounded-2xl p-6 border border-white/15 shadow-2xl space-y-6 flex flex-col justify-between">
               <div>
-                <h3 className="text-white font-semibold text-lg mb-2 flex items-center gap-2">
+                <h3 className="text-white font-bold text-lg font-display mb-2 flex items-center gap-2">
                   <ThumbsUp className="h-5 w-5 text-cosmic-purple" /> RLHF Model Response Preference
                 </h3>
-                <p className="text-xs text-white/50 mb-6">Compare Model A vs Model B output and select the better response for alignment training.</p>
+                <p className="text-xs text-white/60 mb-6">Compare Model A vs Model B output and select the better response for alignment training.</p>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   {/* Model A */}
                   <div
                     onClick={() => setRlhfRank("A")}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                    className={`p-5 rounded-xl border cursor-pointer transition-all ${
                       rlhfRank === "A"
-                        ? "bg-cosmic-purple/20 border-cosmic-purple shadow-[0_0_20px_rgba(139,92,246,0.3)]"
-                        : "bg-white/5 border-white/10 hover:border-white/20"
+                        ? "bg-cosmic-purple/20 border-cosmic-purple shadow-[0_0_25px_rgba(139,92,246,0.35)] scale-[1.02]"
+                        : "bg-black/40 border-white/15 hover:border-white/30 text-white"
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-cosmic-purple uppercase">Model Response A</span>
-                      {rlhfRank === "A" && <CheckCircle size={14} className="text-cosmic-purple" />}
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-bold text-cosmic-purple uppercase tracking-wider">Model Response A</span>
+                      {rlhfRank === "A" && <CheckCircle size={16} className="text-cosmic-purple" />}
                     </div>
-                    <p className="text-xs text-white/80 leading-relaxed mb-4">
+                    <p className="text-xs text-white/90 leading-relaxed mb-4 font-medium">
                       "Orbital calculation indicates NORAD-49210 will maintain a safe distance of 14.2 km from nearest debris cluster during South Asia pass at 14:22 UTC."
                     </p>
-                    <div className="text-[10px] text-white/40 font-mono">Score: {rlhfScoreA}/5 · Helpful & Accurate</div>
+                    <div className="text-[11px] text-white/50 font-mono font-semibold">Score: {rlhfScoreA}/5 · Helpful & Accurate</div>
                   </div>
 
                   {/* Model B */}
                   <div
                     onClick={() => setRlhfRank("B")}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                    className={`p-5 rounded-xl border cursor-pointer transition-all ${
                       rlhfRank === "B"
-                        ? "bg-cosmic-teal/20 border-cosmic-teal shadow-[0_0_20px_rgba(20,184,166,0.3)]"
-                        : "bg-white/5 border-white/10 hover:border-white/20"
+                        ? "bg-cosmic-teal/20 border-cosmic-teal shadow-[0_0_25px_rgba(20,184,166,0.35)] scale-[1.02]"
+                        : "bg-black/40 border-white/15 hover:border-white/30 text-white"
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-cosmic-teal uppercase">Model Response B</span>
-                      {rlhfRank === "B" && <CheckCircle size={14} className="text-cosmic-teal" />}
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-bold text-cosmic-teal uppercase tracking-wider">Model Response B</span>
+                      {rlhfRank === "B" && <CheckCircle size={16} className="text-cosmic-teal" />}
                     </div>
-                    <p className="text-xs text-white/80 leading-relaxed mb-4">
+                    <p className="text-xs text-white/90 leading-relaxed mb-4 font-medium">
                       "Satellite is fine. No issues detected in orbit."
                     </p>
-                    <div className="text-[10px] text-white/40 font-mono">Score: {rlhfScoreB}/5 · Too Brief</div>
+                    <div className="text-[11px] text-white/50 font-mono font-semibold">Score: {rlhfScoreB}/5 · Too Brief</div>
                   </div>
                 </div>
               </div>
 
-              <div className="text-xs text-white/40 bg-white/5 p-3 rounded-xl border border-white/10">
-                Selected Preference: <span className="text-white font-bold">Model {rlhfRank ?? "None"}</span> — Exporting will record this pair for PPO / DPO fine-tuning.
+              <div className="text-xs text-white/60 bg-black/50 p-4 rounded-xl border border-white/15 font-mono">
+                Selected Preference: <span className="text-cosmic-teal font-bold text-sm">Model {rlhfRank ?? "None"}</span> — Exporting will record this pair for PPO / DPO fine-tuning.
               </div>
             </div>
           </div>
@@ -680,22 +691,22 @@ export default function AnnotationTool() {
         {/* 5. SAR RADAR & SENSOR FUSION MODALITY */}
         {activeModality === "sar_radar" && (
           <div className="flex-1 flex flex-col md:flex-row p-6 gap-6 overflow-y-auto">
-            <div className="flex-1 glass-card rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+            <div className="flex-1 bg-[#0c0c1e]/90 backdrop-blur-xl rounded-2xl p-6 border border-white/15 shadow-2xl flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
                     <Radar className="h-5 w-5 text-cosmic-teal" />
-                    <h3 className="text-white font-semibold text-lg">Polarimetric SAR Radar & Multispectral Fusion</h3>
+                    <h3 className="text-white font-bold text-lg font-display">Polarimetric SAR Radar & Multispectral Fusion</h3>
                   </div>
                   <div className="flex items-center gap-2">
                     {["VV", "VH", "RGB", "Thermal"].map((b) => (
                       <button
                         key={b}
                         onClick={() => setSelectedBand(b as any)}
-                        className={`px-3 py-1 rounded-md text-xs font-mono font-bold transition-all ${
+                        className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                           selectedBand === b
-                            ? "bg-cosmic-teal text-black"
-                            : "bg-white/10 text-white/70 hover:text-white"
+                            ? "bg-cosmic-teal text-black shadow-[0_0_12px_rgba(20,184,166,0.6)]"
+                            : "bg-white/10 text-white/70 hover:text-white hover:bg-white/20"
                         }`}
                       >
                         {b} Band
@@ -705,20 +716,20 @@ export default function AnnotationTool() {
                 </div>
 
                 {/* Canvas Simulator for SAR */}
-                <div className="h-72 bg-black/80 rounded-xl border border-white/10 relative overflow-hidden flex items-center justify-center mb-6">
+                <div className="h-80 bg-black/90 rounded-xl border border-white/15 relative overflow-hidden flex items-center justify-center mb-6 shadow-inner">
                   <img src={DEMO_IMAGE} alt="SAR Radar" className="w-full h-full object-cover mix-blend-difference" style={{ opacity: opacityOverlay / 100 }} />
-                  <div className="absolute top-4 left-4 bg-black/70 p-3 rounded-lg border border-white/20 text-xs font-mono space-y-1 text-white">
-                    <div>Polarization: <span className="text-cosmic-teal">{selectedBand}</span></div>
-                    <div>Wavelength: <span className="text-cosmic-purple">5.55 cm (C-band)</span></div>
-                    <div>Incidence Angle: <span className="text-yellow-400">38.2°</span></div>
+                  <div className="absolute top-4 left-4 bg-black/80 backdrop-blur-md p-4 rounded-xl border border-white/20 text-xs font-mono space-y-1.5 text-white shadow-xl">
+                    <div>Polarization: <span className="text-cosmic-teal font-bold">{selectedBand}</span></div>
+                    <div>Wavelength: <span className="text-cosmic-purple font-bold">5.55 cm (C-band)</span></div>
+                    <div>Incidence Angle: <span className="text-yellow-400 font-bold">38.2°</span></div>
                   </div>
                 </div>
 
                 {/* Opacity slider */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs text-white/50">
+                <div className="space-y-2 bg-black/50 p-4 rounded-xl border border-white/15">
+                  <div className="flex justify-between text-xs text-white/70 font-semibold">
                     <span>Optical Base Layer</span>
-                    <span>SAR Radar Overlay ({opacityOverlay}%)</span>
+                    <span className="text-cosmic-teal">SAR Radar Overlay ({opacityOverlay}%)</span>
                   </div>
                   <input
                     type="range"
@@ -726,7 +737,7 @@ export default function AnnotationTool() {
                     max={100}
                     value={opacityOverlay}
                     onChange={(e) => setOpacityOverlay(Number(e.target.value))}
-                    className="w-full accent-cosmic-teal cursor-pointer"
+                    className="w-full accent-cosmic-teal cursor-pointer h-2 bg-white/10 rounded-lg"
                   />
                 </div>
               </div>

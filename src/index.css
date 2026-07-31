@@ -163,9 +163,16 @@
 }
 
 .glass-card {
-  background: hsl(0 0% 100% / 0.8);
+  background: rgba(12, 12, 28, 0.75);
   backdrop-filter: blur(20px);
-  border: 1px solid hsl(0 0% 70% / 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-card-light {
+  background: hsl(0 0% 100% / 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid hsl(0 0% 70% / 0.4);
 }
 
 /* Global scroll-reveal applied by <AutoScrollReveal /> */
