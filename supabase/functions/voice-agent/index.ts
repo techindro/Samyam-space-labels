@@ -178,10 +178,12 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const apiKey = Deno.env.get("AI_API_KEY") || Deno.env.get("GEMINI_API_KEY") || Deno.env.get("LOVABLE_API_KEY");
+    if (!apiKey) {
+      throw new Error("AI_API_KEY or GEMINI_API_KEY is not configured");
     }
+
+    const aiGatewayUrl = Deno.env.get("AI_GATEWAY_URL") || "https://ai.gateway.lovable.dev/v1/chat/completions";
 
     // Set up Supabase client with user's authentication headers if available
     const authHeader = req.headers.get("Authorization") || "";
@@ -204,11 +206,11 @@ serve(async (req) => {
       { role: "user", content: message },
     ];
 
-    // First call to Lovable AI gateway with tool definitions
-    let response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // First call to AI gateway with tool definitions
+    let response = await fetch(aiGatewayUrl, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -276,11 +278,11 @@ serve(async (req) => {
         }
       }
 
-      // Second call to Lovable AI gateway with tool results
-      response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      // Second call to AI gateway with tool results
+      response = await fetch(aiGatewayUrl, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

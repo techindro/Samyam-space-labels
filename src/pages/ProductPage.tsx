@@ -81,7 +81,7 @@ const ProductPage = () => {
   }
 
   const Icon = product.icon;
-  const pageUrl = `https://chai-space-labels.lovable.app/products/${product.slug}`;
+  const pageUrl = `${window.location.origin}/products/${product.slug}`;
   const pageTitle = `${product.label} — samyam`;
   const pageDescription = product.hero.description;
 

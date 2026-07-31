@@ -74,7 +74,7 @@ const App = () => (
             <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
             <Route path="/government/:slug" element={<GovernmentPage />} />
             <Route path="/products/:slug" element={<ProductPage />} />
-            <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
+            <Route path="/oauth/consent" element={<OAuthConsent />} />
             {/* Annotation Tool — demo mode (no auth) */}
             <Route path="/annotate/demo" element={<AnnotationTool />} />
             {/* Annotation Tool — task-specific (protected) */}
