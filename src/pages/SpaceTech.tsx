@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import esaLogo from "@/assets/logos/esa.png";
 import nasaLogo from "@/assets/logos/nasa.png";
 import isroLogo from "@/assets/logos/isro.png";
+import usgsLogo from "@/assets/logos/usgs.svg";
 import {
   Dialog,
   DialogContent,
@@ -338,7 +339,7 @@ const agencyArchives = [
     name: "USGS EarthExplorer",
     fullName: "United States Geological Survey",
     archiveName: "USGS Landsat & EROS Archive",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/USGS_logo.svg/640px-USGS_logo.svg.png",
+    logo: usgsLogo,
     thumbnail: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=800&auto=format&fit=crop",
     satellites: ["Landsat 8 & 9 OLI-2", "Landsat Collection 2", "SRTM DEM"],
     desc: "50-year calibrated surface reflectance time-series data and global digital elevation archives.",
