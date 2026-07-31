@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => ({
       ".onrender.com"
     ]
   },
-  plugins: [react(), mode === "development" && componentTagger(), mcpPlugin()].filter(Boolean),
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   optimizeDeps: {
     esbuildOptions: {
       sourcemap: false,
