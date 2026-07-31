@@ -308,6 +308,8 @@ const MissionImage = ({
       />
     </div>
   );
+};
+
 // Real, verified open space agency data archives
 const agencyArchives = [
   {
