@@ -259,7 +259,7 @@ export default function AnnotationTool() {
         </div>
 
         {/* Modality Switcher Tabs */}
-        <div className="flex items-center gap-1 bg-black/60 p-1 rounded-xl border border-white/20 shadow-inner">
+        <div className="flex items-center gap-1 bg-black/50 p-1 rounded-xl border border-white/15 shadow-inner">
           {[
             { id: "vision", label: "2D Vision", icon: ImageIcon },
             { id: "audio", label: "Audio & Speech", icon: Mic },
@@ -276,10 +276,10 @@ export default function AnnotationTool() {
                   setActiveModality(m.id as Modality);
                   toast({ title: `Switched to ${m.label} Modality` });
                 }}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-extrabold transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
                   active
-                    ? "bg-white text-slate-950 shadow-[0_0_15px_rgba(255,255,255,0.4)] scale-105"
-                    : "text-white/70 hover:text-white hover:bg-white/10"
+                    ? "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white shadow-[0_0_15px_rgba(139,92,246,0.5)] scale-105"
+                    : "text-white/60 hover:text-white hover:bg-white/10"
                 }`}
               >
                 <Icon size={14} />
@@ -296,7 +296,7 @@ export default function AnnotationTool() {
             size="sm"
             onClick={() => setShowHindiKb(v => !v)}
             className={`h-7 px-2.5 text-xs gap-1 transition-colors border ${
-              showHindiKb ? "bg-white text-black font-bold border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+              showHindiKb ? "bg-cosmic-teal text-black font-bold border-cosmic-teal shadow-[0_0_10px_rgba(20,184,166,0.4)]" : "bg-white/5 border-white/20 text-white/80 hover:text-white hover:bg-white/10"
             }`}
           >
             <span>क/A</span>
@@ -308,7 +308,7 @@ export default function AnnotationTool() {
               size="sm"
               onClick={handleAiPrelabel}
               disabled={runningAi}
-              className="h-7 px-2.5 text-xs bg-white/10 border border-white/40 text-white hover:bg-white/20 gap-1 font-semibold"
+              className="h-7 px-2.5 text-xs bg-cosmic-purple/10 border border-cosmic-purple/60 text-cosmic-purple hover:bg-cosmic-purple/20 gap-1 font-semibold"
             >
               {runningAi ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
               <span>AI Pre-label</span>
@@ -316,14 +316,14 @@ export default function AnnotationTool() {
           )}
 
           {activeModality === "vision" && (
-            <button title="Change image URL" onClick={() => setShowUrlBox(v => !v)} className="text-white/60 hover:text-white transition-colors mr-2">
+            <button title="Change image URL" onClick={() => setShowUrlBox(v => !v)} className="text-white/40 hover:text-white transition-colors mr-2">
               <ImageIcon size={16} />
             </button>
           )}
-          <Button size="sm" onClick={handleExport} className="h-7 px-3 text-xs bg-white/10 border border-white/25 text-white hover:bg-white/20 gap-1.5 font-medium">
+          <Button size="sm" onClick={handleExport} className="h-7 px-3 text-xs bg-white/5 border border-white/20 text-white/80 hover:text-white hover:bg-white/15 gap-1.5">
             <Download size={13} /> Export JSON
           </Button>
-          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3.5 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1.5 font-bold shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-gradient-to-r from-cosmic-purple to-cosmic-teal hover:opacity-90 text-white border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]">
             {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
             Save
           </Button>
@@ -332,13 +332,13 @@ export default function AnnotationTool() {
 
       {/* ── Devanagari (Hindi) On-Screen Keyboard Drawer ── */}
       {showHindiKb && (
-        <div className="shrink-0 bg-[#121422] border-b border-white/20 p-3 shadow-xl z-20">
+        <div className="shrink-0 bg-[#121225] border-b border-cosmic-teal/40 p-3 shadow-xl z-20">
           <div className="flex items-center justify-between mb-2 px-1">
-            <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+            <span className="text-xs font-semibold text-cosmic-teal flex items-center gap-1.5">
               <span>⌨️</span> Devanagari (देवनागरी/हिन्दी) On-Screen Keyboard Pad
             </span>
-            <span className="text-[10px] text-white/60">Click any character to copy to clipboard & insert into annotations</span>
-            <button onClick={() => setShowHindiKb(false)} className="text-white/50 hover:text-white text-xs">✕ Close</button>
+            <span className="text-[10px] text-white/50">Click any character to copy to clipboard & insert into annotations</span>
+            <button onClick={() => setShowHindiKb(false)} className="text-white/40 hover:text-white text-xs">✕ Close</button>
           </div>
           <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto pr-1">
             {DEVANAGARI_CHARS.map((char, i) => (
@@ -348,7 +348,7 @@ export default function AnnotationTool() {
                   navigator.clipboard.writeText(char);
                   toast({ title: `Copied '${char}'` });
                 }}
-                className="px-2.5 py-1 rounded bg-white/10 hover:bg-white hover:text-black font-mono text-sm text-white transition-colors border border-white/10"
+                className="px-2.5 py-1 rounded bg-white/10 hover:bg-cosmic-teal hover:text-black font-mono text-sm text-white transition-colors border border-white/5"
               >
                 {char}
               </button>
@@ -359,7 +359,7 @@ export default function AnnotationTool() {
 
       {/* ── Image URL Input ── */}
       {showUrlBox && activeModality === "vision" && (
-        <div className="shrink-0 flex items-center gap-2 px-4 py-2 bg-[#0d0e19] border-b border-white/15">
+        <div className="shrink-0 flex items-center gap-2 px-4 py-2 bg-[#0f0f1e] border-b border-white/10">
           <input
             autoFocus
             type="url"
@@ -370,12 +370,12 @@ export default function AnnotationTool() {
               if (e.key === "Enter" && customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }
               if (e.key === "Escape") setShowUrlBox(false);
             }}
-            className="flex-1 text-xs bg-white/10 text-white px-3 py-1.5 rounded-md border border-white/20 outline-none focus:border-white placeholder:text-white/40"
+            className="flex-1 text-xs bg-white/5 text-white px-3 py-1.5 rounded-md border border-white/10 outline-none focus:border-cosmic-purple/60 placeholder:text-white/25"
           />
-          <Button size="sm" onClick={() => { if (customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }}} className="h-7 px-3 text-xs bg-white text-black hover:bg-slate-200 border-0 font-bold">
+          <Button size="sm" onClick={() => { if (customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }}} className="h-7 px-3 text-xs bg-cosmic-purple text-white border-0">
             Load
           </Button>
-          <button onClick={() => setShowUrlBox(false)} className="text-white/50 hover:text-white text-xs">✕</button>
+          <button onClick={() => setShowUrlBox(false)} className="text-white/40 hover:text-white text-xs">✕</button>
         </div>
       )}
 
@@ -463,7 +463,7 @@ export default function AnnotationTool() {
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                      className="p-3.5 rounded-full bg-white text-slate-950 shadow-[0_0_15px_rgba(255,255,255,0.4)] hover:bg-slate-200 transition-all hover:scale-105"
+                      className="p-3.5 rounded-full bg-gradient-to-r from-violet-600 to-teal-500 text-white shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:scale-105 transition-transform"
                     >
                       {isPlayingAudio ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
                     </button>
@@ -515,12 +515,12 @@ export default function AnnotationTool() {
                   <div key={seg.id} className="p-4 rounded-xl bg-[#0c0d18] border border-[#22253b] hover:border-[#343956] transition-all space-y-2.5">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-mono text-teal-400 font-bold bg-teal-500/10 px-2.5 py-0.5 rounded border border-teal-500/30">{seg.start} - {seg.end}</span>
-                      <span className="px-2.5 py-0.5 rounded bg-white/15 text-white font-bold text-[10px] uppercase border border-white/30">
+                      <span className="px-2.5 py-0.5 rounded bg-violet-500/20 text-violet-300 font-bold text-[10px] uppercase border border-violet-500/30">
                         {seg.tag}
                       </span>
                     </div>
                     <p className="text-xs text-slate-200 font-semibold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-white" /> {seg.speaker}
+                      <span className="w-2 h-2 rounded-full bg-violet-400" /> {seg.speaker}
                     </p>
                     <textarea
                       value={seg.transcript}
@@ -549,10 +549,10 @@ export default function AnnotationTool() {
             <div className="flex-1 bg-[#131524] rounded-2xl p-6 border border-[#272b44] shadow-2xl flex flex-col justify-between">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2.5">
-                  <VideoIcon className="h-5 w-5 text-teal-400" />
+                  <VideoIcon className="h-5 w-5 text-violet-400" />
                   <h3 className="text-white font-bold text-lg font-display">Video & Object Tracking Timeline</h3>
                 </div>
-                <span className="text-xs font-mono text-white bg-white/15 px-3.5 py-1 rounded-full border border-white/30 font-bold">
+                <span className="text-xs font-mono text-violet-300 bg-violet-500/15 px-3.5 py-1 rounded-full border border-violet-500/30 font-bold">
                   Frame {videoFrame} / {totalVideoFrames} (30 FPS)
                 </span>
               </div>
@@ -563,7 +563,7 @@ export default function AnnotationTool() {
                 <div className="absolute top-12 left-24 border-2 border-teal-400 bg-teal-500/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-teal-300 shadow-[0_0_15px_rgba(45,212,191,0.5)]">
                   Track #401: Orbital Debris [Frame {videoFrame}]
                 </div>
-                <div className="absolute bottom-16 right-36 border-2 border-white bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-white shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+                <div className="absolute bottom-16 right-36 border-2 border-violet-400 bg-violet-500/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-violet-300 shadow-[0_0_15px_rgba(167,139,250,0.5)]">
                   Track #402: Satellite Alpha [Frame {videoFrame}]
                 </div>
               </div>
@@ -572,7 +572,7 @@ export default function AnnotationTool() {
               <div className="space-y-2 mb-6 bg-[#0b0c16] p-4 rounded-xl border border-[#23263d]">
                 <div className="flex justify-between text-xs text-slate-300 font-mono font-semibold">
                   <span>Frame 0</span>
-                  <span className="text-white font-bold">Frame {videoFrame}</span>
+                  <span className="text-violet-400">Frame {videoFrame}</span>
                   <span>Frame {totalVideoFrames}</span>
                 </div>
                 <input
@@ -581,7 +581,7 @@ export default function AnnotationTool() {
                   max={totalVideoFrames}
                   value={videoFrame}
                   onChange={(e) => setVideoFrame(Number(e.target.value))}
-                  className="w-full accent-white cursor-pointer h-2 bg-[#25293d] rounded-lg"
+                  className="w-full accent-violet-500 cursor-pointer h-2 bg-[#25293d] rounded-lg"
                 />
               </div>
 
@@ -636,7 +636,7 @@ export default function AnnotationTool() {
             <div className="flex-1 bg-[#131524] rounded-2xl p-6 border border-[#272b44] shadow-2xl space-y-6 flex flex-col justify-between">
               <div>
                 <h3 className="text-white font-bold text-lg font-display mb-2 flex items-center gap-2">
-                  <ThumbsUp className="h-5 w-5 text-white" /> RLHF Model Response Preference
+                  <ThumbsUp className="h-5 w-5 text-violet-400" /> RLHF Model Response Preference
                 </h3>
                 <p className="text-xs text-slate-400 mb-6">Compare Model A vs Model B output and select the better response for alignment training.</p>
 
@@ -646,13 +646,13 @@ export default function AnnotationTool() {
                     onClick={() => setRlhfRank("A")}
                     className={`p-5 rounded-xl border cursor-pointer transition-all ${
                       rlhfRank === "A"
-                        ? "bg-white/15 border-white shadow-[0_0_25px_rgba(255,255,255,0.35)] scale-[1.02]"
+                        ? "bg-violet-600/20 border-violet-500 shadow-[0_0_25px_rgba(139,92,246,0.35)] scale-[1.02]"
                         : "bg-[#06070d] border-[#23263d] hover:border-[#3b4160] text-white"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">Model Response A</span>
-                      {rlhfRank === "A" && <CheckCircle size={16} className="text-white" />}
+                      <span className="text-xs font-bold text-violet-400 uppercase tracking-wider">Model Response A</span>
+                      {rlhfRank === "A" && <CheckCircle size={16} className="text-violet-400" />}
                     </div>
                     <p className="text-xs text-slate-100 leading-relaxed mb-4 font-medium">
                       "Orbital calculation indicates NORAD-49210 will maintain a safe distance of 14.2 km from nearest debris cluster during South Asia pass at 14:22 UTC."
@@ -682,7 +682,7 @@ export default function AnnotationTool() {
               </div>
 
               <div className="text-xs text-slate-300 bg-[#0b0c16] p-4 rounded-xl border border-[#23263d] font-mono">
-                Selected Preference: <span className="text-white font-bold text-sm">Model {rlhfRank ?? "None"}</span> — Exporting will record this pair for PPO / DPO fine-tuning.
+                Selected Preference: <span className="text-teal-400 font-bold text-sm">Model {rlhfRank ?? "None"}</span> — Exporting will record this pair for PPO / DPO fine-tuning.
               </div>
             </div>
           </div>
@@ -705,7 +705,7 @@ export default function AnnotationTool() {
                         onClick={() => setSelectedBand(b as any)}
                         className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                           selectedBand === b
-                            ? "bg-white text-slate-950 shadow-[0_0_12px_rgba(255,255,255,0.6)]"
+                            ? "bg-teal-400 text-slate-950 shadow-[0_0_12px_rgba(45,212,191,0.6)]"
                             : "bg-[#1e2238] text-slate-300 hover:text-white hover:bg-[#282d4a]"
                         }`}
                       >
@@ -720,7 +720,7 @@ export default function AnnotationTool() {
                   <img src={DEMO_IMAGE} alt="SAR Radar" className="w-full h-full object-cover mix-blend-difference" style={{ opacity: opacityOverlay / 100 }} />
                   <div className="absolute top-4 left-4 bg-[#0a0b14]/90 backdrop-blur-md p-4 rounded-xl border border-[#282c44] text-xs font-mono space-y-1.5 text-slate-100 shadow-xl">
                     <div>Polarization: <span className="text-teal-400 font-bold">{selectedBand}</span></div>
-                    <div>Wavelength: <span className="text-white font-bold">5.55 cm (C-band)</span></div>
+                    <div>Wavelength: <span className="text-violet-400 font-bold">5.55 cm (C-band)</span></div>
                     <div>Incidence Angle: <span className="text-amber-400 font-bold">38.2°</span></div>
                   </div>
                 </div>
