@@ -6,51 +6,88 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --background: 235 25% 8%;
+    --foreground: 210 20% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card: 235 22% 12%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover: 235 22% 12%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 0 0% 0%;
+    --primary: 263 70% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 235 20% 18%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 0 0% 92%;
-    --muted-foreground: 0 0% 20%;
+    --muted: 235 20% 18%;
+    --muted-foreground: 215 15% 65%;
 
-    --accent: 0 0% 0%;
+    --accent: 263 70% 60%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 0% 85%;
-    --destructive-foreground: 0 0% 0%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 0 0% 80%;
-    --input: 0 0% 80%;
-    --ring: 0 0% 0%;
+    --border: 235 20% 20%;
+    --input: 235 20% 20%;
+    --ring: 263 70% 60%;
 
     --radius: 0.75rem;
 
-    --cosmic-purple: 0 0% 0%;
-    --cosmic-purple-glow: 0 0% 0%;
-    --cosmic-teal: 0 0% 0%;
-    --cosmic-teal-glow: 0 0% 0%;
-    --cosmic-navy: 0 0% 100%;
-    --cosmic-navy-light: 0 0% 95%;
+    --cosmic-purple: 263 70% 60%;
+    --cosmic-purple-glow: 263 70% 60%;
+    --cosmic-teal: 173 80% 40%;
+    --cosmic-teal-glow: 173 80% 40%;
+    --cosmic-navy: 235 25% 9%;
+    --cosmic-navy-light: 235 22% 14%;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 0%;
-    --sidebar-primary: 0 0% 0%;
+    --sidebar-background: 235 22% 12%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 263 70% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 90%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 80%;
-    --sidebar-ring: 0 0% 0%;
+    --sidebar-accent: 235 20% 18%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 235 20% 20%;
+    --sidebar-ring: 263 70% 60%;
+  }
+
+  .dark {
+    --background: 235 25% 8%;
+    --foreground: 210 20% 98%;
+
+    --card: 235 22% 12%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 235 22% 12%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 263 70% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 235 20% 18%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 235 20% 18%;
+    --muted-foreground: 215 15% 65%;
+
+    --accent: 263 70% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 235 20% 20%;
+    --input: 235 20% 20%;
+    --ring: 263 70% 60%;
+
+    --cosmic-purple: 263 70% 60%;
+    --cosmic-purple-glow: 263 70% 60%;
+    --cosmic-teal: 173 80% 40%;
+    --cosmic-teal-glow: 173 80% 40%;
+    --cosmic-navy: 235 25% 9%;
+    --cosmic-navy-light: 235 22% 14%;
   }
 }
 
