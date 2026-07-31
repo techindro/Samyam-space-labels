@@ -26,6 +26,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { Button } from "@/components/ui/button";
+import esaLogo from "@/assets/logos/esa.png";
+import nasaLogo from "@/assets/logos/nasa.png";
+import isroLogo from "@/assets/logos/isro.png";
 import {
   Dialog,
   DialogContent,
@@ -305,7 +308,53 @@ const MissionImage = ({
       />
     </div>
   );
-};
+// Real, verified open space agency data archives
+const agencyArchives = [
+  {
+    name: "ESA Copernicus",
+    fullName: "European Space Agency",
+    archiveName: "Copernicus Open Access Ecosystem",
+    logo: esaLogo,
+    thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
+    satellites: ["Sentinel-1 SAR", "Sentinel-2 Optical L2A", "Sentinel-5P"],
+    desc: "10m multispectral surface reflectance & Sentinel C-band SAR radar archives for global Earth observation.",
+    href: "https://dataspace.copernicus.eu/",
+    badge: "Optical & SAR Radar",
+  },
+  {
+    name: "NASA EOSDIS",
+    fullName: "National Aeronautics & Space Admin",
+    archiveName: "NASA Earth & Solar Data Systems",
+    logo: nasaLogo,
+    thumbnail: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=800&auto=format&fit=crop",
+    satellites: ["SDO Solar AIA/HMI", "MODIS Terra/Aqua", "VIIRS"],
+    desc: "Full-disk solar EUV magnetograms, atmospheric radiance, and space climate telemetry archives.",
+    href: "https://earthdata.nasa.gov/",
+    badge: "Heliophysics & Earth",
+  },
+  {
+    name: "USGS EarthExplorer",
+    fullName: "United States Geological Survey",
+    archiveName: "USGS Landsat & EROS Archive",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/USGS_logo.svg/640px-USGS_logo.svg.png",
+    thumbnail: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=800&auto=format&fit=crop",
+    satellites: ["Landsat 8 & 9 OLI-2", "Landsat Collection 2", "SRTM DEM"],
+    desc: "50-year calibrated surface reflectance time-series data and global digital elevation archives.",
+    href: "https://earthexplorer.usgs.gov/",
+    badge: "50-Yr Time-Series",
+  },
+  {
+    name: "ISRO PRADAN",
+    fullName: "Indian Space Research Organisation",
+    archiveName: "Bhuvan & PRADAN Lunar Center",
+    logo: isroLogo,
+    thumbnail: "https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?q=80&w=800&auto=format&fit=crop",
+    satellites: ["Chandrayaan-2 OHRC (25cm)", "RESOURCESAT-2A", "AWiFS"],
+    desc: "Ultra high-resolution 25cm lunar surface imagery (OHRC) and Indian sub-continent Earth observation.",
+    href: "https://bhuvan.nrsc.gov.in/",
+    badge: "25cm Lunar & EO",
+  },
+];
 
 const SpaceTech = () => {
   const [open, setOpen] = useState(false);
@@ -527,9 +576,78 @@ const SpaceTech = () => {
                 space data sources
               </span>
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base">
+            <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base mb-10">
               We ingest, curate and label from open agency archives — ESA Copernicus, NASA, USGS and ISRO — so every model is grounded in verifiable imagery.
             </p>
+          </div>
+
+          {/* Featured Space Agency Open Archives Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto mb-16">
+            {agencyArchives.map((agency, i) => (
+              <motion.div
+                key={agency.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="bg-slate-950 rounded-2xl overflow-hidden border border-slate-800 hover:border-cyan-400/80 shadow-2xl transition-all hover:-translate-y-1.5 flex flex-col justify-between group select-none"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
+                  <MissionImage
+                    src={agency.thumbnail}
+                    alt={`${agency.name} Satellite Imagery`}
+                    containerClassName="w-full h-full"
+                    className="group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                  
+                  {/* Official Agency Logo Badge */}
+                  <div className="absolute top-2.5 left-2.5 flex items-center gap-2 bg-slate-950/95 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-800 shadow-md">
+                    <img src={agency.logo} alt={agency.name} className="h-4 w-auto object-contain max-w-[50px]" />
+                    <span className="text-xs font-bold text-slate-100">{agency.name}</span>
+                  </div>
+
+                  <span className="absolute bottom-2.5 left-2.5 text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-cyan-950/90 border border-cyan-800 text-cyan-300">
+                    {agency.badge}
+                  </span>
+                </div>
+
+                <div className="p-4 flex flex-col flex-1 justify-between space-y-3 bg-slate-950">
+                  <div>
+                    <h3 className="font-display text-sm font-bold text-slate-100 group-hover:text-cyan-400 transition-colors">
+                      {agency.archiveName}
+                    </h3>
+                    <p className="text-[11px] text-slate-300 mt-1.5 leading-relaxed line-clamp-2">
+                      {agency.desc}
+                    </p>
+                  </div>
+
+                  {/* Satellites Tags */}
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {agency.satellites.map((sat) => (
+                      <span key={sat} className="text-[9px] font-mono font-semibold bg-slate-900 text-slate-200 border border-slate-800 px-2 py-0.5 rounded-md">
+                        {sat}
+                      </span>
+                    ))}
+                  </div>
+
+                  <a
+                    href={agency.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-between w-full mt-2 pt-2 border-t border-slate-800 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    <span>Explore Open Archive</span>
+                    <ExternalLink size={13} />
+                  </a>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mb-8">
+            <h3 className="font-display text-xl font-bold text-slate-100">Curated Verifiable Mission Datasets</h3>
+            <p className="text-xs text-muted-foreground mt-1">Select any mission dataset below to inspect spatial resolution, spectral bands, and access methods.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 max-w-6xl mx-auto">
