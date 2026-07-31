@@ -28,7 +28,7 @@ export default function AnnotationToolbar({
   tool, onSetTool, onUndo, onRedo, canUndo, canRedo,
 }: Props) {
   return (
-    <div className="flex flex-col items-center gap-1 px-1.5 py-3 bg-[#0f0f1e] border-r border-white/10 w-12 shrink-0 select-none">
+    <div className="flex flex-col items-center gap-1.5 px-2 py-3 bg-[#0c0c1b]/90 backdrop-blur-md border-r border-white/10 w-14 shrink-0 select-none shadow-xl z-10">
 
       {/* Tool buttons */}
       {tools.map(btn => (
@@ -37,10 +37,10 @@ export default function AnnotationToolbar({
           title={`${btn.label}  (${btn.shortcut})`}
           onClick={() => onSetTool(btn.id)}
           className={`
-            w-9 h-9 flex items-center justify-center rounded-lg transition-all
+            w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200
             ${tool === btn.id
-              ? "bg-cosmic-purple text-white shadow-lg shadow-cosmic-purple/30"
-              : "text-white/50 hover:text-white hover:bg-white/10"}
+              ? "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white font-bold shadow-[0_0_15px_rgba(139,92,246,0.4)] scale-105"
+              : "text-white/60 hover:text-white hover:bg-white/10"}
           `}
         >
           {btn.icon}

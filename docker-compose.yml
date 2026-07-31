@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # React Frontend Web App
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: samyam-frontend
+    ports:
+      - "8080:80"
+    environment:
+      - VITE_FASTAPI_URL=http://localhost:8000
+    depends_on:
+      - ai-engine
+    restart: always
+
+  # Python FastAPI AI Engine (CLIP, ISRO Satellite Inference)
+  ai-engine:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    container_name: samyam-ai-engine
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    restart: always

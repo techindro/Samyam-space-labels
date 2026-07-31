@@ -199,7 +199,7 @@ serve(async (req) => {
 
     const systemPrompt = agentPrompts[agentType] || agentPrompts["Data Annotation"];
 
-    const messages = [
+    const messages: any[] = [
       { role: "system", content: systemPrompt },
       { role: "user", content: message },
     ];

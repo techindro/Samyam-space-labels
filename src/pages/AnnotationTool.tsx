@@ -172,7 +172,7 @@ export default function AnnotationTool() {
     const { error: err } = await supabase
       .from("annotation_tasks")
       .update({
-        result: { annotations: state.annotations, labels: state.labels, modality: activeModality },
+        result: { annotations: state.annotations, labels: state.labels, modality: activeModality } as any,
         status: "in_progress",
         updated_at: new Date().toISOString(),
       })
@@ -238,28 +238,28 @@ export default function AnnotationTool() {
   );
 
   return (
-    <div className="h-screen flex flex-col bg-[#0d0d1a] overflow-hidden select-none">
+    <div className="h-screen flex flex-col bg-gradient-to-b from-[#080814] via-[#0c0c1b] to-[#06060f] overflow-hidden select-none">
 
       {/* ── Top Bar ── */}
-      <header className="shrink-0 flex items-center justify-between gap-3 px-4 h-12 border-b border-white/10 bg-[#0f0f1e]">
+      <header className="shrink-0 flex items-center justify-between gap-3 px-4 h-14 border-b border-cosmic-purple/20 bg-[#0c0c1b]/95 backdrop-blur-md z-20 shadow-xl">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="text-white/40 hover:text-white transition-colors shrink-0" title="Back">
+          <button onClick={() => navigate(-1)} className="text-white/50 hover:text-white transition-colors shrink-0 p-1.5 rounded-lg hover:bg-white/10" title="Back">
             <ArrowLeft size={18} />
           </button>
           <div>
-            <p className="text-white font-medium text-sm truncate max-w-[200px]">
+            <p className="text-white font-bold text-sm font-display truncate max-w-[220px]">
               {task?.title ?? "Multimodal Labeling Workspace"}
             </p>
           </div>
           {task?.status && (
-            <span className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full border font-medium uppercase tracking-wide ${statusColors[task.status] ?? ""}`}>
+            <span className={`shrink-0 text-[10px] px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColors[task.status] ?? ""}`}>
               {task.status.replace("_", " ")}
             </span>
           )}
         </div>
 
         {/* Modality Switcher Tabs */}
-        <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/10">
+        <div className="flex items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/10">
           {[
             { id: "vision", label: "2D Vision", icon: ImageIcon },
             { id: "audio", label: "Audio & Speech", icon: Mic },
@@ -276,13 +276,13 @@ export default function AnnotationTool() {
                   setActiveModality(m.id as Modality);
                   toast({ title: `Switched to ${m.label} Modality` });
                 }}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
                   active
-                    ? "bg-cosmic-purple text-white shadow-sm"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
+                    ? "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white shadow-[0_0_15px_rgba(139,92,246,0.4)] scale-105"
+                    : "text-white/60 hover:text-white hover:bg-white/10"
                 }`}
               >
-                <Icon size={13} />
+                <Icon size={14} />
                 <span className="hidden md:inline">{m.label}</span>
               </button>
             );

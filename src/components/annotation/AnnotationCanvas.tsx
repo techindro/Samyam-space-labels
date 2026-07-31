@@ -199,7 +199,7 @@ export default function AnnotationCanvas({
     const d    = ds.current;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#0d0d1a";
+    ctx.fillStyle = "#080814";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Checkerboard background (indicates image area)
@@ -478,6 +478,7 @@ export default function AnnotationCanvas({
     };
 
     const finishPolygon = (d: DrawState) => {
+      if (d.polyPoints.length < 3) return;
       const ann: PolygonAnnotation = {
         id: crypto.randomUUID(), type: "polygon",
         label: labelRef.current.name, color: labelRef.current.color,
@@ -487,6 +488,41 @@ export default function AnnotationCanvas({
       d.polyPoints = [];
       d.polyMouse  = null;
       render();
+    };
+
+    let touchStartDist = 0;
+    let touchStartScale = 1;
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        e.preventDefault();
+        touchStartDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        touchStartScale = d.transform.scale;
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 2 && touchStartDist > 0) {
+        e.preventDefault();
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const factor = dist / touchStartDist;
+        const newScale = Math.max(0.05, Math.min(30, touchStartScale * factor));
+        const rect = canvas.getBoundingClientRect();
+        const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left;
+        const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top;
+        d.transform = {
+          scale: newScale,
+          tx: midX - (midX - d.transform.tx) * (newScale / d.transform.scale),
+          ty: midY - (midY - d.transform.ty) * (newScale / d.transform.scale),
+        };
+        render();
+      }
     };
 
     const onWheel = (e: WheelEvent) => {
@@ -542,6 +578,8 @@ export default function AnnotationCanvas({
     canvas.addEventListener("mousemove", onMouseMove);
     canvas.addEventListener("mouseup",   onMouseUp);
     canvas.addEventListener("dblclick",  onDblClick);
+    canvas.addEventListener("touchstart", onTouchStart, { passive: false });
+    canvas.addEventListener("touchmove",  onTouchMove, { passive: false });
     canvas.addEventListener("wheel",     onWheel, { passive: false });
     window.addEventListener("keydown",   onKeyDown);
     window.addEventListener("keyup",     onKeyUp);
@@ -551,24 +589,122 @@ export default function AnnotationCanvas({
       canvas.removeEventListener("mousemove", onMouseMove);
       canvas.removeEventListener("mouseup",   onMouseUp);
       canvas.removeEventListener("dblclick",  onDblClick);
+      canvas.removeEventListener("touchstart", onTouchStart);
+      canvas.removeEventListener("touchmove",  onTouchMove);
       canvas.removeEventListener("wheel",     onWheel);
       window.removeEventListener("keydown",   onKeyDown);
       window.removeEventListener("keyup",     onKeyUp);
     };
   }, [render]); // stable — all mutable state via refs
 
+  const handleZoom = (factor: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const d = ds.current;
+    const midX = canvas.width / 2;
+    const midY = canvas.height / 2;
+    const newScale = Math.max(0.05, Math.min(30, d.transform.scale * factor));
+    d.transform = {
+      scale: newScale,
+      tx: midX - (midX - d.transform.tx) * (newScale / d.transform.scale),
+      ty: midY - (midY - d.transform.ty) * (newScale / d.transform.scale),
+    };
+    render();
+  };
+
+  const handleFit = () => {
+    const canvas = canvasRef.current;
+    const img = ds.current.image;
+    if (!canvas || !img) return;
+    const s = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.85;
+    ds.current.transform = {
+      scale: s,
+      tx: (canvas.width - img.width * s) / 2,
+      ty: (canvas.height - img.height * s) / 2,
+    };
+    render();
+  };
+
+  const handleCompletePoly = () => {
+    if (ds.current.polyPoints.length >= 3) {
+      const ann: PolygonAnnotation = {
+        id: crypto.randomUUID(), type: "polygon",
+        label: labelRef.current.name, color: labelRef.current.color,
+        points: [...ds.current.polyPoints],
+      };
+      cbRef.current.onAddAnnotation(ann);
+      ds.current.polyPoints = [];
+      ds.current.polyMouse = null;
+      render();
+    }
+  };
+
+  const handleCancelDraw = () => {
+    ds.current.polyPoints = [];
+    ds.current.polyMouse = null;
+    ds.current.isDrawingBBox = false;
+    ds.current.bboxStart = null;
+    ds.current.bboxCurrent = null;
+    render();
+  };
+
   return (
-    <div ref={containerRef} className="relative w-full h-full overflow-hidden bg-[#0d0d1a]">
-      <canvas ref={canvasRef} className="block" />
+    <div ref={containerRef} className="relative w-full h-full overflow-hidden bg-[#0d0d1a] touch-none">
+      <canvas ref={canvasRef} className="block w-full h-full touch-none" style={{ touchAction: "none" }} />
+
+      {/* Touch & Mobile Controls Overlay */}
+      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/80 backdrop-blur-md p-1.5 rounded-xl border border-white/10 shadow-xl z-10 select-none">
+        <button
+          onClick={() => handleZoom(1.25)}
+          title="Zoom In"
+          className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-base transition-colors"
+        >
+          +
+        </button>
+        <button
+          onClick={() => handleZoom(0.8)}
+          title="Zoom Out"
+          className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-base transition-colors"
+        >
+          −
+        </button>
+        <button
+          onClick={handleFit}
+          title="Fit to Screen (F)"
+          className="px-2.5 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
+        >
+          Fit
+        </button>
+
+        {ds.current.polyPoints.length >= 3 && (
+          <button
+            onClick={handleCompletePoly}
+            title="Complete Polygon"
+            className="px-3 h-8 flex items-center justify-center rounded-lg bg-cosmic-teal text-black font-bold text-xs transition-colors"
+          >
+            ✓ Done
+          </button>
+        )}
+
+        {(ds.current.polyPoints.length > 0 || ds.current.isDrawingBBox) && (
+          <button
+            onClick={handleCancelDraw}
+            title="Cancel (Esc)"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 font-bold text-xs transition-colors"
+          >
+            ✕
+          </button>
+        )}
+      </div>
 
       {/* Zoom badge */}
-      <div className="absolute bottom-3 right-3 bg-black/70 text-white/80 text-xs px-2.5 py-1 rounded-md font-mono select-none pointer-events-none">
+      <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-md font-mono select-none pointer-events-none border border-white/10">
         {zoomPct}%
       </div>
 
       {/* Shortcut hint */}
-      <div className="absolute bottom-3 left-3 text-white/30 text-[10px] select-none pointer-events-none leading-relaxed">
-        Scroll: zoom · Space+drag: pan · F: fit · Esc: cancel · Dbl-click: close poly
+      <div className="absolute bottom-3 left-3 text-white/40 text-[10px] select-none pointer-events-none leading-relaxed hidden sm:block">
+        Touch/Pinch: zoom & pan · Scroll: zoom · Space+drag: pan · F: fit · Esc: cancel
       </div>
     </div>
   );

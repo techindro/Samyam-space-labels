@@ -32,7 +32,7 @@ export default function LabelPanel({
   };
 
   return (
-    <div className="w-56 shrink-0 flex flex-col bg-[#0f0f1e] border-l border-white/10 overflow-y-auto text-sm">
+    <div className="w-60 shrink-0 flex flex-col bg-[#0c0c1b]/95 backdrop-blur-md border-l border-white/10 overflow-y-auto text-sm shadow-xl z-10 select-none">
 
       {/* ── Label Classes ── */}
       <div className="px-3 pt-4 pb-2">

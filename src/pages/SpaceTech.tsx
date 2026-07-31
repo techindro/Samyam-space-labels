@@ -20,6 +20,8 @@ import {
   Palette,
   Layers,
 } from "lucide-react";
+import SpaceEdgeExporter from "@/components/space/SpaceEdgeExporter";
+import SyntheticSpaceGenerator from "@/components/space/SyntheticSpaceGenerator";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
@@ -638,6 +640,32 @@ const SpaceTech = () => {
           </DialogContent>
         )}
       </Dialog>
+
+      {/* Breakthrough Engines: On-Orbit Edge Exporter & Synthetic Scenario Generator */}
+      <section className="relative py-24 overflow-hidden">
+        <ParallelWebBg />
+        <div className="container mx-auto px-4 relative z-10 space-y-16">
+          <div className="text-center max-w-xl mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-border/80 bg-background text-xs text-muted-foreground mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-cosmic-teal animate-pulse" />
+              <span>First-Principles & High-Throughput Edge Architecture</span>
+            </div>
+            <h2 className="font-display text-4xl sm:text-5xl font-bold mb-3 text-foreground tracking-tight">
+              Space AI Breakthrough{" "}
+              <span className="bg-gradient-to-r from-cosmic-purple-glow via-cosmic-teal to-cosmic-purple bg-clip-text text-transparent">
+                Engines
+              </span>
+            </h2>
+            <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
+              From ray-traced synthetic space debris simulation to 1-click model compilation for radiation-shielded satellite payloads.
+            </p>
+          </div>
+
+          <SyntheticSpaceGenerator />
+
+          <SpaceEdgeExporter />
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="relative py-24 overflow-hidden">

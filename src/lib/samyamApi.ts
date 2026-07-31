@@ -12,7 +12,7 @@ export interface PrelabelResult {
 }
 
 export interface IsroTileMetadata {
-  tile_id: str;
+  tile_id: string;
   satellite: string;
   resolution: string;
   band: string;

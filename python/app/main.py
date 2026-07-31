@@ -157,6 +157,19 @@ async def run_hindi_vqa(req: HindiVqaRequest):
         model="SamyamLM-VL-Indic (67.4% IndicVQA accuracy)"
     )
 
+from app.synthetic_generator import generate_synthetic_orbital_frame
+
+@app.get("/api/v1/synthetic/generate")
+async def generate_synthetic_scenario(debris_count: int = 5, sun_angle_deg: float = 45.0, sar_clutter_ratio: float = 0.3):
+    """
+    Generates synthetic orbital scenario frames with ground-truth BBox annotations.
+    """
+    return generate_synthetic_orbital_frame(
+        debris_count=debris_count,
+        sun_angle_deg=sun_angle_deg,
+        sar_clutter_ratio=sar_clutter_ratio
+    )
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
