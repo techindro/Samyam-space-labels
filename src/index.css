@@ -36,8 +36,8 @@
 
     --radius: 0.75rem;
 
-    --cosmic-purple: 263 70% 60%;
-    --cosmic-purple-glow: 263 70% 60%;
+    --cosmic-purple: 0 0% 100%;
+    --cosmic-purple-glow: 0 0% 100%;
     --cosmic-teal: 173 80% 40%;
     --cosmic-teal-glow: 173 80% 40%;
     --cosmic-navy: 235 25% 9%;
@@ -82,8 +82,8 @@
     --input: 235 20% 20%;
     --ring: 263 70% 60%;
 
-    --cosmic-purple: 263 70% 60%;
-    --cosmic-purple-glow: 263 70% 60%;
+    --cosmic-purple: 0 0% 100%;
+    --cosmic-purple-glow: 0 0% 100%;
     --cosmic-teal: 173 80% 40%;
     --cosmic-teal-glow: 173 80% 40%;
     --cosmic-navy: 235 25% 9%;
