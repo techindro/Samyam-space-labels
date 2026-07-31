@@ -241,9 +241,9 @@ export default function AnnotationTool() {
     <div className="dark h-screen flex flex-col bg-gradient-to-b from-[#080814] via-[#0c0c1b] to-[#06060f] text-white overflow-hidden select-none">
 
       {/* ── Top Bar ── */}
-      <header className="shrink-0 flex items-center justify-between gap-3 px-4 h-14 border-b border-cosmic-purple/20 bg-[#0c0c1b]/95 backdrop-blur-md z-20 shadow-xl">
+      <header className="shrink-0 flex items-center justify-between gap-3 px-4 h-14 border-b border-[#25283d] bg-[#0c0d18]/95 backdrop-blur-md z-20 shadow-xl">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="text-white/50 hover:text-white transition-colors shrink-0 p-1.5 rounded-lg hover:bg-white/10" title="Back">
+          <button onClick={() => navigate(-1)} className="text-slate-400 hover:text-white transition-colors shrink-0 p-1.5 rounded-lg hover:bg-white/10" title="Back">
             <ArrowLeft size={18} />
           </button>
           <div>
@@ -259,7 +259,7 @@ export default function AnnotationTool() {
         </div>
 
         {/* Modality Switcher Tabs */}
-        <div className="flex items-center gap-1 bg-black/50 p-1 rounded-xl border border-white/15 shadow-inner">
+        <div className="flex items-center gap-1 bg-[#06070d] p-1 rounded-xl border border-[#23263d] shadow-inner">
           {[
             { id: "vision", label: "2D Vision", icon: ImageIcon },
             { id: "audio", label: "Audio & Speech", icon: Mic },
@@ -278,8 +278,8 @@ export default function AnnotationTool() {
                 }}
                 className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
                   active
-                    ? "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white shadow-[0_0_15px_rgba(139,92,246,0.5)] scale-105"
-                    : "text-white/60 hover:text-white hover:bg-white/10"
+                    ? "bg-gradient-to-r from-violet-600 to-teal-500 text-white shadow-[0_0_12px_rgba(139,92,246,0.5)] scale-105"
+                    : "text-slate-400 hover:text-white hover:bg-white/10"
                 }`}
               >
                 <Icon size={14} />
@@ -296,7 +296,7 @@ export default function AnnotationTool() {
             size="sm"
             onClick={() => setShowHindiKb(v => !v)}
             className={`h-7 px-2.5 text-xs gap-1 transition-colors border ${
-              showHindiKb ? "bg-cosmic-teal text-black font-bold border-cosmic-teal shadow-[0_0_10px_rgba(20,184,166,0.4)]" : "bg-white/5 border-white/20 text-white/80 hover:text-white hover:bg-white/10"
+              showHindiKb ? "bg-teal-500 text-slate-950 font-bold border-teal-400 shadow-[0_0_10px_rgba(20,184,166,0.4)]" : "bg-[#1e2238] border-[#343956] text-slate-200 hover:bg-[#282d4a]"
             }`}
           >
             <span>क/A</span>
@@ -308,7 +308,7 @@ export default function AnnotationTool() {
               size="sm"
               onClick={handleAiPrelabel}
               disabled={runningAi}
-              className="h-7 px-2.5 text-xs bg-cosmic-purple/10 border border-cosmic-purple/60 text-cosmic-purple hover:bg-cosmic-purple/20 gap-1 font-semibold"
+              className="h-7 px-2.5 text-xs bg-violet-600/20 border border-violet-500/50 text-violet-300 hover:bg-violet-600/30 gap-1 font-semibold"
             >
               {runningAi ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
               <span>AI Pre-label</span>
@@ -316,14 +316,14 @@ export default function AnnotationTool() {
           )}
 
           {activeModality === "vision" && (
-            <button title="Change image URL" onClick={() => setShowUrlBox(v => !v)} className="text-white/40 hover:text-white transition-colors mr-2">
+            <button title="Change image URL" onClick={() => setShowUrlBox(v => !v)} className="text-slate-400 hover:text-white transition-colors mr-2">
               <ImageIcon size={16} />
             </button>
           )}
-          <Button size="sm" onClick={handleExport} className="h-7 px-3 text-xs bg-white/5 border border-white/20 text-white/80 hover:text-white hover:bg-white/15 gap-1.5">
+          <Button size="sm" onClick={handleExport} className="h-7 px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1.5 font-medium">
             <Download size={13} /> Export JSON
           </Button>
-          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-gradient-to-r from-cosmic-purple to-cosmic-teal hover:opacity-90 text-white border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]">
+          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3.5 text-xs bg-gradient-to-r from-violet-600 to-teal-500 hover:opacity-90 text-white border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(139,92,246,0.4)]">
             {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
             Save
           </Button>
