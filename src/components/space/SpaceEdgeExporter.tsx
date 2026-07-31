@@ -123,9 +123,9 @@ export default function SpaceEdgeExporter() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Cpu className="h-6 w-6 text-white shrink-0" />
+            <Cpu className="h-6 w-6 text-cyan-400 shrink-0" />
             <h2 className="text-xl font-bold font-display text-slate-100">On-Orbit Space Edge AI Model Exporter</h2>
-            <span className="bg-white/10 text-white border border-white/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
+            <span className="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
               Radiation-Hardened Edge Spec
             </span>
           </div>
@@ -133,6 +133,7 @@ export default function SpaceEdgeExporter() {
             Compile vision & detection models directly into radiation-shielded TensorRT/ONNX payloads for satellite deployment.
           </p>
         </div>
+        {/* UNTOUCHED Compile Space Payload Button */}
         <Button
           onClick={handleCompile}
           disabled={isCompiling}
@@ -166,18 +167,18 @@ export default function SpaceEdgeExporter() {
                   onClick={() => setSelectedHw(hw)}
                   className={`p-4 rounded-xl border cursor-pointer transition-all ${
                     isSelected
-                      ? "bg-white/10 border-white shadow-md"
+                      ? "bg-cyan-950/30 border-cyan-400/80 shadow-[0_0_15px_rgba(34,211,238,0.15)] ring-1 ring-cyan-400/30"
                       : "bg-slate-900/60 border-slate-800/80 hover:border-slate-700 hover:bg-slate-900"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-bold text-slate-100">{hw.name}</span>
-                    {isSelected && <CheckCircle2 size={16} className="text-white shrink-0" />}
+                    {isSelected && <CheckCircle2 size={16} className="text-cyan-400 shrink-0" />}
                   </div>
                   <p className="text-[11px] text-slate-400 mb-2">{hw.architecture}</p>
                   <div className="flex items-center justify-between text-[10px] font-mono">
-                    <span className="text-white font-semibold">⚡ Max Power: {hw.maxPowerWatts}W</span>
-                    <span className="text-white/90 font-semibold">🛡️ {hw.radHardRating.split(" ")[0]} {hw.radHardRating.split(" ")[1]}</span>
+                    <span className="text-amber-400 font-semibold">⚡ Max Power: {hw.maxPowerWatts}W</span>
+                    <span className="text-cyan-300 font-semibold">🛡️ {hw.radHardRating.split(" ")[0]} {hw.radHardRating.split(" ")[1]}</span>
                   </div>
                 </div>
               );
@@ -216,7 +217,7 @@ export default function SpaceEdgeExporter() {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-300 font-medium">Structured Pruning</span>
-                <span className="font-mono text-white font-bold">{pruningRatio}% Sparsity</span>
+                <span className="font-mono text-cyan-400 font-bold">{pruningRatio}% Sparsity</span>
               </div>
               <input
                 type="range"
@@ -225,7 +226,7 @@ export default function SpaceEdgeExporter() {
                 step={5}
                 value={pruningRatio}
                 onChange={(e) => setPruningRatio(Number(e.target.value))}
-                className="w-full accent-white cursor-pointer"
+                className="w-full accent-cyan-400 cursor-pointer"
               />
               <p className="text-[10px] text-slate-400">Reduces RAM & FLASH footprint for CubeSat constraints.</p>
             </div>
@@ -235,7 +236,7 @@ export default function SpaceEdgeExporter() {
           <div className="bg-slate-950/80 rounded-lg p-3.5 border border-slate-800 space-y-2 font-mono text-[11px]">
             <div className="flex justify-between">
               <span className="text-slate-400">Est. Latency:</span>
-              <span className="text-white font-bold">{precision === "INT8" ? "7.1 ms" : precision === "FP16" ? "11.4 ms" : "23.8 ms"}</span>
+              <span className="text-cyan-400 font-bold">{precision === "INT8" ? "7.1 ms" : precision === "FP16" ? "11.4 ms" : "23.8 ms"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">RAM Footprint:</span>
@@ -243,7 +244,7 @@ export default function SpaceEdgeExporter() {
             </div>
             <div className="flex justify-between">
               <span className="text-slate-400">Thermal Budget:</span>
-              <span className="text-white font-bold">PASS (8.4W / {selectedHw.maxPowerWatts}W)</span>
+              <span className="text-emerald-400 font-bold">PASS <span className="text-amber-400 font-medium">(8.4W / {selectedHw.maxPowerWatts}W)</span></span>
             </div>
           </div>
         </div>
