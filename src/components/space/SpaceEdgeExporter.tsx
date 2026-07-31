@@ -250,12 +250,19 @@ export default function SpaceEdgeExporter() {
       </div>
 
       {/* Build Terminal Output */}
-      {(logs.length > 0 || compiled) && (
-        <div className="space-y-3">
+      {(logs.length > 0 || compiled || isCompiling) && (
+        <div className="space-y-3 pt-2 border-t border-slate-800/80">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold font-mono text-slate-300 flex items-center gap-1.5">
-              <Terminal size={14} className="text-white" /> Build Console Output
-            </h4>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 px-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+              </div>
+              <h4 className="text-xs font-bold font-mono text-slate-300 flex items-center gap-1.5 ml-2">
+                <Terminal size={14} className="text-emerald-400" /> bash — space_payload_compiler.sh
+              </h4>
+            </div>
             {compiled && (
               <Button
                 size="sm"
@@ -266,12 +273,31 @@ export default function SpaceEdgeExporter() {
               </Button>
             )}
           </div>
-          <div className="bg-slate-950 rounded-xl border border-slate-800 p-4 font-mono text-xs text-white leading-relaxed space-y-1 max-h-48 overflow-y-auto">
-            {logs.map((log, i) => (
-              <div key={i} className={log.includes("PASSED") || log.includes("Success") ? "text-white font-bold" : "text-white/80"}>
-                {log}
+          <div className="bg-[#080c14] rounded-xl border border-slate-800/90 p-4 font-mono text-xs leading-relaxed space-y-1.5 max-h-52 overflow-y-auto shadow-inner">
+            {logs.map((log, i) => {
+              const isSuccess = log.includes("PASSED") || log.includes("Success");
+              const timeMatch = log.match(/^(\[\d+\.\ds\])\s*(.*)$/);
+              return (
+                <div key={i} className="flex items-start gap-2">
+                  <span className="text-emerald-500 font-bold select-none">$</span>
+                  {timeMatch ? (
+                    <div>
+                      <span className="text-cyan-400 font-semibold">{timeMatch[1]}</span>{" "}
+                      <span className={isSuccess ? "text-emerald-400 font-bold" : "text-slate-200"}>{timeMatch[2]}</span>
+                    </div>
+                  ) : (
+                    <span className={isSuccess ? "text-emerald-400 font-bold" : "text-slate-200"}>{log}</span>
+                  )}
+                </div>
+              );
+            })}
+            {isCompiling && (
+              <div className="flex items-center gap-2 text-emerald-400 font-mono">
+                <span className="text-emerald-500 font-bold select-none">$</span>
+                <span>Compiling C++ / TensorRT kernels...</span>
+                <span className="inline-block w-2 h-4 bg-emerald-400 animate-pulse align-middle" />
               </div>
-            ))}
+            )}
           </div>
         </div>
       )}
