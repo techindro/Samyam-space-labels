@@ -195,9 +195,9 @@ export default function SyntheticSpaceGenerator() {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="h-6 w-6 text-white animate-pulse shrink-0" />
+            <Sparkles className="h-6 w-6 text-cyan-400 animate-pulse shrink-0" />
             <h2 className="text-xl font-bold font-display text-slate-100">Procedural Synthetic Space Data Generator</h2>
-            <span className="bg-white/10 text-white border border-white/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
+            <span className="bg-slate-800 text-slate-200 border border-slate-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider font-mono">
               Ray-Traced Physics
             </span>
           </div>
@@ -212,8 +212,9 @@ export default function SyntheticSpaceGenerator() {
             variant="outline"
             className="border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800 hover:text-white text-xs font-medium"
           >
-            <RefreshCw className="h-3.5 w-3.5 mr-1.5 text-white" /> Re-seed Space Scenario
+            <RefreshCw className="h-3.5 w-3.5 mr-1.5 text-cyan-400" /> Re-seed Space Scenario
           </Button>
+          {/* UNTOUCHED Export Synthetic Dataset Button */}
           <Button
             size="sm"
             onClick={handleExportSyntheticDataset}
@@ -225,22 +226,22 @@ export default function SyntheticSpaceGenerator() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Canvas Display (FRAME INSIDE KEPT intact) */}
+        {/* Canvas Display */}
         <div className="lg:col-span-2 relative rounded-2xl overflow-hidden border border-slate-800 bg-black shadow-2xl h-80 flex items-center justify-center">
           <canvas ref={canvasRef} width={640} height={320} className="w-full h-full object-cover" />
           <div className="absolute top-3 left-3 bg-slate-950/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-800 text-[11px] font-mono space-y-0.5 text-slate-200">
-            <div>Mode: <span className="text-white font-bold">Procedural Space Sim</span></div>
-            <div>Ground Truth BBoxes: <span className="text-white font-bold">{debrisCount} Objects</span></div>
+            <div>Mode: <span className="text-cyan-400 font-bold">Procedural Space Sim</span></div>
+            <div>Ground Truth BBoxes: <span className="text-amber-400 font-bold">{debrisCount} Objects</span></div>
           </div>
           <div className="absolute bottom-3 right-3 bg-slate-950/90 backdrop-blur-md px-3 py-1 rounded-md border border-slate-800 text-[10px] font-mono text-slate-400">
             Frame #{syntheticFrameCount}
           </div>
         </div>
 
-        {/* Controls (OUTSIDE CANVAS FRAME - ALL GREEN/ACCENT CHANGED TO WHITE) */}
+        {/* Controls */}
         <div className="bg-slate-900/70 rounded-xl p-5 border border-slate-800 space-y-5 flex flex-col justify-between">
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Sliders size={14} className="text-white" /> Simulation Parameters
+            <Sliders size={14} className="text-cyan-400" /> Simulation Parameters
           </h3>
 
           <div className="space-y-4">
@@ -248,7 +249,7 @@ export default function SyntheticSpaceGenerator() {
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
                 <span className="text-slate-300 font-medium">Debris Object Density</span>
-                <span className="font-mono text-white font-bold">{debrisCount} Objects</span>
+                <span className="font-mono text-cyan-400 font-bold">{debrisCount} Objects</span>
               </div>
               <input
                 type="range"
@@ -256,7 +257,7 @@ export default function SyntheticSpaceGenerator() {
                 max={12}
                 value={debrisCount}
                 onChange={(e) => setDebrisCount(Number(e.target.value))}
-                className="w-full accent-white cursor-pointer"
+                className="w-full accent-cyan-400 cursor-pointer"
               />
             </div>
 
@@ -264,7 +265,7 @@ export default function SyntheticSpaceGenerator() {
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
                 <span className="text-slate-300 font-medium">Solar Specular Angle</span>
-                <span className="font-mono text-white font-bold">{sunAngle}°</span>
+                <span className="font-mono text-amber-400 font-bold">{sunAngle}°</span>
               </div>
               <input
                 type="range"
@@ -272,7 +273,7 @@ export default function SyntheticSpaceGenerator() {
                 max={180}
                 value={sunAngle}
                 onChange={(e) => setSunAngle(Number(e.target.value))}
-                className="w-full accent-white cursor-pointer"
+                className="w-full accent-amber-400 cursor-pointer"
               />
             </div>
 
@@ -280,7 +281,7 @@ export default function SyntheticSpaceGenerator() {
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
                 <span className="text-slate-300 font-medium">SAR Radar Noise / Clutter</span>
-                <span className="font-mono text-white font-bold">{sarClutter}%</span>
+                <span className="font-mono text-purple-300 font-bold">{sarClutter}%</span>
               </div>
               <input
                 type="range"
@@ -288,7 +289,7 @@ export default function SyntheticSpaceGenerator() {
                 max={80}
                 value={sarClutter}
                 onChange={(e) => setSarClutter(Number(e.target.value))}
-                className="w-full accent-white cursor-pointer"
+                className="w-full accent-purple-400 cursor-pointer"
               />
             </div>
           </div>
