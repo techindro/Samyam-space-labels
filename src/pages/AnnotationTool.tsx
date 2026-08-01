@@ -357,25 +357,44 @@ export default function AnnotationTool() {
         </div>
       )}
 
-      {/* ── Image URL Input ── */}
+      {/* ── Image URL & Preset Picker ── */}
       {showUrlBox && activeModality === "vision" && (
-        <div className="shrink-0 flex items-center gap-2 px-4 py-2 bg-[#0f0f1e] border-b border-white/10">
-          <input
-            autoFocus
-            type="url"
-            placeholder="Paste image URL here…"
-            value={customUrl}
-            onChange={e => setCustomUrl(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === "Enter" && customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }
-              if (e.key === "Escape") setShowUrlBox(false);
-            }}
-            className="flex-1 text-xs bg-white/5 text-white px-3 py-1.5 rounded-md border border-white/10 outline-none focus:border-white placeholder:text-white/25"
-          />
-          <Button size="sm" onClick={() => { if (customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }}} className="h-7 px-3 text-xs bg-white text-black hover:bg-slate-200 border-0 font-bold">
-            Load
-          </Button>
-          <button onClick={() => setShowUrlBox(false)} className="text-white/40 hover:text-white text-xs">✕</button>
+        <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 px-4 py-2 bg-[#0f0f1e] border-b border-white/10 z-10">
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 sm:py-0">
+            <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap">Presets:</span>
+            {[
+              { label: "🛰️ Earth Satellite", url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200" },
+              { label: "🛣️ Indian Traffic", url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1200" },
+              { label: "🌆 Urban Topo Map", url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1200" },
+              { label: "🚁 Drone Aerial", url: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1200" }
+            ].map((p, idx) => (
+              <button
+                key={idx}
+                onClick={() => { setImageUrl(p.url); setShowUrlBox(false); toast({ title: `Loaded ${p.label}` }); }}
+                className="text-[11px] px-2.5 py-1 rounded bg-white/10 hover:bg-white hover:text-black text-white whitespace-nowrap transition-colors border border-white/10 font-medium"
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-1 items-center gap-2">
+            <input
+              autoFocus
+              type="url"
+              placeholder="Or paste custom image URL here…"
+              value={customUrl}
+              onChange={e => setCustomUrl(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === "Enter" && customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }
+                if (e.key === "Escape") setShowUrlBox(false);
+              }}
+              className="flex-1 text-xs bg-white/5 text-white px-3 py-1.5 rounded-md border border-white/10 outline-none focus:border-white placeholder:text-white/25"
+            />
+            <Button size="sm" onClick={() => { if (customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }}} className="h-7 px-3 text-xs bg-white text-black hover:bg-slate-200 border-0 font-bold">
+              Load
+            </Button>
+            <button onClick={() => setShowUrlBox(false)} className="text-white/40 hover:text-white text-xs px-1">✕</button>
+          </div>
         </div>
       )}
 

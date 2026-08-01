@@ -4,7 +4,7 @@ Supports CLIP zero-shot pre-labeling, ISRO Resourcesat-2A geospatial ingestion,
 Indic VQA (Hindi Visual Question Answering), and RLHF alignment.
 """
 
-from fastapi import FastAPI, HTTPException, BackgroundTask
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
@@ -157,8 +157,8 @@ async def run_hindi_vqa(req: HindiVqaRequest):
         model="SamyamLM-VL-Indic (67.4% IndicVQA accuracy)"
     )
 
-from app.synthetic_generator import generate_synthetic_orbital_frame
-from app.kafka_service import kafka_manager
+from synthetic_generator import generate_synthetic_orbital_frame
+from kafka_service import kafka_manager
 
 @app.get("/api/v1/synthetic/generate")
 async def generate_synthetic_scenario(debris_count: int = 5, sun_angle_deg: float = 45.0, sar_clutter_ratio: float = 0.3):
