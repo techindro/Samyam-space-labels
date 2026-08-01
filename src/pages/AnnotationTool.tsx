@@ -121,6 +121,7 @@ export default function AnnotationTool() {
 
   // ── Audio Upload & File handling ──
   const [audioUrl, setAudioUrl] = useState(DEMO_AUDIO);
+  const [customAudioInputUrl, setCustomAudioInputUrl] = useState("");
   const [newAudioTranscript, setNewAudioTranscript] = useState("");
   const [newAudioSpeaker, setNewAudioSpeaker] = useState("Speaker 1");
   const [showAddSegmentBox, setShowAddSegmentBox] = useState(false);
@@ -198,6 +199,8 @@ export default function AnnotationTool() {
   // ── SAR Radar Modality State ──
   const [selectedBand, setSelectedBand] = useState<"VV" | "VH" | "RGB" | "Thermal">("VV");
   const [opacityOverlay, setOpacityOverlay] = useState(75);
+  const [sarImageUrl, setSarImageUrl] = useState(DEMO_IMAGE);
+  const [customSarInputUrl, setCustomSarInputUrl] = useState("");
 
   // ── Load task from Supabase ──
   useEffect(() => {
@@ -486,7 +489,8 @@ export default function AnnotationTool() {
               { label: "Earth Satellite", icon: Globe, url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200" },
               { label: "Indian Traffic", icon: Car, url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1200" },
               { label: "Urban Topo Map", icon: Building2, url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1200" },
-              { label: "Drone Aerial", icon: Radio, url: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1200" }
+              { label: "Drone Aerial", icon: Radio, url: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1200" },
+              { label: "JWST Deep Space", icon: Sparkles, url: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1200" }
             ].map((p, idx) => {
               const PresetIcon = p.icon;
               return (
@@ -576,6 +580,72 @@ export default function AnnotationTool() {
                   <span className="text-xs font-mono text-white bg-white/10 px-3.5 py-1 rounded-full border border-white/30 font-semibold">
                     Sample: Satellite_Downlink_Audio.wav (44.1kHz, Mono)
                   </span>
+                </div>
+
+                {/* Real Internet Audio Stream Presets & URL Bar */}
+                <div className="mb-4 bg-[#0b0c16] p-3 rounded-xl border border-[#23263d] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                  <div className="flex items-center gap-1.5 overflow-x-auto">
+                    <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap flex items-center gap-1">
+                      <Music size={12} className="text-purple-400" /> Audio Stream Presets:
+                    </span>
+                    {[
+                      { label: "Apollo Telemetry", icon: Mic, url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+                      { label: "Satellite Radio Sweep", icon: Radio, url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+                      { label: "Ground Control Command", icon: Activity, url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+                      { label: "Ambient Acoustic Stream", icon: Sliders, url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
+                    ].map((preset, idx) => {
+                      const PresetIcon = preset.icon;
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setAudioUrl(preset.url);
+                            setIsPlayingAudio(false);
+                            toast({ title: `Loaded Audio Stream: ${preset.label}` });
+                          }}
+                          className={`text-[11px] px-2.5 py-1 rounded transition-colors border font-medium flex items-center gap-1.5 whitespace-nowrap ${
+                            audioUrl === preset.url
+                              ? "bg-white text-black font-bold border-white"
+                              : "bg-white/10 hover:bg-white/20 text-white border-white/20"
+                          }`}
+                        >
+                          <PresetIcon size={12} />
+                          <span>{preset.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="flex items-center gap-2 flex-1 max-w-md">
+                    <input
+                      type="url"
+                      placeholder="Or paste custom MP3/WAV audio URL from internet…"
+                      value={customAudioInputUrl}
+                      onChange={e => setCustomAudioInputUrl(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === "Enter" && customAudioInputUrl) {
+                          setAudioUrl(customAudioInputUrl);
+                          setIsPlayingAudio(false);
+                          toast({ title: "Loaded Custom Audio URL" });
+                          setCustomAudioInputUrl("");
+                        }
+                      }}
+                      className="flex-1 text-xs bg-white/5 text-white px-3 py-1.5 rounded-md border border-white/10 outline-none focus:border-white placeholder:text-white/30"
+                    />
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        if (customAudioInputUrl) {
+                          setAudioUrl(customAudioInputUrl);
+                          setIsPlayingAudio(false);
+                          toast({ title: "Loaded Custom Audio URL" });
+                          setCustomAudioInputUrl("");
+                        }
+                      }}
+                      className="h-7 px-3 text-xs bg-white text-black hover:bg-slate-200 border-0 font-bold"
+                    >
+                      Load Audio
+                    </Button>
+                  </div>
                 </div>
 
                 {/* Hidden HTML5 Audio Element for playback */}
@@ -894,10 +964,58 @@ export default function AnnotationTool() {
                 <h3 className="text-white font-bold text-lg font-display mb-2 flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-white" /> Prompt & Entity Tagging (NER)
                 </h3>
-                <p className="text-xs text-slate-400 mb-4">Highlight tokens to tag Named Entities or evaluate model alignment.</p>
-                <div className="p-5 rounded-xl bg-[#06070d] border border-[#23263d] text-sm leading-relaxed text-slate-100 font-medium shadow-inner">
-                  {rlhfPrompt}
+                <p className="text-xs text-slate-400 mb-4">Select sample domain prompts or type custom prompts to evaluate model alignment & named entities.</p>
+
+                {/* Prompt Presets Bar */}
+                <div className="mb-4 flex flex-wrap gap-1.5">
+                  <span className="text-[11px] font-semibold text-slate-400 self-center mr-1">Presets:</span>
+                  {[
+                    {
+                      label: "NORAD Orbital Hazard",
+                      prompt: "Analyze potential collision hazards for Satellite NORAD-49210 over South Asia given polar orbital telemetry.",
+                      tokens: [
+                        { text: "NORAD-49210", tag: "SATELLITE_ID", color: "bg-blue-500/20 text-blue-300 border-blue-500/40" },
+                        { text: "South Asia", tag: "GEO_LOCATION", color: "bg-green-500/20 text-green-300 border-green-500/40" },
+                        { text: "polar orbital", tag: "ORBIT_TYPE", color: "bg-purple-500/20 text-purple-300 border-purple-500/40" }
+                      ]
+                    },
+                    {
+                      label: "ISRO Hindi VQA",
+                      prompt: "सैमयम-1 उपग्रह की कक्षा और सौर पैनल स्थिति रिपोर्ट का हिंदी में विश्लेषण करें।",
+                      tokens: [
+                        { text: "सैमयम-1", tag: "SATELLITE_NAME", color: "bg-orange-500/20 text-orange-300 border-orange-500/40" },
+                        { text: "सौर पैनल स्थिति", tag: "TELEMETRY_ITEM", color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/40" }
+                      ]
+                    },
+                    {
+                      label: "NHAI Traffic Bottleneck",
+                      prompt: "Identify high-density vehicle bottlenecks on Bengaluru Outer Ring Road during monsoon peak hours.",
+                      tokens: [
+                        { text: "Bengaluru Outer Ring Road", tag: "LOCATION", color: "bg-green-500/20 text-green-300 border-green-500/40" },
+                        { text: "high-density vehicle", tag: "TRAFFIC_CLASS", color: "bg-red-500/20 text-red-300 border-red-500/40" }
+                      ]
+                    }
+                  ].map((p, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setRlhfPrompt(p.prompt);
+                        setNerTokens(p.tokens);
+                        toast({ title: `Loaded Prompt: ${p.label}` });
+                      }}
+                      className="text-[11px] px-2.5 py-1 rounded bg-white/10 hover:bg-white hover:text-black text-white font-medium border border-white/20 transition-colors"
+                    >
+                      {p.label}
+                    </button>
+                  ))}
                 </div>
+
+                <textarea
+                  value={rlhfPrompt}
+                  onChange={e => setRlhfPrompt(e.target.value)}
+                  className="w-full p-4 rounded-xl bg-[#06070d] border border-[#23263d] text-sm leading-relaxed text-slate-100 font-medium shadow-inner outline-none focus:border-white resize-none h-28"
+                  placeholder="Type or paste custom prompt here…"
+                />
               </div>
 
               <div>
@@ -995,9 +1113,70 @@ export default function AnnotationTool() {
                   </div>
                 </div>
 
+                {/* Internet SAR Radar Presets & URL Loader Bar */}
+                <div className="mb-4 bg-[#0b0c16] p-3 rounded-xl border border-[#23263d] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                  <div className="flex items-center gap-1.5 overflow-x-auto">
+                    <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap flex items-center gap-1">
+                      <Radar size={12} className="text-cyan-400" /> SAR Satellite Presets:
+                    </span>
+                    {[
+                      { label: "Sentinel-1 VV SAR", band: "VV", url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200" },
+                      { label: "Sentinel-1 VH Cross", band: "VH", url: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1200" },
+                      { label: "ISRO Thermal IR", band: "Thermal", url: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=1200" },
+                      { label: "Bhuvan Crop Index", band: "RGB", url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1200" }
+                    ].map((preset, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setSarImageUrl(preset.url);
+                          setSelectedBand(preset.band as any);
+                          toast({ title: `Loaded SAR Radar Preset: ${preset.label}` });
+                        }}
+                        className={`text-[11px] px-2.5 py-1 rounded transition-colors border font-medium flex items-center gap-1.5 whitespace-nowrap ${
+                          sarImageUrl === preset.url
+                            ? "bg-white text-black font-bold border-white"
+                            : "bg-white/10 hover:bg-white/20 text-white border-white/20"
+                        }`}
+                      >
+                        <Radar size={12} />
+                        <span>{preset.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2 flex-1 max-w-md">
+                    <input
+                      type="url"
+                      placeholder="Or paste custom SAR satellite image URL…"
+                      value={customSarInputUrl}
+                      onChange={e => setCustomSarInputUrl(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === "Enter" && customSarInputUrl) {
+                          setSarImageUrl(customSarInputUrl);
+                          toast({ title: "Loaded Custom SAR Image URL" });
+                          setCustomSarInputUrl("");
+                        }
+                      }}
+                      className="flex-1 text-xs bg-white/5 text-white px-3 py-1.5 rounded-md border border-white/10 outline-none focus:border-white placeholder:text-white/30"
+                    />
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        if (customSarInputUrl) {
+                          setSarImageUrl(customSarInputUrl);
+                          toast({ title: "Loaded Custom SAR Image URL" });
+                          setCustomSarInputUrl("");
+                        }
+                      }}
+                      className="h-7 px-3 text-xs bg-white text-black hover:bg-slate-200 border-0 font-bold"
+                    >
+                      Load SAR
+                    </Button>
+                  </div>
+                </div>
+
                 {/* Canvas Simulator for SAR */}
                 <div className="h-80 bg-[#06070d] rounded-xl border border-[#23263d] relative overflow-hidden flex items-center justify-center mb-6 shadow-inner">
-                  <img src={DEMO_IMAGE} alt="SAR Radar" className="w-full h-full object-cover mix-blend-difference" style={{ opacity: opacityOverlay / 100 }} />
+                  <img src={sarImageUrl} alt="SAR Radar" className="w-full h-full object-cover mix-blend-difference" style={{ opacity: opacityOverlay / 100 }} />
                   <div className="absolute top-4 left-4 bg-[#0a0b14]/90 backdrop-blur-md p-4 rounded-xl border border-[#282c44] text-xs font-mono space-y-1.5 text-slate-100 shadow-xl">
                     <div>Polarization: <span className="text-white font-bold">{selectedBand}</span></div>
                     <div>Wavelength: <span className="text-white font-bold">5.55 cm (C-band)</span></div>
