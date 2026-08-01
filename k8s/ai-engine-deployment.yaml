@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-engine-deployment
+  namespace: default
+  labels:
+    app: samyam-ai-engine
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: samyam-ai-engine
+  template:
+    metadata:
+      labels:
+        app: samyam-ai-engine
+    spec:
+      containers:
+      - name: ai-engine
+        image: samyam-ai-engine:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: samyam-config
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 20
+          periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-engine-service
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: samyam-ai-engine
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
