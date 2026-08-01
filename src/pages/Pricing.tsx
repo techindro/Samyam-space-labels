@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { Button } from "@/components/ui/button";
+import PricingRoiCalculator from "@/components/PricingRoiCalculator";
 
 const plans = [
   {
@@ -189,6 +190,9 @@ const Pricing = () => {
             </div>
           </div>
         </section>
+
+        {/* Interactive ROI & Savings Calculator */}
+        <PricingRoiCalculator />
 
         {/* API Pricing Table */}
         <section className="py-16 border-t border-border/30 relative z-10">

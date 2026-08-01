@@ -9,6 +9,7 @@ import FeaturedResearch from "@/components/FeaturedResearch";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CaseStudiesSection from "@/components/CaseStudiesSection";
 import ComplianceSection from "@/components/ComplianceSection";
+import PricingRoiCalculator from "@/components/PricingRoiCalculator";
 import ExperienceSamyam from "@/components/ExperienceSamyam";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -27,6 +28,7 @@ const Index = () => {
         <ScrollReveal><FeaturedResearch /></ScrollReveal>
         <ScrollReveal><TestimonialsSection /></ScrollReveal>
         <ScrollReveal><CaseStudiesSection /></ScrollReveal>
+        <ScrollReveal><PricingRoiCalculator /></ScrollReveal>
         <ScrollReveal><ComplianceSection /></ScrollReveal>
         <ScrollReveal><ExperienceSamyam /></ScrollReveal>
       </main>
