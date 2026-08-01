@@ -12,7 +12,8 @@ import {
   Save, Download, ArrowLeft, Loader2, AlertCircle, Tag, Image as ImageIcon,
   Mic, Video as VideoIcon, FileText, Radar, Play, Pause, Plus, Trash2,
   Sparkles, ThumbsUp, ThumbsDown, Layers, Activity, Sliders, CheckCircle,
-  Target, Keyboard, X, Globe, Car, Building2, Radio, CheckCircle2, Cpu
+  Target, Keyboard, X, Globe, Car, Building2, Radio, CheckCircle2, Cpu,
+  Upload, PlusCircle, Music, Film
 } from "lucide-react";
 
 // ─── Status badge ────────────────────────────────────────────────────────────
@@ -99,7 +100,7 @@ export default function AnnotationTool() {
     toast({ title: "SAM Segmentation Complete", description: `Generated pixel-perfect mask for ${result.label} (IoU: ${result.confidence})` });
   }, [imageUrl, state, toast]);
 
-  // ── Actions Header Buttons ──
+  // ── Audio Modality State ──
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const [audioDuration, setAudioDuration] = useState(15.4);
@@ -117,6 +118,70 @@ export default function AnnotationTool() {
     { id: "vt-1", name: "Debris Track #401", class: "Orbital Debris", startFrame: 1, endFrame: 84, bbox: "[240, 180, 45, 45]" },
     { id: "vt-2", name: "LEO Satellite Alpha", class: "Satellite", startFrame: 10, endFrame: 120, bbox: "[510, 320, 110, 80]" },
   ]);
+
+  // ── Audio Upload & File handling ──
+  const [audioUrl, setAudioUrl] = useState(DEMO_AUDIO);
+  const [newAudioTranscript, setNewAudioTranscript] = useState("");
+  const [newAudioSpeaker, setNewAudioSpeaker] = useState("Speaker 1");
+  const [showAddSegmentBox, setShowAddSegmentBox] = useState(false);
+  const audioInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAudioFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const localUrl = URL.createObjectURL(file);
+      setAudioUrl(localUrl);
+      toast({ title: "Loaded Audio File", description: file.name });
+    }
+  };
+
+  const handleAddAudioSegment = () => {
+    if (!newAudioTranscript) return;
+    const newSeg = {
+      id: `aud-${Date.now()}`,
+      start: `00:${Math.floor(audioCurrentTime).toString().padStart(2, '0')}.0`,
+      end: `00:${Math.floor(audioCurrentTime + 3).toString().padStart(2, '0')}.0`,
+      speaker: newAudioSpeaker,
+      tag: "User Annotation",
+      transcript: newAudioTranscript,
+    };
+    setAudioSegments(prev => [...prev, newSeg]);
+    setNewAudioTranscript("");
+    setShowAddSegmentBox(false);
+    toast({ title: "Added Audio Segment Annotation" });
+  };
+
+  // ── Video Upload & File handling ──
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [newTrackName, setNewTrackName] = useState("");
+  const [newTrackClass, setNewTrackClass] = useState("Satellite");
+  const [showAddTrackBox, setShowAddTrackBox] = useState(false);
+  const videoInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleVideoFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const localUrl = URL.createObjectURL(file);
+      setVideoUrl(localUrl);
+      toast({ title: "Loaded Video File", description: file.name });
+    }
+  };
+
+  const handleAddVideoTrack = () => {
+    if (!newTrackName) return;
+    const newTrack = {
+      id: `vt-${Date.now()}`,
+      name: newTrackName,
+      class: newTrackClass,
+      startFrame: videoFrame,
+      endFrame: Math.min(videoFrame + 50, totalVideoFrames),
+      bbox: `[${Math.floor(Math.random()*300+100)}, ${Math.floor(Math.random()*200+100)}, 60, 60]`,
+    };
+    setVideoTracks(prev => [...prev, newTrack]);
+    setNewTrackName("");
+    setShowAddTrackBox(false);
+    toast({ title: "Added Video Object Track" });
+  };
 
   // ── Text / RLHF Modality State ──
   const [rlhfPrompt, setRlhfPrompt] = useState("Analyze potential collision hazards for Satellite NORAD-49210 over South Asia given polar orbital telemetry.");
@@ -346,11 +411,32 @@ export default function AnnotationTool() {
             </Button>
           )}
 
-          {activeModality === "vision" && (
-            <button title="Change image URL" onClick={() => setShowUrlBox(v => !v)} className="text-slate-400 hover:text-white transition-colors mr-2">
-              <ImageIcon size={16} />
-            </button>
+          {/* Hidden File Inputs for Audio & Video */}
+          <input type="file" ref={audioInputRef} accept="audio/*" className="hidden" onChange={handleAudioFileUpload} />
+          <input type="file" ref={videoInputRef} accept="video/*" className="hidden" onChange={handleVideoFileUpload} />
+
+          {activeModality === "audio" && (
+            <Button
+              size="sm"
+              onClick={() => audioInputRef.current?.click()}
+              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5"
+            >
+              <Upload size={12} />
+              <span>Upload Audio File</span>
+            </Button>
           )}
+
+          {activeModality === "video" && (
+            <Button
+              size="sm"
+              onClick={() => videoInputRef.current?.click()}
+              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5"
+            >
+              <Upload size={12} />
+              <span>Upload Video File</span>
+            </Button>
+          )}
+
           <Button size="sm" onClick={handleExport} className="h-7 px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1.5 font-medium">
             <Download size={13} /> Export JSON
           </Button>
@@ -491,6 +577,15 @@ export default function AnnotationTool() {
                   </span>
                 </div>
 
+                {/* Hidden HTML5 Audio Element for playback */}
+                <audio
+                  ref={audioRef}
+                  src={audioUrl}
+                  onTimeUpdate={() => setAudioCurrentTime(audioRef.current?.currentTime || 0)}
+                  onLoadedMetadata={() => setAudioDuration(audioRef.current?.duration || 15.4)}
+                  onEnded={() => setIsPlayingAudio(false)}
+                />
+
                 {/* Simulated Waveform Visualizer */}
                 <div className="h-36 bg-[#07080f] rounded-xl border border-[#23263d] relative overflow-hidden flex items-center justify-around px-4 gap-1 mb-6 shadow-inner">
                   {Array.from({ length: 64 }).map((_, i) => {
@@ -499,8 +594,13 @@ export default function AnnotationTool() {
                     return (
                       <div
                         key={i}
+                        onClick={() => {
+                          const targetTime = (i / 64) * audioDuration;
+                          setAudioCurrentTime(targetTime);
+                          if (audioRef.current) audioRef.current.currentTime = targetTime;
+                        }}
                         style={{ height: `${h}%` }}
-                        className={`w-1.5 rounded-full transition-all duration-150 ${
+                        className={`w-1.5 rounded-full cursor-pointer transition-all duration-150 ${
                           active
                             ? "bg-white shadow-[0_0_14px_rgba(255,255,255,0.85)]"
                             : "bg-[#25293d] hover:bg-[#3b415e]"
@@ -518,7 +618,15 @@ export default function AnnotationTool() {
                 <div className="flex items-center justify-between bg-[#0b0c16] p-4 rounded-xl border border-[#23263d] mb-6">
                   <div className="flex items-center gap-4">
                     <button
-                      onClick={() => setIsPlayingAudio(!isPlayingAudio)}
+                      onClick={() => {
+                        if (isPlayingAudio) {
+                          audioRef.current?.pause();
+                          setIsPlayingAudio(false);
+                        } else {
+                          audioRef.current?.play();
+                          setIsPlayingAudio(true);
+                        }
+                      }}
                       className="p-3.5 rounded-full bg-white text-slate-950 shadow-[0_0_15px_rgba(255,255,255,0.4)] hover:bg-slate-200 transition-all hover:scale-105"
                     >
                       {isPlayingAudio ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
@@ -532,23 +640,37 @@ export default function AnnotationTool() {
                   </div>
                   <Button
                     size="sm"
-                    onClick={() => {
-                      const newSeg = {
-                        id: `aud-${Date.now()}`,
-                        start: `00:${audioCurrentTime.toFixed(1)}`,
-                        end: `00:${(audioCurrentTime + 3).toFixed(1)}`,
-                        speaker: "Speaker 1 (Ground Control)",
-                        tag: "SPEAKER TAG",
-                        transcript: "New audio telemetry transcript segment...",
-                      };
-                      setAudioSegments([...audioSegments, newSeg]);
-                      toast({ title: "Added Audio Segment" });
-                    }}
+                    onClick={() => setShowAddSegmentBox(v => !v)}
                     className="bg-white hover:bg-slate-200 text-slate-950 font-bold text-xs border-0 shadow-[0_0_15px_rgba(255,255,255,0.4)] px-4 py-2"
                   >
                     <Plus size={15} className="mr-1.5" /> Add Segment Here
                   </Button>
                 </div>
+
+                {/* Custom Segment Input Drawer */}
+                {showAddSegmentBox && (
+                  <div className="mb-6 p-4 bg-[#07080f] border border-white/20 rounded-xl space-y-3">
+                    <p className="text-xs font-bold text-white flex items-center gap-1.5"><PlusCircle size={14} /> Add Custom Audio Segment Transcript</p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Speaker name (e.g. Ground Control / Pilot)"
+                        value={newAudioSpeaker}
+                        onChange={e => setNewAudioSpeaker(e.target.value)}
+                        className="text-xs bg-white/10 text-white px-3 py-1.5 rounded border border-white/20 outline-none w-1/3"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Type audio transcript / speech text here…"
+                        value={newAudioTranscript}
+                        onChange={e => setNewAudioTranscript(e.target.value)}
+                        onKeyDown={e => { if (e.key === "Enter") handleAddAudioSegment(); }}
+                        className="text-xs bg-white/10 text-white px-3 py-1.5 rounded border border-white/20 outline-none flex-1"
+                      />
+                      <Button size="sm" onClick={handleAddAudioSegment} className="bg-white text-black font-bold text-xs">Add</Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="text-xs text-slate-400 bg-[#0b0c16] p-3.5 rounded-xl border border-[#23263d] flex items-center gap-2">
@@ -613,15 +735,21 @@ export default function AnnotationTool() {
                 </span>
               </div>
 
-              {/* Video Frame Canvas Simulator */}
+              {/* Video Frame Canvas / HTML5 Video Player */}
               <div className="h-72 bg-[#06070d] rounded-xl border border-[#23263d] relative overflow-hidden flex items-center justify-center mb-6 shadow-inner">
-                <img src={DEMO_IMAGE} alt="Video Frame" className="w-full h-full object-cover opacity-75" />
-                <div className="absolute top-12 left-24 border-2 border-white bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-white shadow-[0_0_15px_rgba(255,255,255,0.4)]">
-                  Track #401: Orbital Debris [Frame {videoFrame}]
-                </div>
-                <div className="absolute bottom-16 right-36 border-2 border-white bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-white shadow-[0_0_15px_rgba(255,255,255,0.4)]">
-                  Track #402: Satellite Alpha [Frame {videoFrame}]
-                </div>
+                {videoUrl ? (
+                  <video src={videoUrl} controls className="w-full h-full object-contain bg-black" />
+                ) : (
+                  <>
+                    <img src={DEMO_IMAGE} alt="Video Frame" className="w-full h-full object-cover opacity-75" />
+                    <div className="absolute top-12 left-24 border-2 border-white bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-white shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+                      Track #401: Orbital Debris [Frame {videoFrame}]
+                    </div>
+                    <div className="absolute bottom-16 right-36 border-2 border-white bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs font-mono font-bold text-white shadow-[0_0_15px_rgba(255,255,255,0.4)]">
+                      Track #402: Satellite Alpha [Frame {videoFrame}]
+                    </div>
+                  </>
+                )}
               </div>
 
               {/* Timeline Scrubber */}
@@ -641,11 +769,43 @@ export default function AnnotationTool() {
                 />
               </div>
 
-              {/* Tracks Table */}
+              {/* Add Object Track Form Drawer */}
+              {showAddTrackBox && (
+                <div className="mb-6 p-4 bg-[#07080f] border border-white/20 rounded-xl space-y-3">
+                  <p className="text-xs font-bold text-white flex items-center gap-1.5"><PlusCircle size={14} /> Add Custom Video Object Tracking Track</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Track Object Name (e.g. Auto-rickshaw #12 / Drone Alpha)"
+                      value={newTrackName}
+                      onChange={e => setNewTrackName(e.target.value)}
+                      className="text-xs bg-white/10 text-white px-3 py-1.5 rounded border border-white/20 outline-none flex-1"
+                    />
+                    <select
+                      value={newTrackClass}
+                      onChange={e => setNewTrackClass(e.target.value)}
+                      className="text-xs bg-[#1a1d30] text-white px-3 py-1.5 rounded border border-white/20 outline-none"
+                    >
+                      <option value="Satellite">Satellite</option>
+                      <option value="Orbital Debris">Orbital Debris</option>
+                      <option value="Vehicle">Vehicle</option>
+                      <option value="Drone">Drone</option>
+                    </select>
+                    <Button size="sm" onClick={handleAddVideoTrack} className="bg-white text-black font-bold text-xs">Add Track</Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Tracks Table Header */}
               <div className="bg-[#0b0c16] rounded-xl border border-[#23263d] p-4">
-                <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <Tag size={13} className="text-white" /> Tracked Objects Across Frames
-                </h4>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                    <Tag size={13} className="text-white" /> Tracked Objects Across Frames
+                  </h4>
+                  <Button size="sm" onClick={() => setShowAddTrackBox(v => !v)} className="h-6 px-2.5 text-[11px] bg-white text-black font-bold border-0">
+                    <Plus size={12} className="mr-1" /> Add New Track
+                  </Button>
+                </div>
                 <div className="space-y-2.5 text-xs">
                   {videoTracks.map((vt) => (
                     <div key={vt.id} className="flex items-center justify-between p-3 rounded-lg bg-[#06070d] border border-[#23263d] hover:border-[#383e5c] transition-all">
