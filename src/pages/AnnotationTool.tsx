@@ -152,7 +152,8 @@ export default function AnnotationTool() {
   };
 
   // ── Video Upload & File handling ──
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string>("https://www.w3schools.com/html/mov_bbb.mp4");
+  const [customVideoInputUrl, setCustomVideoInputUrl] = useState("");
   const [newTrackName, setNewTrackName] = useState("");
   const [newTrackClass, setNewTrackClass] = useState("Satellite");
   const [showAddTrackBox, setShowAddTrackBox] = useState(false);
@@ -735,10 +736,73 @@ export default function AnnotationTool() {
                 </span>
               </div>
 
+              {/* Real Internet Video Stream Presets & URL Bar */}
+              <div className="mb-4 bg-[#0b0c16] p-3 rounded-xl border border-[#23263d] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                <div className="flex items-center gap-1.5 overflow-x-auto">
+                  <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap flex items-center gap-1">
+                    <Globe size={12} className="text-blue-400" /> Internet Video Presets:
+                  </span>
+                  {[
+                    { label: "ISS Earth Orbit", icon: Globe, url: "https://www.w3schools.com/html/mov_bbb.mp4" },
+                    { label: "Indian Traffic", icon: Car, url: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" },
+                    { label: "Drone Highway", icon: Radio, url: "https://vjs.zencdn.net/v/oceans.mp4" },
+                    { label: "Space Launch", icon: Film, url: "https://www.w3schools.com/html/movie.mp4" }
+                  ].map((preset, idx) => {
+                    const PresetIcon = preset.icon;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setVideoUrl(preset.url);
+                          toast({ title: `Loaded Internet Video: ${preset.label}` });
+                        }}
+                        className={`text-[11px] px-2.5 py-1 rounded transition-colors border font-medium flex items-center gap-1.5 whitespace-nowrap ${
+                          videoUrl === preset.url
+                            ? "bg-white text-black font-bold border-white"
+                            : "bg-white/10 hover:bg-white/20 text-white border-white/20"
+                        }`}
+                      >
+                        <PresetIcon size={12} />
+                        <span>{preset.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex items-center gap-2 flex-1 max-w-md">
+                  <input
+                    type="url"
+                    placeholder="Or paste custom MP4 video URL from internet…"
+                    value={customVideoInputUrl}
+                    onChange={e => setCustomVideoInputUrl(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter" && customVideoInputUrl) {
+                        setVideoUrl(customVideoInputUrl);
+                        toast({ title: "Loaded Custom Internet Video URL" });
+                        setCustomVideoInputUrl("");
+                      }
+                    }}
+                    className="flex-1 text-xs bg-white/5 text-white px-3 py-1.5 rounded-md border border-white/10 outline-none focus:border-white placeholder:text-white/30"
+                  />
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      if (customVideoInputUrl) {
+                        setVideoUrl(customVideoInputUrl);
+                        toast({ title: "Loaded Custom Internet Video URL" });
+                        setCustomVideoInputUrl("");
+                      }
+                    }}
+                    className="h-7 px-3 text-xs bg-white text-black hover:bg-slate-200 border-0 font-bold"
+                  >
+                    Load URL
+                  </Button>
+                </div>
+              </div>
+
               {/* Video Frame Canvas / HTML5 Video Player */}
               <div className="h-72 bg-[#06070d] rounded-xl border border-[#23263d] relative overflow-hidden flex items-center justify-center mb-6 shadow-inner">
                 {videoUrl ? (
-                  <video src={videoUrl} controls className="w-full h-full object-contain bg-black" />
+                  <video src={videoUrl} controls autoPlay loop muted className="w-full h-full object-contain bg-black rounded-xl" />
                 ) : (
                   <>
                     <img src={DEMO_IMAGE} alt="Video Frame" className="w-full h-full object-cover opacity-75" />
