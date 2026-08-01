@@ -94,7 +94,7 @@ export default function AnnotationTool() {
       type: "polygon",
       label: state.activeLabel.name,
       color: state.activeLabel.color,
-      points: result.polygon,
+      points: result.polygon.map(pt => [pt[0], pt[1]] as [number, number]),
     });
 
     toast({ title: "SAM Segmentation Complete", description: `Generated pixel-perfect mask for ${result.label} (IoU: ${result.confidence})` });
