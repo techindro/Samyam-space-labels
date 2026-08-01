@@ -158,6 +158,7 @@ async def run_hindi_vqa(req: HindiVqaRequest):
     )
 
 from app.synthetic_generator import generate_synthetic_orbital_frame
+from app.kafka_service import kafka_manager
 
 @app.get("/api/v1/synthetic/generate")
 async def generate_synthetic_scenario(debris_count: int = 5, sun_angle_deg: float = 45.0, sar_clutter_ratio: float = 0.3):
@@ -170,6 +171,23 @@ async def generate_synthetic_scenario(debris_count: int = 5, sun_angle_deg: floa
         sar_clutter_ratio=sar_clutter_ratio
     )
 
+@app.get("/api/v1/kafka/status")
+async def get_kafka_service_status():
+    """
+    Returns Apache Kafka Event Streaming Engine status & broker connectivity.
+    """
+    return kafka_manager.get_status()
+
+@app.post("/api/v1/kafka/publish")
+async def publish_kafka_event(topic: str = "samyam-prelabel-tasks", payload: Dict[str, Any] = None):
+    """
+    Publishes satellite pre-labeling task or annotation event to Kafka stream queue.
+    """
+    if payload is None:
+        payload = {"event": "test_ping", "timestamp": time.time()}
+    return kafka_manager.publish_event(topic=topic, payload=payload)
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+

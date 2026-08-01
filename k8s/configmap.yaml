@@ -6,3 +6,4 @@ metadata:
 data:
   VITE_FASTAPI_URL: "http://ai-engine-service:8000"
   PORT: "8000"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka-service:9092"

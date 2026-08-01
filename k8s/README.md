@@ -57,16 +57,19 @@ Deploy all manifests using `kubectl`:
 # 1. Apply ConfigMap
 kubectl apply -f k8s/configmap.yaml
 
-# 2. Deploy AI Engine Backend
+# 2. Deploy Kafka & Zookeeper Broker (Optional Streaming Bus)
+kubectl apply -f k8s/kafka.yaml
+
+# 3. Deploy AI Engine Backend
 kubectl apply -f k8s/ai-engine-deployment.yaml
 
-# 3. Deploy Frontend Web App
+# 4. Deploy Frontend Web App
 kubectl apply -f k8s/frontend-deployment.yaml
 
-# 4. Apply Horizontal Pod Autoscaler (HPA)
+# 5. Apply Horizontal Pod Autoscaler (HPA)
 kubectl apply -f k8s/hpa.yaml
 
-# 5. (Optional) Apply Ingress Routing
+# 6. (Optional) Apply Ingress Routing
 kubectl apply -f k8s/ingress.yaml
 ```
 
