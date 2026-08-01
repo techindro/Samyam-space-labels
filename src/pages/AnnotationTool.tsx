@@ -339,7 +339,7 @@ export default function AnnotationTool() {
               size="sm"
               onClick={handleSamSegment}
               disabled={runningSam}
-              className="h-7 px-2.5 text-xs bg-white/10 border border-white/40 text-white hover:bg-white/20 gap-1 font-semibold"
+              className="h-7 px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)]"
             >
               {runningSam ? <Loader2 size={12} className="animate-spin" /> : <Target size={12} />}
               <span>SAM Segment</span>
