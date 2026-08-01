@@ -11,7 +11,8 @@ import { useToast }       from "@/hooks/use-toast";
 import { 
   Save, Download, ArrowLeft, Loader2, AlertCircle, Tag, Image as ImageIcon,
   Mic, Video as VideoIcon, FileText, Radar, Play, Pause, Plus, Trash2,
-  Sparkles, ThumbsUp, ThumbsDown, Layers, Activity, Sliders, CheckCircle
+  Sparkles, ThumbsUp, ThumbsDown, Layers, Activity, Sliders, CheckCircle,
+  Target, Keyboard, X, Globe, Car, Building2, Radio, CheckCircle2, Cpu
 } from "lucide-react";
 
 // ─── Status badge ────────────────────────────────────────────────────────────
@@ -61,7 +62,7 @@ export default function AnnotationTool() {
 
   const handleAiPrelabel = useCallback(async () => {
     setRunningAi(true);
-    toast({ title: "🤖 Running CLIP AI Pre-labeling...", description: "Querying FastAPI / PyTorch Vision-Language Engine" });
+    toast({ title: "Running CLIP AI Pre-labeling...", description: "Querying FastAPI / PyTorch Vision-Language Engine" });
     const candidateLabels = state.labels.map(l => l.name);
     const results = await samyamApi.runClipPrelabel(imageUrl, candidateLabels);
     setRunningAi(false);
@@ -77,13 +78,13 @@ export default function AnnotationTool() {
       });
     });
 
-    toast({ title: "✓ AI Pre-labeling Complete!", description: `Generated ${results.length} bounding box annotations via CLIP engine.` });
+    toast({ title: "AI Pre-labeling Complete", description: `Generated ${results.length} bounding box annotations via CLIP engine.` });
   }, [imageUrl, state, toast]);
 
   const [runningSam, setRunningSam] = useState(false);
   const handleSamSegment = useCallback(async () => {
     setRunningSam(true);
-    toast({ title: "🎯 Running Meta SAM Segment Anything Model...", description: "Generating pixel-perfect zero-shot polygon mask" });
+    toast({ title: "Running Meta SAM Segment Anything Model...", description: "Generating pixel-perfect zero-shot polygon mask" });
     const result = await samyamApi.runSamSegment(imageUrl, 250, 180);
     setRunningSam(false);
 
@@ -95,7 +96,7 @@ export default function AnnotationTool() {
       points: result.polygon,
     });
 
-    toast({ title: "✓ SAM Segmentation Complete!", description: `Generated pixel-perfect mask for ${result.label} (IoU: ${result.confidence})` });
+    toast({ title: "SAM Segmentation Complete", description: `Generated pixel-perfect mask for ${result.label} (IoU: ${result.confidence})` });
   }, [imageUrl, state, toast]);
 
   // ── Actions Header Buttons ──
@@ -340,8 +341,8 @@ export default function AnnotationTool() {
               disabled={runningSam}
               className="h-7 px-2.5 text-xs bg-gradient-to-r from-purple-600 to-indigo-600 border border-purple-400 text-white hover:brightness-110 gap-1 font-semibold shadow-[0_0_10px_rgba(168,85,247,0.4)]"
             >
-              {runningSam ? <Loader2 size={12} className="animate-spin" /> : <Layers size={12} />}
-              <span>🎯 SAM Segment</span>
+              {runningSam ? <Loader2 size={12} className="animate-spin" /> : <Target size={12} />}
+              <span>SAM Segment</span>
             </Button>
           )}
 
@@ -365,10 +366,12 @@ export default function AnnotationTool() {
         <div className="shrink-0 bg-[#121225] border-b border-white/20 p-3 shadow-xl z-20">
           <div className="flex items-center justify-between mb-2 px-1">
             <span className="text-xs font-semibold text-white flex items-center gap-1.5">
-              <span>⌨️</span> Devanagari (देवनागरी/हिन्दी) On-Screen Keyboard Pad
+              <Keyboard size={14} className="text-indigo-400" /> Devanagari (देवनागरी/हिन्दी) On-Screen Keyboard Pad
             </span>
             <span className="text-[10px] text-white/50">Click any character to copy to clipboard & insert into annotations</span>
-            <button onClick={() => setShowHindiKb(false)} className="text-white/40 hover:text-white text-xs">✕ Close</button>
+            <button onClick={() => setShowHindiKb(false)} className="text-white/40 hover:text-white text-xs flex items-center gap-1">
+              <X size={12} /> Close
+            </button>
           </div>
           <div className="flex flex-wrap gap-1 max-h-28 overflow-y-auto pr-1">
             {DEVANAGARI_CHARS.map((char, i) => (
@@ -393,19 +396,23 @@ export default function AnnotationTool() {
           <div className="flex items-center gap-1.5 overflow-x-auto py-1 sm:py-0">
             <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap">Presets:</span>
             {[
-              { label: "🛰️ Earth Satellite", url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200" },
-              { label: "🛣️ Indian Traffic", url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1200" },
-              { label: "🌆 Urban Topo Map", url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1200" },
-              { label: "🚁 Drone Aerial", url: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1200" }
-            ].map((p, idx) => (
-              <button
-                key={idx}
-                onClick={() => { setImageUrl(p.url); setShowUrlBox(false); toast({ title: `Loaded ${p.label}` }); }}
-                className="text-[11px] px-2.5 py-1 rounded bg-white/10 hover:bg-white hover:text-black text-white whitespace-nowrap transition-colors border border-white/10 font-medium"
-              >
-                {p.label}
-              </button>
-            ))}
+              { label: "Earth Satellite", icon: Globe, url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200" },
+              { label: "Indian Traffic", icon: Car, url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1200" },
+              { label: "Urban Topo Map", icon: Building2, url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1200" },
+              { label: "Drone Aerial", icon: Radio, url: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1200" }
+            ].map((p, idx) => {
+              const PresetIcon = p.icon;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => { setImageUrl(p.url); setShowUrlBox(false); toast({ title: `Loaded ${p.label}` }); }}
+                  className="text-[11px] px-2.5 py-1 rounded bg-white/10 hover:bg-white hover:text-black text-white whitespace-nowrap transition-colors border border-white/10 font-medium flex items-center gap-1"
+                >
+                  <PresetIcon size={12} />
+                  <span>{p.label}</span>
+                </button>
+              );
+            })}
           </div>
           <div className="flex flex-1 items-center gap-2">
             <input
