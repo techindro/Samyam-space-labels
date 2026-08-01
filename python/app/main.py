@@ -159,6 +159,24 @@ async def run_hindi_vqa(req: HindiVqaRequest):
 
 from synthetic_generator import generate_synthetic_orbital_frame
 from kafka_service import kafka_manager
+from sam_inference import sam_engine
+
+class SamSegmentRequest(BaseModel):
+    image_url: str
+    point_x: float = Field(default=250.0, example=250.0)
+    point_y: float = Field(default=180.0, example=180.0)
+
+@app.post("/api/v1/prelabel/sam")
+async def run_sam_segmentation(req: SamSegmentRequest):
+    """
+    Runs Meta SAM (Segment Anything Model) zero-shot promptable segmentation at specified point (x, y).
+    Generates pixel-perfect polygon mask for satellite features / road objects.
+    """
+    return sam_engine.segment_image_at_point(
+        image_url=req.image_url,
+        point_x=req.point_x,
+        point_y=req.point_y
+    )
 
 @app.get("/api/v1/synthetic/generate")
 async def generate_synthetic_scenario(debris_count: int = 5, sun_angle_deg: float = 45.0, sar_clutter_ratio: float = 0.3):
@@ -190,4 +208,5 @@ async def publish_kafka_event(topic: str = "samyam-prelabel-tasks", payload: Dic
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
 

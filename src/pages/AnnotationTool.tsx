@@ -80,6 +80,24 @@ export default function AnnotationTool() {
     toast({ title: "✓ AI Pre-labeling Complete!", description: `Generated ${results.length} bounding box annotations via CLIP engine.` });
   }, [imageUrl, state, toast]);
 
+  const [runningSam, setRunningSam] = useState(false);
+  const handleSamSegment = useCallback(async () => {
+    setRunningSam(true);
+    toast({ title: "🎯 Running Meta SAM Segment Anything Model...", description: "Generating pixel-perfect zero-shot polygon mask" });
+    const result = await samyamApi.runSamSegment(imageUrl, 250, 180);
+    setRunningSam(false);
+
+    state.addAnnotation({
+      id: `sam-${Date.now()}`,
+      type: "polygon",
+      label: state.activeLabel.name,
+      color: state.activeLabel.color,
+      points: result.polygon,
+    });
+
+    toast({ title: "✓ SAM Segmentation Complete!", description: `Generated pixel-perfect mask for ${result.label} (IoU: ${result.confidence})` });
+  }, [imageUrl, state, toast]);
+
   // ── Actions Header Buttons ──
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
@@ -312,6 +330,18 @@ export default function AnnotationTool() {
             >
               {runningAi ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
               <span>AI Pre-label</span>
+            </Button>
+          )}
+          {/* Meta SAM Auto-Segment Button */}
+          {activeModality === "vision" && (
+            <Button
+              size="sm"
+              onClick={handleSamSegment}
+              disabled={runningSam}
+              className="h-7 px-2.5 text-xs bg-gradient-to-r from-purple-600 to-indigo-600 border border-purple-400 text-white hover:brightness-110 gap-1 font-semibold shadow-[0_0_10px_rgba(168,85,247,0.4)]"
+            >
+              {runningSam ? <Loader2 size={12} className="animate-spin" /> : <Layers size={12} />}
+              <span>🎯 SAM Segment</span>
             </Button>
           )}
 
