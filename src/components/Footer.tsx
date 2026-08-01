@@ -42,7 +42,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <a href="/" className="text-[28px] font-medium tracking-wide text-foreground" style={{ fontFamily: "'Comfortaa', cursive" }}>
-              Samyam
+              Samyuam
             </a>
             <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
               Breakthrough AI for space data labeling, defense, and enterprise.

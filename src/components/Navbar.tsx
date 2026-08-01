@@ -149,7 +149,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
           <a href="/" className={`text-[28px] font-medium tracking-wide ${isDark ? 'text-white' : 'text-foreground'}`} style={{ fontFamily: "'Comfortaa', cursive" }}>
-            Samyam
+            Samyuam
           </a>
 
           {/* Desktop Links */}
