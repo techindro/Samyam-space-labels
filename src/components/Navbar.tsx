@@ -42,6 +42,7 @@ import { productPages } from "@/data/productPages";
 
 const navLinks: { label: string; href: string }[] = [
   { label: "Space Tech", href: "/space-tech" },
+  { label: "OpenClaw Chat", href: "/openclaw-chat" },
   { label: "Enterprise", href: "#" },
 ];
 

@@ -10,6 +10,7 @@ import BookDemo from "./pages/BookDemo";
 import BuildAI from "./pages/BuildAI";
 import SpaceTech from "./pages/SpaceTech";
 import Learn from "./pages/Learn";
+import OpenClawChat from "./pages/OpenClawChat";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ResearchPapers from "./pages/ResearchPapers";
@@ -58,6 +59,7 @@ const App = () => (
             <Route path="/build-ai" element={<BuildAI />} />
             <Route path="/space-tech" element={<SpaceTech />} />
             <Route path="/learn" element={<Learn />} />
+            <Route path="/openclaw-chat" element={<OpenClawChat />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/research/papers" element={<ResearchPapers />} />
