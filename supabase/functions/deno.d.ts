@@ -12,6 +12,7 @@ declare module "npm:*" {
   export default content;
   export const createSupabaseHandler: any;
   export const createClient: any;
+  export const corsHeaders: any;
 }
 
 declare module "https://*" {
