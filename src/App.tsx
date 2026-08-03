@@ -10,6 +10,7 @@ import BookDemo from "./pages/BookDemo";
 import BuildAI from "./pages/BuildAI";
 import SpaceTech from "./pages/SpaceTech";
 import Learn from "./pages/Learn";
+import OpenClawChat from "./pages/OpenClawChat";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ResearchPapers from "./pages/ResearchPapers";
