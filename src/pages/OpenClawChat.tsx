@@ -3,9 +3,6 @@ import { motion } from "framer-motion";
 import {
   Send,
   Paperclip,
-  Image as ImageIcon,
-  AudioLines,
-  FileText,
   X,
   Radio,
   Layers,
@@ -17,16 +14,22 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { Button } from "@/components/ui/button";
+import DatasetItemCard, {
+  makeWaveform,
+  suggestionsFor,
+  type DatasetItem,
+} from "@/components/openclaw/DatasetItemCard";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-type Attachment = {
-  id: string;
-  name: string;
-  kind: "image" | "audio" | "text";
-  url?: string;
-};
+type Attachment = DatasetItem;
+
+function sizeLabel(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 type ChatMessage = {
   id: string;
@@ -58,6 +61,12 @@ function kindOf(file: File): Attachment["kind"] {
 }
 
 function simulatedReply(text: string, attachments: Attachment[]) {
+  const acceptedLabels = Array.from(
+    new Set(attachments.flatMap((a) => a.suggestions.filter((s) => s.accepted).map((s) => s.label)))
+  );
+  const schemaLine = acceptedLabels.length
+    ? `\n\n**Confirmed schema from your selections**: ${acceptedLabels.map((l) => `\`${l}\``).join(", ")}`
+    : "";
   const img = attachments.filter((a) => a.kind === "image").length;
   const aud = attachments.filter((a) => a.kind === "audio").length;
   const txt = attachments.filter((a) => a.kind === "text").length;
@@ -74,7 +83,7 @@ function simulatedReply(text: string, attachments: Attachment[]) {
 **Suggested schema**: \`building\`, \`road\`, \`water\`, \`vegetation\`
 **Quality gate**: mean IoU 0.84 against the reference tiles — above the 0.80 acceptance threshold.
 
-I can export this as COCO, GeoJSON or YOLO, or push it into an active labeling session for human review.`;
+I can export this as COCO, GeoJSON or YOLO, or push it into an active labeling session for human review.${schemaLine}`;
   }
   if (aud) {
     return `Processing ${aud} audio file${aud > 1 ? "s" : ""} through the speech pipeline (en-IN / hi-IN acoustic models):
@@ -83,7 +92,7 @@ I can export this as COCO, GeoJSON or YOLO, or push it into an active labeling s
 - Intent tags: \`mission-status\`, \`telemetry-check\`
 - Named entities: 2 satellite IDs, 1 ground station
 
-Timestamps are aligned to the transcript so the audio can be cross-labeled with telemetry frames for sensor-fusion training sets.`;
+Timestamps are aligned to the transcript so the audio can be cross-labeled with telemetry frames for sensor-fusion training sets.${schemaLine}`;
   }
   if (txt) {
     return `Parsed ${txt} dataset file${txt > 1 ? "s" : ""}.
@@ -92,7 +101,7 @@ Timestamps are aligned to the transcript so the audio can be cross-labeled with 
 - Candidate label column: \`class_name\` (7 unique classes)
 - Class imbalance flagged: \`debris\` at 2.1% of rows
 
-Recommendation: stratified sampling plus targeted labeling of the minority class before the next training run.`;
+Recommendation: stratified sampling plus targeted labeling of the minority class before the next training run.${schemaLine}`;
   }
 
   return `On it — "${text.slice(0, 80)}".
@@ -127,13 +136,35 @@ const OpenClawChat = () => {
 
   const addFiles = (files: FileList | null) => {
     if (!files) return;
-    const next: Attachment[] = Array.from(files).slice(0, 5).map((f) => ({
-      id: crypto.randomUUID(),
-      name: f.name,
-      kind: kindOf(f),
-      url: f.type.startsWith("image/") ? URL.createObjectURL(f) : undefined,
-    }));
+    const next: Attachment[] = Array.from(files).slice(0, 5).map((f) => {
+      const kind = kindOf(f);
+      return {
+        id: crypto.randomUUID(),
+        name: f.name,
+        kind,
+        url: f.type.startsWith("image/") ? URL.createObjectURL(f) : undefined,
+        sizeLabel: sizeLabel(f.size),
+        meta: kind === "image" ? "optical tile" : kind === "audio" ? "voice / telemetry" : "tabular dataset",
+        waveform: kind === "audio" ? makeWaveform(f.name) : undefined,
+        suggestions: suggestionsFor(kind, f.name),
+      };
+    });
     setPending((p) => [...p, ...next]);
+  };
+
+  const toggleSuggestion = (itemId: string, suggestionId: string) => {
+    setPending((p) =>
+      p.map((a) =>
+        a.id !== itemId
+          ? a
+          : {
+              ...a,
+              suggestions: a.suggestions.map((s) =>
+                s.id === suggestionId ? { ...s, accepted: !s.accepted } : s
+              ),
+            }
+      )
+    );
   };
 
   const send = () => {
@@ -215,25 +246,10 @@ const OpenClawChat = () => {
                     )}
                     <div className={`max-w-[85%] ${m.role === "user" ? "text-right" : ""}`}>
                       {m.attachments && m.attachments.length > 0 && (
-                        <div className="mb-2 flex flex-wrap gap-2 justify-end">
-                          {m.attachments.map((a) =>
-                            a.kind === "image" && a.url ? (
-                              <img
-                                key={a.id}
-                                src={a.url}
-                                alt={a.name}
-                                className="h-24 w-24 rounded-lg object-cover border border-border"
-                              />
-                            ) : (
-                              <span
-                                key={a.id}
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/50 px-2.5 py-1.5 text-xs"
-                              >
-                                {a.kind === "audio" ? <AudioLines className="h-3.5 w-3.5" /> : <FileText className="h-3.5 w-3.5" />}
-                                {a.name}
-                              </span>
-                            )
-                          )}
+                        <div className="mb-2 grid gap-2 sm:grid-cols-2">
+                          {m.attachments.map((a) => (
+                            <DatasetItemCard key={a.id} item={a} compact />
+                          ))}
                         </div>
                       )}
                       {(m.text || m.streaming) && (
@@ -262,29 +278,14 @@ const OpenClawChat = () => {
 
             <div className="border-t border-border p-3 sm:p-4">
               {pending.length > 0 && (
-                <div className="mb-2 flex flex-wrap gap-2">
+                <div className="mb-3 grid gap-2 sm:grid-cols-2">
                   {pending.map((a) => (
-                    <span
+                    <DatasetItemCard
                       key={a.id}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted/50 px-2.5 py-1.5 text-xs"
-                    >
-                      {a.kind === "image" ? (
-                        <ImageIcon className="h-3.5 w-3.5" />
-                      ) : a.kind === "audio" ? (
-                        <AudioLines className="h-3.5 w-3.5" />
-                      ) : (
-                        <FileText className="h-3.5 w-3.5" />
-                      )}
-                      <span className="max-w-[140px] truncate">{a.name}</span>
-                      <button
-                        type="button"
-                        aria-label={`Remove ${a.name}`}
-                        onClick={() => setPending((p) => p.filter((x) => x.id !== a.id))}
-                        className="text-muted-foreground hover:text-foreground"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
+                      item={a}
+                      onToggleSuggestion={toggleSuggestion}
+                      onRemove={(id) => setPending((p) => p.filter((x) => x.id !== id))}
+                    />
                   ))}
                 </div>
               )}
