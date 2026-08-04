@@ -3,9 +3,6 @@ import { motion } from "framer-motion";
 import {
   Send,
   Paperclip,
-  Image as ImageIcon,
-  AudioLines,
-  FileText,
   X,
   Radio,
   Layers,
