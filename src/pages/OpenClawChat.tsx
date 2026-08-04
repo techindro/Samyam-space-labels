@@ -152,20 +152,51 @@ const OpenClawChat = () => {
     setPending((p) => [...p, ...next]);
   };
 
-  const toggleSuggestion = (itemId: string, suggestionId: string) => {
-    setPending((p) =>
-      p.map((a) =>
-        a.id !== itemId
-          ? a
-          : {
-              ...a,
-              suggestions: a.suggestions.map((s) =>
-                s.id === suggestionId ? { ...s, accepted: !s.accepted } : s
-              ),
-            }
-      )
+  const updateItem = (itemId: string, fn: (a: Attachment) => Attachment) =>
+    setPending((p) => p.map((a) => (a.id === itemId ? fn(a) : a)));
+
+  const toggleSuggestion = (itemId: string, suggestionId: string) =>
+    updateItem(itemId, (a) => ({
+      ...a,
+      suggestions: a.suggestions.map((s) =>
+        s.id === suggestionId ? { ...s, accepted: !s.accepted } : s
+      ),
+    }));
+
+  const renameSuggestion = (itemId: string, suggestionId: string, label: string) =>
+    updateItem(itemId, (a) => ({
+      ...a,
+      suggestions: a.suggestions.map((s) => (s.id === suggestionId ? { ...s, label } : s)),
+    }));
+
+  const removeSuggestion = (itemId: string, suggestionId: string) =>
+    updateItem(itemId, (a) => ({
+      ...a,
+      suggestions: a.suggestions.filter((s) => s.id !== suggestionId),
+    }));
+
+  const moveSuggestion = (itemId: string, suggestionId: string, dir: -1 | 1) =>
+    updateItem(itemId, (a) => {
+      const list = [...a.suggestions];
+      const i = list.findIndex((s) => s.id === suggestionId);
+      const j = i + dir;
+      if (i < 0 || j < 0 || j >= list.length) return a;
+      [list[i], list[j]] = [list[j], list[i]];
+      return { ...a, suggestions: list };
+    });
+
+  const addSuggestion = (itemId: string, label: string) =>
+    updateItem(itemId, (a) =>
+      a.suggestions.some((s) => s.label.toLowerCase() === label.toLowerCase())
+        ? a
+        : {
+            ...a,
+            suggestions: [
+              ...a.suggestions,
+              { id: crypto.randomUUID(), label, confidence: 1, accepted: true },
+            ],
+          }
     );
-  };
 
   const send = () => {
     const text = input.trim();
@@ -284,6 +315,10 @@ const OpenClawChat = () => {
                       key={a.id}
                       item={a}
                       onToggleSuggestion={toggleSuggestion}
+                      onRenameSuggestion={renameSuggestion}
+                      onRemoveSuggestion={removeSuggestion}
+                      onMoveSuggestion={moveSuggestion}
+                      onAddSuggestion={addSuggestion}
                       onRemove={(id) => setPending((p) => p.filter((x) => x.id !== id))}
                     />
                   ))}
