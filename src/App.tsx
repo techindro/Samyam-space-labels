@@ -41,6 +41,7 @@ import TermsOfService from "./pages/TermsOfService";
 import CookieConsent from "./components/CookieConsent";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Enterprise from "./pages/Enterprise";
 import { FloatingAiWidget } from "./components/FloatingAiWidget";
 
 
@@ -84,6 +85,7 @@ const App = () => (
             {/* Annotation Tool — task-specific (protected) */}
             <Route path="/annotate/:taskId" element={<ProtectedRoute><AnnotationTool /></ProtectedRoute>} />
             {/* New Pages */}
+            <Route path="/enterprise" element={<Enterprise />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
