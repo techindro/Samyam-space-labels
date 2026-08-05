@@ -364,9 +364,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                         onClick={(e) => { e.preventDefault(); setDevelopersOpen(false); }}
                         className="block rounded-xl overflow-hidden group"
                       >
-                        <div className="bg-secondary border border-border p-6 rounded-xl h-full flex flex-col items-center justify-center text-center min-h-[140px]">
-                          <Rocket className="h-6 w-6 text-foreground mb-2" />
-                          <span className="text-foreground text-lg font-bold leading-tight">Startup<br />Program</span>
+                        <div className="bg-gradient-to-br from-indigo-400 via-purple-400 to-blue-400 p-6 rounded-2xl h-full flex flex-col items-center justify-center text-center min-h-[140px] text-white shadow-md group-hover:shadow-lg transition-all">
+                          <Rocket className="h-6 w-6 text-white mb-2" />
+                          <span className="text-white text-lg font-bold leading-tight">Startup<br />Program</span>
                         </div>
                         <div className={`flex items-center justify-between pt-2 text-xs ${isDark ? 'text-white/50' : 'text-muted-foreground'}`}>
                           <span>Samyam Startup Program</span>
