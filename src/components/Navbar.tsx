@@ -140,9 +140,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   return (
     <>
       {/* Announcement Banner */}
-      <div className={`w-full border-b py-2 px-4 text-center text-sm ${isDark ? 'bg-white/5 border-white/10 text-white/70' : 'bg-gradient-to-r from-cosmic-purple/20 via-cosmic-teal/20 to-cosmic-purple/20 border-border/50 text-muted-foreground'}`}>
+      <div className={`w-full border-b py-2 px-4 text-center text-sm ${isDark ? 'bg-white/5 border-white/10 text-white/70' : 'bg-secondary/60 border-border/50 text-muted-foreground'}`}>
         <span>Samyam launches satellite data labeling platform</span>
-        <a href="/learn" className={`ml-2 inline-flex items-center gap-1 font-medium ${isDark ? 'text-white hover:text-white/80' : 'text-cosmic-teal hover:text-cosmic-teal-glow'}`}>
+        <a href="/learn" className={`ml-2 inline-flex items-center gap-1 font-medium ${isDark ? 'text-white hover:text-white/80' : 'text-foreground hover:text-foreground/80'}`}>
           Learn more <ArrowRight className="h-3 w-3" />
         </a>
       </div>
