@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Calculator, Clock, IndianRupee, Zap, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
+import { Calculator, Clock, IndianRupee, Zap, ShieldCheck, Sparkles, ArrowRight, Satellite, Radio, Mic, FileText, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -14,7 +14,7 @@ interface DataTypeOption {
   samyamCostPerUnit: number; // in INR
   manualMinsPerUnit: number;
   samyamSecsPerUnit: number;
-  iconName: string;
+  icon: LucideIcon;
 }
 
 const dataTypeOptions: DataTypeOption[] = [
@@ -26,7 +26,7 @@ const dataTypeOptions: DataTypeOption[] = [
     samyamCostPerUnit: 4.5,
     manualMinsPerUnit: 6,
     samyamSecsPerUnit: 1.2,
-    iconName: "🛰️",
+    icon: Satellite,
   },
   {
     id: "sar",
@@ -36,7 +36,7 @@ const dataTypeOptions: DataTypeOption[] = [
     samyamCostPerUnit: 6.0,
     manualMinsPerUnit: 10,
     samyamSecsPerUnit: 1.8,
-    iconName: "📡",
+    icon: Radio,
   },
   {
     id: "audio",
@@ -46,7 +46,7 @@ const dataTypeOptions: DataTypeOption[] = [
     samyamCostPerUnit: 1.8,
     manualMinsPerUnit: 4,
     samyamSecsPerUnit: 0.5,
-    iconName: "🎙️",
+    icon: Mic,
   },
   {
     id: "document",
@@ -56,7 +56,7 @@ const dataTypeOptions: DataTypeOption[] = [
     samyamCostPerUnit: 3.0,
     manualMinsPerUnit: 5,
     samyamSecsPerUnit: 0.8,
-    iconName: "📄",
+    icon: FileText,
   },
 ];
 
@@ -136,6 +136,7 @@ export default function PricingRoiCalculator() {
                 <div className="grid grid-cols-2 gap-2.5">
                   {dataTypeOptions.map((opt) => {
                     const isSelected = opt.id === selectedType;
+                    const Icon = opt.icon;
                     return (
                       <button
                         key={opt.id}
@@ -146,7 +147,9 @@ export default function PricingRoiCalculator() {
                             : "bg-secondary/40 border-border/40 text-muted-foreground hover:bg-secondary/70 hover:text-foreground"
                         }`}
                       >
-                        <span className="text-xl">{opt.iconName}</span>
+                        <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${isSelected ? "bg-cosmic-purple/20 text-cosmic-purple-glow" : "bg-muted/80 text-muted-foreground"}`}>
+                          <Icon size={18} />
+                        </div>
                         <div className="min-w-0 flex-1">
                           <div className="text-xs font-semibold leading-tight truncate">{opt.label}</div>
                           <div className="text-[10px] text-muted-foreground/80 mt-0.5">Per {opt.unit}</div>
