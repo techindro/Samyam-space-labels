@@ -63,13 +63,13 @@ const Enterprise = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-cosmic-purple/30 selection:text-cosmic-purple-glow">
-      <Navbar variant="dark" />
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <Navbar />
 
       <main className="flex-1">
         {/* Enterprise Hero */}
-        <section className="relative py-24 md:py-32 overflow-hidden border-b border-border/40 bg-gradient-to-b from-black via-background to-background">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(147,51,234,0.15),transparent_60%)]" />
+        <section className="relative py-24 md:py-32 overflow-hidden border-b border-border/40 bg-gradient-to-b from-cosmic-purple/10 via-background to-background">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(147,51,234,0.1),transparent_60%)]" />
 
           <div className="container mx-auto px-4 max-w-6xl relative z-10 text-center">
             <motion.div
@@ -108,7 +108,7 @@ const Enterprise = () => {
             >
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-black dark:bg-white text-white dark:text-black font-bold hover:opacity-90 px-8 py-6 text-base"
+                className="w-full sm:w-auto bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white font-bold hover:opacity-90 px-8 py-6 text-base border-0 shadow-lg"
                 onClick={() => navigate("/book-demo")}
               >
                 Schedule Enterprise Briefing <ArrowRight className="ml-2 h-5 w-5" />
@@ -126,7 +126,7 @@ const Enterprise = () => {
         </section>
 
         {/* Enterprise Key Pillars */}
-        <section className="py-20 bg-secondary/20 border-b border-border/40">
+        <section className="py-20 bg-background border-b border-border/40">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4">
@@ -147,7 +147,7 @@ const Enterprise = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.08 }}
-                    className="p-6 rounded-2xl border border-border/60 bg-background/80 hover:border-foreground/30 transition-all flex flex-col justify-between"
+                    className="p-6 rounded-2xl border border-border/60 glass-card hover:border-foreground/30 transition-all flex flex-col justify-between"
                   >
                     <div>
                       <div className="p-3 rounded-xl bg-secondary w-fit mb-4 text-foreground">
@@ -169,7 +169,7 @@ const Enterprise = () => {
         <PricingRoiCalculator />
 
         {/* Enterprise CTA Banner */}
-        <section className="py-20 border-t border-border/40 bg-gradient-to-t from-black via-background to-background text-center">
+        <section className="py-20 border-t border-border/40 bg-gradient-to-b from-background via-secondary/20 to-background text-center">
           <div className="container mx-auto px-4 max-w-4xl">
             <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4">
               Ready to Accelerate Your Enterprise AI Perception?
@@ -180,7 +180,7 @@ const Enterprise = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
                 size="lg"
-                className="w-full sm:w-auto bg-black dark:bg-white text-white dark:text-black font-bold px-8 py-6"
+                className="w-full sm:w-auto bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white font-bold px-8 py-6 border-0 shadow-lg"
                 onClick={() => navigate("/book-demo")}
               >
                 Contact Enterprise Sales <ArrowRight className="ml-2 h-5 w-5" />
