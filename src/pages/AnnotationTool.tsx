@@ -28,6 +28,52 @@ const statusColors: Record<string, string> = {
 const DEMO_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/ISS-44_Jeff_Williams_takes_a_nadir-looking_view_of_Earth.jpg/1280px-ISS-44_Jeff_Williams_takes_a_nadir-looking_view_of_Earth.jpg";
 const DEMO_AUDIO = "https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg";
 
+export const PRELOADED_DATASETS = [
+  {
+    id: "sat-iss",
+    name: "🛰️ NASA ISS Nadir Earth Imagery",
+    category: "Satellite BBox & Polygon",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/ISS-44_Jeff_Williams_takes_a_nadir-looking_view_of_Earth.jpg/1280px-ISS-44_Jeff_Williams_takes_a_nadir-looking_view_of_Earth.jpg",
+    modality: "vision",
+    annotations: [
+      { id: "pre-1", type: "bbox", label: "Vehicle", color: "#3b82f6", bbox: [140, 90, 380, 240] },
+      { id: "pre-2", type: "polygon", label: "Building", color: "#a855f7", points: [[300, 150], [450, 120], [520, 220], [380, 260]] },
+    ],
+  },
+  {
+    id: "sar-sentinel",
+    name: "📡 Sentinel-1 SAR Radar Ocean Vessels",
+    category: "SAR Radar Multi-Band",
+    url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
+    modality: "sar_radar",
+    annotations: [
+      { id: "pre-3", type: "bbox", label: "Aircraft", color: "#ef4444", bbox: [250, 190, 185, 125] },
+      { id: "pre-4", type: "bbox", label: "Infrastructure", color: "#eab308", bbox: [510, 310, 220, 140] },
+    ],
+  },
+  {
+    id: "indian-infra",
+    name: "🚗 Indian Road & Urban Vehicle Perception",
+    category: "Aerial & Drone Vehicles",
+    url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1280&auto=format&fit=crop",
+    modality: "vision",
+    annotations: [
+      { id: "pre-5", type: "bbox", label: "Auto-Rickshaw", color: "#22c55e", bbox: [180, 240, 150, 120] },
+      { id: "pre-6", type: "bbox", label: "Pothole", color: "#f97316", bbox: [410, 380, 95, 75] },
+    ],
+  },
+  {
+    id: "lunar-terrain",
+    name: "🌕 ISRO Chandrayaan Lunar Surface Craters",
+    category: "Deep Space Topography",
+    url: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=1280&auto=format&fit=crop",
+    modality: "vision",
+    annotations: [
+      { id: "pre-7", type: "polygon", label: "Lunar Crater", color: "#ec4899", points: [[210, 190], [330, 160], [410, 270], [290, 320]] },
+    ],
+  },
+];
+
 const DEVANAGARI_CHARS = [
   "क", "ख", "ग", "घ", "ङ", "च", "छ", "ज", "झ", "ञ",
   "ट", "ठ", "ड", "ढ", "ण", "त", "थ", "द", "ध", "न",
@@ -55,9 +101,28 @@ export default function AnnotationTool() {
   const [imageUrl,   setImageUrl]   = useState<string>(DEMO_IMAGE);
   const [customUrl,  setCustomUrl]  = useState("");
   const [showUrlBox, setShowUrlBox] = useState(false);
+  const [selectedDatasetId, setSelectedDatasetId] = useState<string>("sat-iss");
 
   // Annotation state for Vision
   const state = useAnnotationState();
+
+  const handleSelectPresetDataset = (dsId: string) => {
+    const ds = PRELOADED_DATASETS.find(d => d.id === dsId);
+    if (!ds) return;
+    setSelectedDatasetId(ds.id);
+    setImageUrl(ds.url);
+    if (ds.modality === "sar_radar") {
+      setActiveModality("sar_radar");
+    } else {
+      setActiveModality("vision");
+    }
+    // Pre-populate annotations
+    state.setAnnotations(ds.annotations as any);
+    toast({
+      title: `Loaded Pre-loaded Dataset`,
+      description: `${ds.name} (${ds.category})`,
+    });
+  };
 
   const [runningAi, setRunningAi] = useState(false);
 
@@ -450,6 +515,42 @@ export default function AnnotationTool() {
           </Button>
         </div>
       </header>
+
+      {/* ── Pre-loaded Satellite & SAR Sample Datasets Bar ── */}
+      <div className="shrink-0 bg-[#0c0e1e] border-b border-[#23263d] px-4 py-2 flex items-center justify-between gap-3 overflow-x-auto z-10">
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <Globe size={13} className="text-indigo-400" /> Pre-Loaded Demo Datasets:
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 overflow-x-auto py-0.5 no-scrollbar">
+          {PRELOADED_DATASETS.map((ds) => {
+            const isSelected = ds.id === selectedDatasetId;
+            return (
+              <button
+                key={ds.id}
+                onClick={() => handleSelectPresetDataset(ds.id)}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold shrink-0 transition-all border flex items-center gap-1.5 ${
+                  isSelected
+                    ? "bg-white text-slate-950 border-white shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+                    : "bg-[#16182c] text-slate-300 border-[#2b2e4a] hover:bg-[#202340] hover:text-white"
+                }`}
+              >
+                <span>{ds.name}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${isSelected ? "bg-slate-950 text-white" : "bg-white/10 text-slate-400"}`}>
+                  {ds.category}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="hidden lg:flex items-center gap-2 text-slate-400 text-xs shrink-0 font-medium">
+          <Sparkles size={12} className="text-emerald-400" />
+          <span>Interactive BBox & Polygon Demo</span>
+        </div>
+      </div>
 
       {/* ── Devanagari (Hindi) On-Screen Keyboard Drawer ── */}
       {showHindiKb && (
