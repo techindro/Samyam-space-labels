@@ -107,7 +107,7 @@ export default function PricingRoiCalculator() {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 mb-3 px-3.5 py-1 rounded-full border border-cosmic-purple/30 bg-cosmic-purple/10 text-cosmic-purple-glow text-xs font-semibold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 mb-3 px-3.5 py-1 rounded-full border border-border bg-secondary text-foreground text-xs font-semibold uppercase tracking-wider">
             <Calculator size={13} />
             <span>Interactive ROI & Savings Estimator</span>
           </div>
@@ -143,11 +143,11 @@ export default function PricingRoiCalculator() {
                         onClick={() => setSelectedType(opt.id)}
                         className={`p-3 rounded-xl text-left border transition-all flex items-start gap-2.5 ${
                           isSelected
-                            ? "bg-gradient-to-r from-cosmic-purple/20 to-cosmic-teal/20 border-cosmic-teal/60 text-foreground font-semibold shadow-md"
+                            ? "bg-foreground/10 border-foreground text-foreground font-semibold shadow-md"
                             : "bg-secondary/40 border-border/40 text-muted-foreground hover:bg-secondary/70 hover:text-foreground"
                         }`}
                       >
-                        <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${isSelected ? "bg-cosmic-purple/20 text-cosmic-purple-glow" : "bg-muted/80 text-muted-foreground"}`}>
+                        <div className={`p-1.5 rounded-lg shrink-0 mt-0.5 ${isSelected ? "bg-foreground text-background" : "bg-muted/80 text-muted-foreground"}`}>
                           <Icon size={18} />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -165,7 +165,7 @@ export default function PricingRoiCalculator() {
                   <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     2. Select Volume ({activeOption.unit})
                   </label>
-                  <span className="text-base font-bold font-display text-cosmic-teal">
+                  <span className="text-base font-bold font-display text-foreground">
                     {formatVolumeDisplay(volume)} {activeOption.unit}
                   </span>
                 </div>
@@ -177,7 +177,7 @@ export default function PricingRoiCalculator() {
                   step={10000}
                   value={volume}
                   onChange={(e) => setVolume(Number(e.target.value))}
-                  className="w-full h-2.5 bg-secondary rounded-lg appearance-none cursor-pointer accent-cosmic-teal"
+                  className="w-full h-2.5 bg-secondary rounded-lg appearance-none cursor-pointer accent-foreground"
                 />
 
                 <div className="flex justify-between text-[11px] text-muted-foreground mt-2 font-mono">
@@ -191,7 +191,7 @@ export default function PricingRoiCalculator() {
 
               <div className="p-4 rounded-xl bg-secondary/30 border border-border/40 text-xs space-y-1.5 text-muted-foreground">
                 <div className="flex items-center gap-2 text-foreground font-semibold">
-                  <ShieldCheck size={14} className="text-cosmic-teal" />
+                  <ShieldCheck size={14} className="text-foreground" />
                   <span>Quality & SLA Guarantee</span>
                 </div>
                 <p>
@@ -201,13 +201,13 @@ export default function PricingRoiCalculator() {
             </div>
 
             {/* Right Output ROI Cards Column */}
-            <div className="lg:col-span-6 bg-gradient-to-b from-secondary/50 via-background to-secondary/30 rounded-xl p-6 border border-border/50 flex flex-col justify-between">
+            <div className="lg:col-span-6 bg-secondary/30 rounded-xl p-6 border border-border flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between border-b border-border/50 pb-4 mb-5">
                   <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     Estimated ROI Summary
                   </span>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-foreground/10 text-foreground font-bold border border-border">
                     ⚡ {savingsPercentage}% Cost Reduction
                   </span>
                 </div>
@@ -215,9 +215,9 @@ export default function PricingRoiCalculator() {
                 {/* Comparison Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   {/* Manual Cost Card */}
-                  <div className="p-4 rounded-xl bg-background/80 border border-border/50 space-y-1">
+                  <div className="p-4 rounded-xl bg-background/80 border border-border space-y-1">
                     <span className="text-[11px] font-semibold text-muted-foreground block">Traditional In-House</span>
-                    <div className="text-xl font-bold font-display text-rose-400">
+                    <div className="text-xl font-bold font-display text-foreground/80">
                       {formatLakhsCrores(manualTotalCost)}
                     </div>
                     <div className="text-[11px] text-muted-foreground flex items-center gap-1">
@@ -226,23 +226,23 @@ export default function PricingRoiCalculator() {
                   </div>
 
                   {/* Samyam Cost Card */}
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-cosmic-purple/20 to-cosmic-teal/20 border border-cosmic-teal/40 space-y-1">
-                    <span className="text-[11px] font-bold text-cosmic-teal block">With Samyam Engine</span>
-                    <div className="text-xl font-bold font-display text-emerald-400">
+                  <div className="p-4 rounded-xl bg-background border border-foreground/30 space-y-1">
+                    <span className="text-[11px] font-bold text-foreground block">With Samyam Engine</span>
+                    <div className="text-xl font-bold font-display text-foreground">
                       {formatLakhsCrores(samyamTotalCost)}
                     </div>
-                    <div className="text-[11px] text-cosmic-teal/90 flex items-center gap-1 font-semibold">
+                    <div className="text-[11px] text-foreground/80 flex items-center gap-1 font-semibold">
                       <Zap size={11} /> Just {samyamTotalHours} hours
                     </div>
                   </div>
                 </div>
 
                 {/* Big Savings Highlight */}
-                <div className="p-5 rounded-xl bg-gradient-to-r from-emerald-500/10 via-cosmic-teal/10 to-cosmic-purple/10 border border-emerald-500/30 text-center space-y-1 mb-6 shadow-inner">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400 block">
+                <div className="p-5 rounded-xl bg-background border border-border text-center space-y-1 mb-6 shadow-inner">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">
                     Total Net Savings
                   </span>
-                  <div className="text-3xl font-extrabold font-display bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-200 bg-clip-text text-transparent">
+                  <div className="text-3xl font-extrabold font-display text-foreground">
                     {formatLakhsCrores(savingsINR)}
                   </div>
                   <p className="text-xs text-muted-foreground">
@@ -254,7 +254,7 @@ export default function PricingRoiCalculator() {
 
               <div className="space-y-2">
                 <Link to="/book-demo">
-                  <Button className="w-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white hover:opacity-90 font-bold">
+                  <Button className="w-full bg-black dark:bg-white text-white dark:text-black hover:opacity-90 font-bold border-0">
                     <Sparkles size={15} className="mr-2" /> Start Annotating & Saving Now <ArrowRight size={15} className="ml-2" />
                   </Button>
                 </Link>
