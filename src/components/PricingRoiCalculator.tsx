@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Calculator, Clock, IndianRupee, Zap, ShieldCheck, Sparkles, ArrowRight, Satellite, Radio, Mic, FileText, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 type DataType = "satellite" | "sar" | "audio" | "document";
 
@@ -99,7 +100,8 @@ export default function PricingRoiCalculator() {
   };
 
   return (
-    <section className="py-20 relative overflow-hidden">
+    <section className="py-20 relative overflow-hidden bg-background">
+      <ParallelWebBg />
       <div className="container mx-auto px-4 max-w-5xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

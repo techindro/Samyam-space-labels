@@ -19,6 +19,7 @@ import {
   FileCheck,
 } from "lucide-react";
 import PricingRoiCalculator from "@/components/PricingRoiCalculator";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const enterpriseFeatures = [
   {
@@ -69,6 +70,7 @@ const Enterprise = () => {
       <main className="flex-1">
         {/* Enterprise Hero */}
         <section className="relative py-24 md:py-32 overflow-hidden border-b border-border/40 bg-gradient-to-b from-cosmic-purple/10 via-background to-background">
+          <ParallelWebBg />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(147,51,234,0.1),transparent_60%)]" />
 
           <div className="container mx-auto px-4 max-w-6xl relative z-10 text-center">
