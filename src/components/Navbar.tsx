@@ -186,9 +186,8 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium leading-tight">{label}</span>
-                            {badge && (
-                              <span className={`text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded ${isDark ? 'bg-cosmic-purple/20 text-cosmic-purple-glow' : 'bg-cosmic-purple/10 text-cosmic-purple-glow'}`}>{badge}</span>
+                            <span className="text-sm font-medium leading-tight">{label}</span>                             {badge && (
+                              <span className={`text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded ${isDark ? 'bg-white/10 text-white' : 'bg-secondary text-foreground'}`}>{badge}</span>
                             )}
                           </div>
                           <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>{subtitle}</span>
@@ -204,24 +203,24 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                       onClick={(e) => { e.preventDefault(); setProductsOpen(false); navigate("/annotate/demo"); }}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                         isDark
-                          ? 'bg-cosmic-purple/15 hover:bg-cosmic-purple/25 text-white border border-cosmic-purple/20 hover:border-cosmic-purple/40'
-                          : 'bg-cosmic-purple/5 hover:bg-cosmic-purple/10 text-foreground border border-cosmic-purple/20 hover:border-cosmic-purple/40'
+                          ? 'bg-white/10 hover:bg-white/20 text-white border border-white/10'
+                          : 'bg-secondary/60 hover:bg-secondary text-foreground border border-border/40'
                       }`}
                     >
-                      <div className="flex items-center gap-1 text-cosmic-purple shrink-0">
+                      <div className="flex items-center gap-1 text-foreground shrink-0">
                         <Square size={13} />
                         <Hexagon size={13} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold">Annotation Workspace</span>
-                          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-cosmic-purple/20 text-cosmic-purple font-bold">NEW</span>
+                          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-secondary text-foreground font-bold">NEW</span>
                         </div>
                         <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>
                           BBox · Polygon · Undo/Redo · COCO Export
                         </span>
                       </div>
-                      <ArrowRight size={14} className="text-cosmic-purple opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
+                      <ArrowRight size={14} className="text-foreground opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
                     </a>
                   </div>
                 </div>
@@ -365,9 +364,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                         onClick={(e) => { e.preventDefault(); setDevelopersOpen(false); }}
                         className="block rounded-xl overflow-hidden group"
                       >
-                        <div className="bg-gradient-to-br from-indigo-400/80 via-purple-400/60 to-blue-400/80 p-6 rounded-xl h-full flex flex-col items-center justify-center text-center min-h-[140px]">
-                          <Rocket className="h-6 w-6 text-white mb-2" />
-                          <span className="text-white text-lg font-bold leading-tight">Startup<br />Program</span>
+                        <div className="bg-secondary border border-border p-6 rounded-xl h-full flex flex-col items-center justify-center text-center min-h-[140px]">
+                          <Rocket className="h-6 w-6 text-foreground mb-2" />
+                          <span className="text-foreground text-lg font-bold leading-tight">Startup<br />Program</span>
                         </div>
                         <div className={`flex items-center justify-between pt-2 text-xs ${isDark ? 'text-white/50' : 'text-muted-foreground'}`}>
                           <span>Samyam Startup Program</span>
@@ -418,9 +417,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
             <a
               href="/openclaw-chat"
               onClick={(e) => { e.preventDefault(); navigate("/openclaw-chat"); }}
-              className="relative inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-cosmic-purple/40 bg-gradient-to-r from-cosmic-purple/15 via-cosmic-teal/15 to-cosmic-purple/15 text-foreground hover:border-cosmic-purple/80 hover:shadow-[0_0_15px_rgba(147,51,234,0.35)] transition-all group"
+              className="relative inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-border bg-secondary/80 text-foreground hover:bg-secondary transition-all group"
             >
-              <Sparkles className="h-3.5 w-3.5 text-cosmic-purple animate-pulse group-hover:rotate-12 transition-transform" />
+              <Sparkles className="h-3.5 w-3.5 text-foreground group-hover:rotate-12 transition-transform" />
               <span>OpenClaw AI</span>
             </a>
 
@@ -443,7 +442,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
             ) : (
               <>
                 <a href="/auth" className={`text-sm transition-colors ${linkClass}`}>Log In</a>
-                <Button size="sm" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0" onClick={() => navigate("/auth")}>
+                <Button size="sm" className="bg-black dark:bg-white text-white dark:text-black font-bold hover:opacity-90 border-0" onClick={() => navigate("/auth")}>
                   Sign Up <ArrowRight className="h-3 w-3 ml-1" />
                 </Button>
               </>
@@ -571,7 +570,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
               ) : (
                 <>
                   <a href="/auth" className={`block text-sm ${isDark ? 'text-white/70' : 'text-muted-foreground'}`}>Log In</a>
-                  <Button size="sm" className="w-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0" onClick={() => navigate("/auth")}>
+                  <Button size="sm" className="w-full bg-black dark:bg-white text-white dark:text-black font-bold border-0" onClick={() => navigate("/auth")}>
                     Sign Up <ArrowRight className="h-3 w-3 ml-1" />
                   </Button>
                 </>
