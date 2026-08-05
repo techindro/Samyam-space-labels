@@ -41,6 +41,8 @@ import TermsOfService from "./pages/TermsOfService";
 import CookieConsent from "./components/CookieConsent";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { FloatingAiWidget } from "./components/FloatingAiWidget";
+
 
 const queryClient = new QueryClient();
 
@@ -93,6 +95,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <FloatingAiWidget />
           <CookieConsent />
         </BrowserRouter>
       </ErrorBoundary>

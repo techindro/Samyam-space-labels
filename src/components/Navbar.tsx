@@ -36,15 +36,17 @@ import {
   Tag,
   Square,
   Hexagon,
+  Sparkles,
+  Bot,
 } from "lucide-react";
 import { governmentPages } from "@/data/governmentPages";
 import { productPages } from "@/data/productPages";
 
 const navLinks: { label: string; href: string }[] = [
   { label: "Space Tech", href: "/space-tech" },
-  { label: "OpenClaw Chat", href: "/openclaw-chat" },
   { label: "Enterprise", href: "#" },
 ];
+
 
 const governmentLinks = governmentPages.map((p) => ({
   label: p.label,
@@ -412,8 +414,18 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
           </div>
 
           {/* CTA */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            <a
+              href="/openclaw-chat"
+              onClick={(e) => { e.preventDefault(); navigate("/openclaw-chat"); }}
+              className="relative inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-cosmic-purple/40 bg-gradient-to-r from-cosmic-purple/15 via-cosmic-teal/15 to-cosmic-purple/15 text-foreground hover:border-cosmic-purple/80 hover:shadow-[0_0_15px_rgba(147,51,234,0.35)] transition-all group"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-cosmic-purple animate-pulse group-hover:rotate-12 transition-transform" />
+              <span>OpenClaw AI</span>
+            </a>
+
             {user ? (
+
               <>
                 {isAdmin && (
                   <a href="/admin" onClick={(e) => { e.preventDefault(); navigate("/admin"); }} className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}>
