@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import PricingRoiCalculator from "@/components/PricingRoiCalculator";
 import ParallelWebBg from "@/components/ParallelWebBg";
+import AwsS3Uploader from "@/components/AwsS3Uploader";
 
 const enterpriseFeatures = [
   {
@@ -163,6 +164,13 @@ const Enterprise = () => {
                 );
               })}
             </div>
+          </div>
+        </section>
+
+        {/* AWS S3 Ingestion Component */}
+        <section className="py-16 bg-background relative z-10 border-b border-border/40">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <AwsS3Uploader />
           </div>
         </section>
 
