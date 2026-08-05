@@ -111,13 +111,10 @@ export default function PricingRoiCalculator() {
             <Calculator size={13} />
             <span>Interactive ROI & Savings Estimator</span>
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold mb-3">
-            Calculate Your{" "}
-            <span className="bg-gradient-to-r from-cosmic-teal via-cosmic-purple-glow to-cosmic-teal bg-clip-text text-transparent">
-              Cost & Time Savings
-            </span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold mb-3 text-black dark:text-white">
+            Calculate Your Cost & Time Savings
           </h2>
-          <p className="text-muted-foreground text-sm max-w-xl mx-auto">
+          <p className="text-black/80 dark:text-white/80 text-sm max-w-xl mx-auto font-medium">
             See how much time and money Samyam's satellite data labeling platform saves compared to manual in-house labeling.
           </p>
         </motion.div>
