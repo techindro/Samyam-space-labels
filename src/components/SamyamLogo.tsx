@@ -19,10 +19,10 @@ const textSizes = {
   lg: "text-4xl",
 };
 
-const badgeStyles = {
-  sm: "px-1.5 py-0.5 text-[9px] -translate-y-2.5 rounded-md",
-  md: "px-2 py-0.5 text-[11px] -translate-y-3.5 rounded-lg",
-  lg: "px-2.5 py-0.5 text-xs -translate-y-4 rounded-lg",
+const badgeTopOffsets = {
+  sm: "-top-3 px-1 py-0.5 text-[8px]",
+  md: "-top-3.5 px-1.5 py-0.5 text-[9px] sm:text-[10px]",
+  lg: "-top-4 px-2 py-0.5 text-xs",
 };
 
 export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Props) => {
@@ -37,16 +37,19 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
         />
       </div>
 
-      {/* Typography: Samyam + "AI" Pill Badge floating OUTSIDE top-right after letter 'm' (ZiaLabs style) */}
+      {/* Typography: Samyam with "AI" pill badge directly superscript OVER the letter "m" */}
       {showText && (
-        <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none">
-          <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground`}>
-            Samyam
-          </span>
-          <span
-            className={`ml-1 ${badgeStyles[size]} font-mono font-black tracking-wider uppercase bg-foreground text-background shadow-sm select-none shrink-0`}
-          >
-            AI
+        <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none pt-2">
+          <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground inline-flex items-baseline`}>
+            Samya
+            <span className="relative inline-block">
+              m
+              <span
+                className={`absolute ${badgeTopOffsets[size]} left-1/2 -translate-x-1/2 rounded-md bg-foreground text-background font-mono font-black tracking-wider uppercase shadow-sm select-none shrink-0 pointer-events-none`}
+              >
+                AI
+              </span>
+            </span>
           </span>
         </div>
       )}
