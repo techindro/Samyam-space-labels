@@ -107,6 +107,16 @@ export default function AnnotationTool() {
   const [customUrl,  setCustomUrl]  = useState("");
   const [showUrlBox, setShowUrlBox] = useState(false);
   const [selectedDatasetId, setSelectedDatasetId] = useState<string>("sat-iss");
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleImageFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const localUrl = URL.createObjectURL(file);
+      setImageUrl(localUrl);
+      toast({ title: "Loaded Image File", description: file.name });
+    }
+  };
 
   // Annotation state for Vision
   const state = useAnnotationState();
@@ -497,7 +507,32 @@ export default function AnnotationTool() {
             </Button>
           )}
 
-          {/* Hidden File Inputs for Audio & Video */}
+          {/* 2D Vision Image Upload & Paste URL buttons */}
+          {activeModality === "vision" && (
+            <>
+              <Button
+                size="sm"
+                onClick={() => setShowUrlBox(v => !v)}
+                className={`h-7 px-2.5 text-xs gap-1 transition-colors border shrink-0 ${
+                  showUrlBox ? "bg-white text-slate-950 font-bold border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" : "bg-white/10 border-white/40 text-white hover:bg-white/20 font-semibold"
+                }`}
+              >
+                <Globe size={12} />
+                <span>Paste <span className="hidden sm:inline">Image</span> Link</span>
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => imageInputRef.current?.click()}
+                className="h-7 px-2.5 sm:px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1 shrink-0"
+              >
+                <Upload size={12} />
+                <span>Upload <span className="hidden sm:inline">Image</span></span>
+              </Button>
+            </>
+          )}
+
+          {/* Hidden File Inputs for Vision, Audio & Video */}
+          <input type="file" ref={imageInputRef} accept="image/*" className="hidden" onChange={handleImageFileUpload} />
           <input type="file" ref={audioInputRef} accept="audio/*" className="hidden" onChange={handleAudioFileUpload} />
           <input type="file" ref={videoInputRef} accept="video/*" className="hidden" onChange={handleVideoFileUpload} />
 
@@ -602,9 +637,11 @@ export default function AnnotationTool() {
 
       {/* ── Image URL & Preset Picker ── */}
       {showUrlBox && activeModality === "vision" && (
-        <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 px-4 py-2 bg-[#0f0f1e] border-b border-white/10 z-10">
+        <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 px-4 py-2.5 bg-[#0f0f1e] border-b border-indigo-500/30 z-10 shadow-lg animate-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-1.5 overflow-x-auto py-1 sm:py-0 no-scrollbar">
-            <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap">Presets:</span>
+            <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+              <Globe size={13} className="text-indigo-400" /> Presets:
+            </span>
             {[
               { label: "Earth Satellite", icon: Globe, url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200" },
               { label: "Indian Traffic", icon: Car, url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1200" },
@@ -629,17 +666,40 @@ export default function AnnotationTool() {
             <input
               autoFocus
               type="url"
-              placeholder="Or paste custom image URL here…"
+              placeholder="Paste image link/URL here (e.g. https://example.com/image.jpg)…"
               value={customUrl}
               onChange={e => setCustomUrl(e.target.value)}
               onKeyDown={e => {
-                if (e.key === "Enter" && customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }
+                if (e.key === "Enter" && customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); toast({ title: "Loaded Custom Image Link" }); }
                 if (e.key === "Escape") setShowUrlBox(false);
               }}
-              className="flex-1 text-xs bg-white/5 text-white px-3 py-1.5 rounded-md border border-white/10 outline-none focus:border-white placeholder:text-white/25"
+              className="flex-1 text-xs bg-white/10 text-white px-3 py-1.5 rounded-lg border border-indigo-400/40 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 placeholder:text-white/40 font-mono"
             />
-            <Button size="sm" onClick={() => { if (customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); }}} className="h-7 px-3 text-xs bg-white text-black hover:bg-slate-200 border-0 font-bold">
-              Load
+            <Button
+              size="sm"
+              type="button"
+              variant="outline"
+              onClick={async () => {
+                try {
+                  const text = await navigator.clipboard.readText();
+                  if (text && text.startsWith("http")) {
+                    setCustomUrl(text);
+                    setImageUrl(text);
+                    setShowUrlBox(false);
+                    toast({ title: "Pasted & Loaded Image Link" });
+                  } else {
+                    toast({ title: "Clipboard doesn't contain a valid HTTP URL", variant: "destructive" });
+                  }
+                } catch {
+                  toast({ title: "Clipboard access denied", variant: "destructive" });
+                }
+              }}
+              className="h-7 px-2.5 text-xs bg-white/10 text-white hover:bg-white/20 border-white/20 font-medium whitespace-nowrap"
+            >
+              Paste Link
+            </Button>
+            <Button size="sm" onClick={() => { if (customUrl) { setImageUrl(customUrl); setShowUrlBox(false); setCustomUrl(""); toast({ title: "Loaded Image Link" }); }}} className="h-7 px-3 text-xs bg-white text-black hover:bg-slate-200 border-0 font-bold whitespace-nowrap">
+              Load Link
             </Button>
             <button onClick={() => setShowUrlBox(false)} className="text-white/40 hover:text-white text-xs px-1">✕</button>
           </div>
