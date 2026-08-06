@@ -19,10 +19,10 @@ const textSizes = {
   lg: "text-4xl",
 };
 
-const badgePadding = {
-  sm: "px-1.5 py-0.5 text-[9px] -mt-1 rounded-md",
-  md: "px-2 py-0.5 text-[11px] -mt-1.5 rounded-lg",
-  lg: "px-2.5 py-1 text-xs -mt-2 rounded-lg",
+const badgeStyles = {
+  sm: "px-1.5 py-0.5 text-[9px] -translate-y-2.5 rounded-md",
+  md: "px-2 py-0.5 text-[11px] -translate-y-3.5 rounded-lg",
+  lg: "px-2.5 py-0.5 text-xs -translate-y-4 rounded-lg",
 };
 
 export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Props) => {
@@ -37,14 +37,14 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
         />
       </div>
 
-      {/* Typography: Samyam + Rounded Pill Badge "AI" (superscript style matching reference image) */}
+      {/* Typography: Samyam + "AI" Pill Badge floating OUTSIDE top-right after letter 'm' (ZiaLabs style) */}
       {showText && (
-        <div className="flex items-center gap-1.5 font-sans tracking-tight text-foreground leading-none">
+        <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none">
           <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground`}>
             Samyam
           </span>
           <span
-            className={`self-start ${badgePadding[size]} font-mono font-black tracking-wider uppercase bg-foreground text-background shadow-sm select-none`}
+            className={`ml-1 ${badgeStyles[size]} font-mono font-black tracking-wider uppercase bg-foreground text-background shadow-sm select-none shrink-0`}
           >
             AI
           </span>
