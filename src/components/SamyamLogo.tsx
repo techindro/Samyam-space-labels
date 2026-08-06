@@ -8,8 +8,8 @@ interface Props {
 }
 
 const sizeClasses = {
-  sm: "h-10 w-10",
-  md: "h-14 w-14",
+  sm: "h-9 w-9",
+  md: "h-12 w-12",
   lg: "h-16 w-16",
 };
 
@@ -19,16 +19,16 @@ const textSizes = {
   lg: "text-4xl",
 };
 
-const aiBadgeSizes = {
-  sm: "text-[10px] -top-3",
-  md: "text-xs -top-4",
-  lg: "text-sm -top-5",
+const badgePadding = {
+  sm: "px-1.5 py-0.5 text-[9px] -mt-1 rounded-md",
+  md: "px-2 py-0.5 text-[11px] -mt-1.5 rounded-lg",
+  lg: "px-2.5 py-1 text-xs -mt-2 rounded-lg",
 };
 
 export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Props) => {
   return (
-    <Link to="/" className={`inline-flex items-center gap-3.5 group select-none ${className}`}>
-      {/* Prominent Large Emblem Container */}
+    <Link to="/" className={`inline-flex items-center gap-3 group select-none ${className}`}>
+      {/* Emblem Container */}
       <div className={`relative ${sizeClasses[size]} shrink-0 rounded-full bg-white p-0.5 shadow-md border border-border/50 group-hover:scale-105 transition-transform duration-300`}>
         <img
           src={samyamLogoImg}
@@ -37,19 +37,16 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
         />
       </div>
 
-      {/* Typography: Samyam with prominent "AI" floating directly over the letter "m" */}
+      {/* Typography: Samyam + Rounded Pill Badge "AI" (superscript style matching reference image) */}
       {showText && (
-        <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none pt-1.5">
-          <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground inline-flex items-baseline`}>
-            Samya
-            <span className="relative inline-block">
-              m
-              <span
-                className={`absolute ${aiBadgeSizes[size]} left-1/2 -translate-x-1/2 font-black tracking-wider uppercase bg-gradient-to-r from-cosmic-purple via-cosmic-purple to-cosmic-teal bg-clip-text text-transparent select-none font-mono drop-shadow-sm`}
-              >
-                AI
-              </span>
-            </span>
+        <div className="flex items-center gap-1.5 font-sans tracking-tight text-foreground leading-none">
+          <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground`}>
+            Samyam
+          </span>
+          <span
+            className={`self-start ${badgePadding[size]} font-mono font-black tracking-wider uppercase bg-foreground text-background shadow-sm select-none`}
+          >
+            AI
           </span>
         </div>
       )}
