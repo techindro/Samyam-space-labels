@@ -23,7 +23,7 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
   return (
     <Link to="/" className={`inline-flex items-center gap-3 group select-none ${className}`}>
       {/* Emblem Container */}
-      <div className={`relative ${sizeClasses[size]} shrink-0 rounded-full bg-white p-0.5 shadow-md border border-border/50 group-hover:scale-105 transition-transform duration-300`}>
+      <div className={`relative ${sizeClasses[size]} shrink-0 rounded-full overflow-hidden group-hover:scale-105 transition-transform duration-300`}>
         <img
           src={samyamLogoImg}
           alt="Samyam Logo"
