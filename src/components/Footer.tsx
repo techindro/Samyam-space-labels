@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Linkedin, Twitter, Instagram, Facebook, Youtube, ArrowRight, Check } from "lucide-react";
+import { Linkedin, Twitter, Instagram, Facebook, Youtube, ArrowRight, Check, Mail, Sparkles, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { useToast } from "@/hooks/use-toast";
@@ -39,59 +39,106 @@ const footerLinks: Record<string, { label: string; href: string }[]> = {
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: "Invalid Email Address",
+        description: "Please enter a valid work email (e.g. name@organization.com).",
         variant: "destructive",
       });
       return;
     }
-    setSubscribed(true);
-    toast({
-      title: "Subscribed Successfully! 🎉",
-      description: "Thank you for subscribing to Samyam product updates.",
-    });
-    setEmail("");
+
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSubscribed(true);
+      toast({
+        title: "Welcome to Samyam Dispatch! 🎉",
+        description: "You've successfully subscribed to monthly Space AI & Data insights.",
+      });
+      setEmail("");
+    }, 600);
   };
 
   return (
     <footer className="py-16 bg-card/50 relative overflow-hidden">
       <ParallelWebBg />
       <div className="container mx-auto px-4 relative z-10">
-        {/* Top Newsletter Strip */}
-        <div className="rounded-2xl border border-border/50 bg-gradient-to-r from-cosmic-purple/10 via-card/50 to-cosmic-teal/10 p-6 md:p-8 mb-12 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-md">
-          <div className="max-w-md text-center md:text-left">
-            <h3 className="font-bold font-display text-lg text-foreground">Stay ahead with Samyam updates</h3>
-            <p className="text-sm text-muted-foreground mt-1">Get monthly insights on space AI, satellite data labeling, and platform updates.</p>
-          </div>
-          <form onSubmit={handleSubscribe} className="flex w-full md:w-auto items-center gap-2 max-w-md">
-            {subscribed ? (
-              <div className="flex items-center gap-2 text-emerald-500 text-sm font-semibold px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 w-full justify-center">
-                <Check className="h-4 w-4" /> You are subscribed!
+        {/* Ultra-Professional Newsletter Card */}
+        <div className="relative rounded-3xl border border-border/80 bg-gradient-to-br from-card/90 via-card/60 to-background/90 p-8 md:p-10 mb-16 shadow-2xl backdrop-blur-xl overflow-hidden group">
+          {/* Ambient Glow Gradient Effects */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-cosmic-purple/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cosmic-purple/20 transition-all duration-700" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-cosmic-teal/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cosmic-teal/20 transition-all duration-700" />
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-7 space-y-3 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cosmic-purple/10 border border-cosmic-purple/20 text-cosmic-purple text-xs font-semibold tracking-wide uppercase">
+                <Sparkles className="h-3.5 w-3.5" /> Samyam Dispatch & Research Insights
               </div>
-            ) : (
-              <>
-                <input
-                  type="email"
-                  placeholder="Enter your work email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-background/80 border border-border/60 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors w-full md:w-64"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 rounded-xl bg-foreground text-background font-semibold text-sm hover:opacity-90 transition-opacity shrink-0 flex items-center gap-1.5"
-                >
-                  Subscribe <ArrowRight className="h-4 w-4" />
-                </button>
-              </>
-            )}
-          </form>
+              <h3 className="text-2xl md:text-3xl font-bold font-display text-foreground tracking-tight">
+                Stay ahead in Space AI & Data Intelligence
+              </h3>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
+                Join 10,000+ AI researchers, satellite engineers, and defense teams receiving our monthly technical breakdown and platform announcements.
+              </p>
+            </div>
+
+            {/* Right Form */}
+            <div className="lg:col-span-5 w-full">
+              {subscribed ? (
+                <div className="flex flex-col items-center justify-center p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center animate-in fade-in zoom-in-95 duration-300">
+                  <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 mb-3">
+                    <Check className="h-6 w-6 stroke-[3]" />
+                  </div>
+                  <h4 className="font-bold text-foreground text-base">You're on the list!</h4>
+                  <p className="text-xs text-muted-foreground mt-1">Thank you for joining Samyam Research Dispatch.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
+                  <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
+                    <div className="relative flex-1">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                      <input
+                        type="email"
+                        placeholder="Enter your work email..."
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-background/90 border border-border/80 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:border-cosmic-purple focus:ring-2 focus:ring-cosmic-purple/20 transition-all shadow-inner"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="px-6 py-3 rounded-xl bg-gradient-to-r from-cosmic-purple via-cosmic-purple to-cosmic-teal text-white font-semibold text-sm hover:opacity-95 active:scale-[0.98] transition-all shadow-lg shadow-cosmic-purple/25 flex items-center justify-center gap-2 shrink-0 disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          Subscribe <ArrowRight className="h-4 w-4" />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-center lg:justify-start gap-4 text-[11px] text-muted-foreground/80 font-medium pt-1">
+                    <span className="flex items-center gap-1">
+                      <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> Zero spam
+                    </span>
+                    <span>•</span>
+                    <span>Unsubscribe anytime</span>
+                    <span>•</span>
+                    <span>Monthly frequency</span>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Links Grid */}
