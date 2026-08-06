@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Zap, Battery } from "lucide-react";
 import earthMapUrl from "@/assets/earth-map.jpg";
+import heroOrbUrl from "@/assets/hero-orb.jpg";
 
 // WebGL Support Check
 function checkWebGLSupport(): boolean {
@@ -457,33 +458,19 @@ const SceneContents = () => {
 
 type Mode = "auto" | "high" | "saver";
 
-// 2D India Orb Fallback when WebGL context fails
+// 2D Earth Orb Fallback when WebGL context fails
 const OrbFallback2D = () => (
   <div className="relative w-72 h-72 sm:w-80 sm:h-80 mx-auto flex items-center justify-center">
     <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cosmic-purple/20 via-cosmic-teal/15 to-transparent blur-2xl animate-pulse" />
-    <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full overflow-hidden border-2 border-white/20 shadow-[0_0_50px_rgba(139,92,246,0.3)]">
-      {/* Saffron band */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#ff9933] via-[#ffaa44] to-transparent" style={{ height: "38%" }} />
-      {/* White band */}
-      <div className="absolute top-[33%] inset-x-0 bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef]" style={{ height: "34%" }} />
-      {/* Green band */}
-      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#138808] via-[#1bb80e] to-transparent" style={{ height: "38%" }} />
-
-      {/* Ashoka Chakra Center */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-[#000080] flex items-center justify-center bg-white/10 backdrop-blur-sm">
-        <div className="w-10 h-10 rounded-full border border-[#000080]/60 relative animate-spin" style={{ animationDuration: "25s" }}>
-          {Array.from({ length: 24 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute top-1/2 left-1/2 w-[1px] bg-[#000080] origin-bottom"
-              style={{
-                height: "50%",
-                transform: `translate(-50%, -100%) rotate(${i * 15}deg)`,
-              }}
-            />
-          ))}
-        </div>
-      </div>
+    <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full overflow-hidden border-2 border-white/20 shadow-[0_0_50px_rgba(139,92,246,0.3)] group">
+      <img
+        src={heroOrbUrl}
+        alt="Earth Orb"
+        className="w-full h-full object-cover rounded-full animate-spin"
+        style={{ animationDuration: "60s" }}
+      />
+      {/* Orbital Ring overlay */}
+      <div className="absolute inset-0 border border-white/30 rounded-full pointer-events-none transform rotate-[25deg] scale-110" />
     </div>
   </div>
 );

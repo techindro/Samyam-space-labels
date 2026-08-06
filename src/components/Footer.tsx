@@ -3,6 +3,7 @@ import { Linkedin, Twitter, Instagram, Facebook, Youtube, ArrowRight, Check, Mai
 import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { useToast } from "@/hooks/use-toast";
+import SamyamLogo from "@/components/SamyamLogo";
 
 const footerLinks: Record<string, { label: string; href: string }[]> = {
   Products: [
@@ -137,9 +138,7 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="/" className="text-[28px] font-medium tracking-wide text-foreground" style={{ fontFamily: "'Comfortaa', cursive" }}>
-              Samyam
-            </a>
+            <SamyamLogo size="md" />
             <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
               Breakthrough AI for space data labeling, defense, and enterprise.
             </p>

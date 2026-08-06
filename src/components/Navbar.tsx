@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import SamyamLogo from "@/components/SamyamLogo";
 import {
   Menu,
   X,
@@ -157,9 +158,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
       <nav className={`sticky top-0 z-50 w-full border-b ${isDark ? 'bg-black/80 backdrop-blur-xl border-white/10' : 'glass-card border-border/30'}`}>
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
           {/* Logo */}
-          <a href="/" className={`text-[28px] font-medium tracking-wide ${isDark ? 'text-white' : 'text-foreground'}`} style={{ fontFamily: "'Comfortaa', cursive" }}>
-            Samyam
-          </a>
+          <SamyamLogo size="md" />
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
