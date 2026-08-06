@@ -459,29 +459,6 @@ export default function AnnotationTool() {
 
         {/* Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto no-scrollbar max-w-full py-0.5">
-          {/* 2D Vision Primary Image Actions (First in line so never cut off!) */}
-          {activeModality === "vision" && (
-            <>
-              <Button
-                size="sm"
-                onClick={() => imageInputRef.current?.click()}
-                className="h-7 px-2.5 sm:px-3 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold gap-1 shrink-0 shadow-[0_0_10px_rgba(99,102,241,0.5)]"
-              >
-                <Upload size={12} />
-                <span>Upload <span className="hidden sm:inline">Image</span></span>
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => setShowUrlBox(v => !v)}
-                className={`h-7 px-2.5 text-xs gap-1 transition-colors border shrink-0 ${
-                  showUrlBox ? "bg-white text-slate-950 font-bold border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" : "bg-white/10 border-white/40 text-white hover:bg-white/20 font-semibold"
-                }`}
-              >
-                <Globe size={12} />
-                <span>Paste <span className="hidden sm:inline">Image</span> Link</span>
-              </Button>
-            </>
-          )}
 
           {/* Mobile Labels Toggle Button */}
           {activeModality === "vision" && (

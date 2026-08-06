@@ -35,9 +35,9 @@ export default function AnnotationToolbar({
       {/* Upload Image Quick Action */}
       {onUploadImage && (
         <button
-          title="Upload Image File"
+          title="Upload Local Image File"
           onClick={onUploadImage}
-          className="w-10 h-10 flex items-center justify-center rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-500 transition-all shadow-[0_0_12px_rgba(99,102,241,0.5)] active:scale-95"
+          className="w-10 h-10 flex items-center justify-center rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200 active:scale-95"
         >
           <Upload size={18} />
         </button>
@@ -48,7 +48,7 @@ export default function AnnotationToolbar({
         <button
           title="Paste Image Link / URL"
           onClick={onToggleUrlBox}
-          className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20 transition-all active:scale-95 border border-white/10"
+          className="w-10 h-10 flex items-center justify-center rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200 active:scale-95"
         >
           <Globe size={18} />
         </button>
