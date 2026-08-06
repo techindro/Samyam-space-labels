@@ -34,8 +34,8 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
       {/* Typography: Scale AI Style (lowercase "samyam" + uppercase "AI" in bold geometric sans) */}
       {showText && (
         <div className="inline-flex items-baseline gap-2 font-['Plus_Jakarta_Sans','Space_Grotesk',sans-serif] tracking-tight leading-none">
-          <span className={`${textSizes[size]} font-bold tracking-tight text-foreground lowercase`}>
-            samyam
+          <span className={`${textSizes[size]} font-bold tracking-tight text-foreground`}>
+            Samyam
           </span>
           <span className={`${textSizes[size]} font-bold tracking-tight text-foreground uppercase`}>
             AI
