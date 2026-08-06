@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Stars, Float, OrbitControls, useTexture } from "@react-three/drei";
-import { useRef, useMemo, createContext, useContext, useState, useEffect, Component, ReactNode } from "react";
+import { useRef, useMemo, createContext, useContext, useState, useEffect, Component, ReactNode, Suspense } from "react";
 import * as THREE from "three";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Zap, Battery } from "lucide-react";
@@ -534,7 +534,9 @@ const SatelliteScene = () => {
           style={{ background: "transparent" }}
         >
           <QualityCtx.Provider value={quality}>
-            <SceneContents />
+            <Suspense fallback={null}>
+              <SceneContents />
+            </Suspense>
           </QualityCtx.Provider>
         </Canvas>
       </WebGLBoundary>
