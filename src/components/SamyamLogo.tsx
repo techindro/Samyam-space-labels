@@ -20,9 +20,9 @@ const textSizes = {
 };
 
 const badgeTopOffsets = {
-  sm: "-top-3 px-1 py-0.5 text-[8px]",
-  md: "-top-3.5 px-1.5 py-0.5 text-[9px] sm:text-[10px]",
-  lg: "-top-4 px-2 py-0.5 text-xs",
+  sm: "-top-2.5 text-[9px]",
+  md: "-top-3.5 text-[11px]",
+  lg: "-top-4.5 text-xs",
 };
 
 export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Props) => {
@@ -37,7 +37,7 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
         />
       </div>
 
-      {/* Typography: Samyam with "AI" pill badge directly superscript OVER the letter "m" */}
+      {/* Typography: Samyam with borderless "AI" superscript in exact same color over letter "m" */}
       {showText && (
         <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none pt-2">
           <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground inline-flex items-baseline`}>
@@ -45,7 +45,7 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
             <span className="relative inline-block">
               m
               <span
-                className={`absolute ${badgeTopOffsets[size]} left-1/2 -translate-x-1/2 rounded-md border border-foreground/40 text-foreground bg-transparent font-mono font-bold tracking-wider uppercase select-none shrink-0 pointer-events-none`}
+                className={`absolute ${badgeTopOffsets[size]} left-1/2 -translate-x-1/2 text-foreground font-mono font-bold tracking-wider uppercase select-none shrink-0 pointer-events-none`}
               >
                 AI
               </span>
