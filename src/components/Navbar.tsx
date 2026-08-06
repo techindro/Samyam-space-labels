@@ -156,7 +156,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
 
       {/* Navbar */}
       <nav className={`sticky top-0 z-50 w-full border-b ${isDark ? 'bg-black/80 backdrop-blur-xl border-white/10' : 'glass-card border-border/30'}`}>
-        <div className="container mx-auto flex items-center justify-between h-16 px-4">
+        <div className="container mx-auto flex items-center justify-between h-20 px-4">
           {/* Logo */}
           <SamyamLogo size="md" />
 
