@@ -1,5 +1,5 @@
 import type { Tool } from "./useAnnotationState";
-import { MousePointer2, Square, Hexagon, Trash2, Undo2, Redo2 } from "lucide-react";
+import { MousePointer2, Square, Hexagon, Trash2, Undo2, Redo2, Upload, Globe } from "lucide-react";
 
 interface Props {
   tool: Tool;
@@ -8,6 +8,8 @@ interface Props {
   onRedo: () => void;
   canUndo: boolean;
   canRedo: boolean;
+  onUploadImage?: () => void;
+  onToggleUrlBox?: () => void;
 }
 
 interface ToolBtn {
@@ -25,10 +27,34 @@ const tools: ToolBtn[] = [
 ];
 
 export default function AnnotationToolbar({
-  tool, onSetTool, onUndo, onRedo, canUndo, canRedo,
+  tool, onSetTool, onUndo, onRedo, canUndo, canRedo, onUploadImage, onToggleUrlBox,
 }: Props) {
   return (
     <div className="flex flex-col items-center gap-1.5 px-2 py-3 bg-[#0c0c1b]/90 backdrop-blur-md border-r border-white/10 w-14 shrink-0 select-none shadow-xl z-10">
+
+      {/* Upload Local Image File */}
+      {onUploadImage && (
+        <button
+          title="Upload Image File"
+          onClick={onUploadImage}
+          className="w-10 h-10 flex items-center justify-center rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200"
+        >
+          <Upload size={18} />
+        </button>
+      )}
+
+      {/* Paste Image URL Link */}
+      {onToggleUrlBox && (
+        <button
+          title="Paste Image Link / URL"
+          onClick={onToggleUrlBox}
+          className="w-10 h-10 flex items-center justify-center rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all duration-200"
+        >
+          <Globe size={18} />
+        </button>
+      )}
+
+      {(onUploadImage || onToggleUrlBox) && <div className="w-6 h-px bg-white/10 my-1" />}
 
       {/* Tool buttons */}
       {tools.map(btn => (
