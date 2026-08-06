@@ -1,4 +1,4 @@
-import { Linkedin } from "lucide-react";
+import { Linkedin, Twitter, Instagram, Facebook, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
@@ -84,6 +84,10 @@ const Footer = () => {
           <div className="flex items-center gap-6">
             {[
               { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/tech-indro" },
+              { icon: Twitter, label: "X / Twitter", href: "https://x.com/techindro" },
+              { icon: Instagram, label: "Instagram", href: "#" },
+              { icon: Facebook, label: "Facebook", href: "#" },
+              { icon: Youtube, label: "YouTube", href: "#" },
             ].map(({ icon: Icon, label, href }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="text-muted-foreground hover:text-foreground transition-colors">
                 <Icon size={20} />
