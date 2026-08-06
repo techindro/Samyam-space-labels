@@ -39,10 +39,10 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
             <span className="relative inline-block">
               m
               <span
-                className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-extrabold tracking-tight bg-gradient-to-r from-cosmic-purple to-cosmic-teal bg-clip-text text-transparent select-none font-mono"
+                className="absolute -top-3.5 left-1/2 -translate-x-1/2 font-black tracking-wider uppercase bg-gradient-to-r from-cosmic-purple to-cosmic-teal bg-clip-text text-transparent select-none font-mono"
                 style={{ fontSize: size === "sm" ? "9px" : size === "lg" ? "13px" : "11px" }}
               >
-                ai
+                AI
               </span>
             </span>
           </span>
