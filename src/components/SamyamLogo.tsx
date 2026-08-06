@@ -45,7 +45,7 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
             <span className="relative inline-block">
               m
               <span
-                className={`absolute ${badgeTopOffsets[size]} left-1/2 -translate-x-1/2 rounded-md bg-foreground text-background font-mono font-black tracking-wider uppercase shadow-sm select-none shrink-0 pointer-events-none`}
+                className={`absolute ${badgeTopOffsets[size]} left-1/2 -translate-x-1/2 rounded-md border border-foreground/40 text-foreground bg-transparent font-mono font-bold tracking-wider uppercase select-none shrink-0 pointer-events-none`}
               >
                 AI
               </span>
