@@ -15,8 +15,8 @@ const sizeClasses = {
 
 const textSizes = {
   sm: "text-xl",
-  md: "text-3xl",
-  lg: "text-4xl",
+  md: "text-2xl sm:text-[26px]",
+  lg: "text-3xl sm:text-4xl",
 };
 
 export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Props) => {
@@ -26,21 +26,16 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
       <div className={`relative ${sizeClasses[size]} shrink-0 rounded-full bg-white p-0.5 shadow-md border border-border/50 group-hover:scale-105 transition-transform duration-300`}>
         <img
           src={samyamLogoImg}
-          alt="samyam AI Logo"
+          alt="Samyam Logo"
           className="w-full h-full object-cover rounded-full"
         />
       </div>
 
-      {/* Typography: Scale AI Style (lowercase "samyam" + uppercase "AI" in bold geometric sans) */}
+      {/* Typography: Only "Samyam" in clean medium weight geometric sans */}
       {showText && (
-        <div className="inline-flex items-baseline gap-2 font-['Plus_Jakarta_Sans','Space_Grotesk',sans-serif] tracking-tight leading-none">
-          <span className={`${textSizes[size]} font-bold tracking-tight text-foreground`}>
-            Samyam
-          </span>
-          <span className={`${textSizes[size]} font-bold tracking-tight text-foreground uppercase`}>
-            AI
-          </span>
-        </div>
+        <span className={`${textSizes[size]} font-medium tracking-wide text-foreground/90 font-['Plus_Jakarta_Sans','Space_Grotesk',sans-serif] leading-none`}>
+          Samyam
+        </span>
       )}
     </Link>
   );
