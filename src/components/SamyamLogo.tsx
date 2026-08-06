@@ -37,9 +37,9 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
         />
       </div>
 
-      {/* Typography: Samyam + space + power/exponent pill badge AI in solid black (ZiaLabs style) */}
+      {/* Typography: Geometric Sans-Serif font (Plus Jakarta Sans / Space Grotesk) for Samyam + black power AI pill badge */}
       {showText && (
-        <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none">
+        <div className="relative inline-flex items-center font-['Plus_Jakarta_Sans','Space_Grotesk',sans-serif] tracking-tight text-foreground leading-none">
           <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground`}>
             Samyam
           </span>
