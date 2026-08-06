@@ -85,10 +85,10 @@ const Security = () => {
               <CheckCircle2 className="h-8 w-8" />
             </div>
             <div>
-              <h3 className="font-bold text-lg text-foreground">All Systems Operational</h3>
+              <h3 className="font-bold text-lg text-foreground">Continuous Monitoring & Uptime</h3>
               <p className="text-sm text-muted-foreground">
-                Samyam platform uptime: <span className="text-foreground font-semibold">99.95%</span> over the last 90 days. 
-                <Link to="/status" className="text-cosmic-purple underline hover:text-cosmic-purple/80 ml-1.5 font-medium">View Status →</Link>
+                Samyam core services are actively monitored with automated health checks. 
+                <Link to="/status" className="text-foreground underline hover:opacity-80 ml-1.5 font-medium">View System Status →</Link>
               </p>
             </div>
           </motion.div>

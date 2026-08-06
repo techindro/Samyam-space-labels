@@ -79,7 +79,7 @@ const Status = () => {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-foreground">All Systems Operational</h2>
-                <p className="text-sm text-muted-foreground">99.96% average uptime over the past 90 days</p>
+                <p className="text-sm text-muted-foreground">All core platform services and APIs are functioning normally</p>
               </div>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/60 px-3 py-1.5 rounded-full border border-border/60">

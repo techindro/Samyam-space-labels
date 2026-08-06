@@ -78,10 +78,10 @@ const Footer = () => {
                 <Sparkles className="h-3.5 w-3.5" /> Samyam Dispatch & Research Insights
               </div>
               <h3 className="text-2xl md:text-3xl font-bold font-display text-foreground tracking-tight">
-                Stay ahead in Space AI & Data Intelligence
+                Stay updated with Samyam AI releases
               </h3>
               <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
-                Join 10,000+ AI researchers, satellite engineers, and defense teams receiving our monthly technical breakdown and platform announcements.
+                Get monthly product updates, research articles, and dataset annotation features delivered directly to your inbox.
               </p>
             </div>
 
