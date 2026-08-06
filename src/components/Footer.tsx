@@ -64,14 +64,14 @@ const Footer = () => {
       <ParallelWebBg />
       <div className="container mx-auto px-4 relative z-10">
         {/* Top Newsletter Strip */}
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-cosmic-purple/10 via-background to-cosmic-teal/10 p-6 md:p-8 mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8 mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="max-w-md text-center md:text-left">
-            <h3 className="font-bold font-display text-lg text-foreground">Stay ahead with Samyam updates</h3>
-            <p className="text-sm text-muted-foreground mt-1">Get monthly insights on space AI, satellite data labeling, and platform updates.</p>
+            <h3 className="font-bold font-display text-lg text-white">Stay ahead with Samyam updates</h3>
+            <p className="text-sm text-white/70 mt-1">Get monthly insights on space AI, satellite data labeling, and platform updates.</p>
           </div>
           <form onSubmit={handleSubscribe} className="flex w-full md:w-auto items-center gap-2 max-w-md">
             {subscribed ? (
-              <div className="flex items-center gap-2 text-emerald-400 text-sm font-semibold px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 w-full justify-center">
+              <div className="flex items-center gap-2 text-white text-sm font-semibold px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 w-full justify-center">
                 <Check className="h-4 w-4" /> You are subscribed!
               </div>
             ) : (
@@ -81,11 +81,11 @@ const Footer = () => {
                   placeholder="Enter your work email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="px-4 py-2.5 rounded-xl bg-black/50 border border-white/10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-cosmic-purple transition-colors w-full md:w-64"
+                  className="px-4 py-2.5 rounded-xl bg-black/60 border border-white/20 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white transition-colors w-full md:w-64"
                 />
                 <button
                   type="submit"
-                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white font-medium text-sm hover:opacity-90 transition-opacity shrink-0 flex items-center gap-1.5"
+                  className="px-4 py-2.5 rounded-xl bg-white text-black font-semibold text-sm hover:bg-white/90 transition-opacity shrink-0 flex items-center gap-1.5"
                 >
                   Subscribe <ArrowRight className="h-4 w-4" />
                 </button>
