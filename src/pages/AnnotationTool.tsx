@@ -409,26 +409,26 @@ export default function AnnotationTool() {
     <div className="dark h-screen flex flex-col bg-gradient-to-b from-[#080814] via-[#0c0c1b] to-[#06060f] text-white overflow-hidden select-none">
 
       {/* ── Top Bar ── */}
-      <header className="shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 h-14 border-b border-[#25283d] bg-[#0c0d18]/95 backdrop-blur-md z-20 shadow-xl">
+      <header className="shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 py-2 min-h-14 border-b border-[#25283d] bg-[#0c0d18]/95 backdrop-blur-md z-20 shadow-xl overflow-x-auto no-scrollbar">
         {/* Left: Back & Title */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button onClick={() => navigate(-1)} className="text-slate-400 hover:text-white transition-colors shrink-0 p-1.5 rounded-lg hover:bg-white/10" title="Back">
             <ArrowLeft size={18} />
           </button>
           <div>
-            <p className="text-white font-bold text-xs sm:text-sm font-display truncate max-w-[120px] sm:max-w-[200px]">
+            <p className="text-white font-bold text-xs sm:text-sm font-display truncate max-w-[140px] sm:max-w-[220px]">
               {task?.title ?? "Multimodal Labeling Workspace"}
             </p>
           </div>
           {task?.status && (
-            <span className={`hidden sm:inline-block shrink-0 text-[9px] sm:text-[10px] px-2 sm:px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColors[task.status] ?? ""}`}>
+            <span className={`shrink-0 text-[9px] sm:text-[10px] px-2 sm:px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColors[task.status] ?? ""}`}>
               {task.status.replace("_", " ")}
             </span>
           )}
         </div>
 
-        {/* Center: Desktop Modality Switcher Tabs */}
-        <div className="hidden md:flex items-center gap-1 bg-[#06070d] p-1 rounded-xl border border-[#23263d] shadow-inner shrink-0">
+        {/* Modality Switcher Tabs */}
+        <div className="flex items-center gap-1 bg-[#06070d] p-1 rounded-xl border border-[#23263d] shadow-inner overflow-x-auto no-scrollbar shrink-0 max-w-full">
           {[
             { id: "vision", label: "2D Vision", icon: ImageIcon },
             { id: "audio", label: "Audio & Speech", icon: Mic },
@@ -445,21 +445,22 @@ export default function AnnotationTool() {
                   setActiveModality(m.id as Modality);
                   toast({ title: `Switched to ${m.label} Modality` });
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 ${
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 ${
                   active
                     ? "bg-white text-slate-950 shadow-[0_0_12px_rgba(255,255,255,0.4)] scale-105"
                     : "text-slate-400 hover:text-white hover:bg-white/10"
                 }`}
               >
                 <Icon size={14} />
-                <span>{m.label}</span>
+                <span className="hidden sm:inline">{m.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Right: Primary Actions (Save & Export ALWAYS visible!) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* Actions (Hindi Keyboard, AI Pre-label, SAM Segment, Export JSON, Save) */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto no-scrollbar max-w-full py-0.5">
+
           {/* Mobile Labels Toggle Button */}
           {activeModality === "vision" && (
             <Button
@@ -472,74 +473,81 @@ export default function AnnotationTool() {
             </Button>
           )}
 
-          {/* Export JSON Button */}
-          <Button size="sm" onClick={handleExport} className="h-7 px-2.5 sm:px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1 font-medium shrink-0">
-            <Download size={13} /> <span className="hidden xs:inline">Export</span>
+          {/* Devanagari Keyboard Toggle */}
+          <Button
+            size="sm"
+            onClick={() => setShowHindiKb(v => !v)}
+            className={`h-7 px-2.5 text-xs gap-1 transition-colors border shrink-0 ${
+              showHindiKb ? "bg-white text-slate-950 font-bold border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" : "bg-[#1e2238] border-[#343956] text-slate-200 hover:bg-[#282d4a]"
+            }`}
+          >
+            <span>क/A</span>
+            <span className="hidden sm:inline">Hindi Keyboard</span>
           </Button>
 
-          {/* Save Button (Prominent & NEVER Cut Off) */}
-          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3.5 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0">
+          {/* AI Pre-label Button */}
+          {activeModality === "vision" && (
+            <Button
+              size="sm"
+              onClick={handleAiPrelabel}
+              disabled={runningAi}
+              className="h-7 px-2.5 text-xs bg-white/10 border border-white/40 text-white hover:bg-white/20 gap-1 font-semibold shrink-0"
+            >
+              {runningAi ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              <span>AI <span className="hidden sm:inline">Pre-label</span></span>
+            </Button>
+          )}
+
+          {/* Meta SAM Auto-Segment Button */}
+          {activeModality === "vision" && (
+            <Button
+              size="sm"
+              onClick={handleSamSegment}
+              disabled={runningSam}
+              className="h-7 px-2.5 sm:px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0"
+            >
+              {runningSam ? <Loader2 size={12} className="animate-spin" /> : <Target size={12} />}
+              <span>SAM <span className="hidden sm:inline">Segment</span></span>
+            </Button>
+          )}
+
+          {/* Hidden File Inputs for Vision, Audio & Video */}
+          <input type="file" ref={imageInputRef} accept="image/*" className="hidden" onChange={handleImageFileUpload} />
+          <input type="file" ref={audioInputRef} accept="audio/*" className="hidden" onChange={handleAudioFileUpload} />
+          <input type="file" ref={videoInputRef} accept="video/*" className="hidden" onChange={handleVideoFileUpload} />
+
+          {activeModality === "audio" && (
+            <Button
+              size="sm"
+              onClick={() => audioInputRef.current?.click()}
+              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5 shrink-0"
+            >
+              <Upload size={12} />
+              <span>Upload Audio File</span>
+            </Button>
+          )}
+
+          {activeModality === "video" && (
+            <Button
+              size="sm"
+              onClick={() => videoInputRef.current?.click()}
+              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5 shrink-0"
+            >
+              <Upload size={12} />
+              <span>Upload Video File</span>
+            </Button>
+          )}
+
+          <Button size="sm" onClick={handleExport} className="h-7 px-2.5 sm:px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1 font-medium shrink-0">
+            <Download size={13} /> Export <span className="hidden sm:inline">JSON</span>
+          </Button>
+
+          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0">
             {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
             <span>Save</span>
           </Button>
         </div>
       </header>
-
-      {/* ── Mobile Secondary Control Strip (Modality Switchers & AI Tools on Mobile) ── */}
-      <div className="md:hidden shrink-0 flex items-center justify-between gap-2 px-3 py-1.5 bg-[#06070d] border-b border-[#23263d] overflow-x-auto no-scrollbar z-10">
-        {/* Mobile Modality Tabs */}
-        <div className="flex items-center gap-1 shrink-0">
-          {[
-            { id: "vision", label: "2D Vision", icon: ImageIcon },
-            { id: "audio", label: "Audio", icon: Mic },
-            { id: "video", label: "Video", icon: VideoIcon },
-            { id: "text_rlhf", label: "Text", icon: FileText },
-            { id: "sar_radar", label: "SAR", icon: Radar },
-          ].map((m) => {
-            const Icon = m.icon;
-            const active = activeModality === m.id;
-            return (
-              <button
-                key={m.id}
-                onClick={() => {
-                  setActiveModality(m.id as Modality);
-                  toast({ title: `Switched to ${m.label} Modality` });
-                }}
-                className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-bold transition-all shrink-0 ${
-                  active
-                    ? "bg-white text-slate-950 shadow-md"
-                    : "text-slate-400 hover:text-white hover:bg-white/10"
-                }`}
-              >
-                <Icon size={12} />
-                <span>{m.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Mobile AI Quick Tools */}
-        {activeModality === "vision" && (
-          <div className="flex items-center gap-1 shrink-0 pl-2 border-l border-white/10">
-            <Button size="sm" onClick={handleAiPrelabel} disabled={runningAi} className="h-6 px-2 text-[10px] bg-white/10 hover:bg-white/20 text-white font-semibold gap-1 shrink-0">
-              {runningAi ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
-              <span>AI</span>
-            </Button>
-            <Button size="sm" onClick={handleSamSegment} disabled={runningSam} className="h-6 px-2 text-[10px] bg-white text-slate-950 border-0 font-bold shrink-0">
-              {runningSam ? <Loader2 size={10} className="animate-spin" /> : <Target size={10} />}
-              <span>SAM</span>
-            </Button>
-            <Button size="sm" onClick={() => setShowHindiKb(v => !v)} className={`h-6 px-2 text-[10px] font-bold border shrink-0 ${showHindiKb ? "bg-white text-black" : "bg-[#1e2238] text-white"}`}>
-              क/A
-            </Button>
-          </div>
-        )}
-      </div>
-
-      {/* Hidden File Inputs for Vision, Audio & Video */}
-      <input type="file" ref={imageInputRef} accept="image/*" className="hidden" onChange={handleImageFileUpload} />
-      <input type="file" ref={audioInputRef} accept="audio/*" className="hidden" onChange={handleAudioFileUpload} />
-      <input type="file" ref={videoInputRef} accept="video/*" className="hidden" onChange={handleVideoFileUpload} />
 
       {/* ── Pre-loaded Satellite & SAR Sample Datasets Bar ── */}
       <div className="shrink-0 bg-[#0c0e1e] border-b border-[#23263d] px-4 py-2 flex items-center justify-between gap-3 overflow-x-auto z-10 no-scrollbar">
