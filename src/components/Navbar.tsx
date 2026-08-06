@@ -38,6 +38,9 @@ import {
   Hexagon,
   Sparkles,
   Bot,
+  Layers,
+  History,
+  Activity,
 } from "lucide-react";
 import { governmentPages } from "@/data/governmentPages";
 import { productPages } from "@/data/productPages";
@@ -80,8 +83,11 @@ const developerApis = [
 
 const developerResources = [
   { label: "Documentation", icon: Book, href: "/docs" },
+  { label: "Integrations", icon: Layers, href: "/integrations" },
+  { label: "Changelog", icon: History, href: "/changelog" },
+  { label: "System Status", icon: Activity, href: "/status" },
   { label: "API Pricing", icon: CreditCard, href: "/pricing" },
-  { label: "Join Community", icon: MessageSquare, href: "https://discord.gg/samyam" },
+  { label: "Security", icon: ShieldCheck, href: "/security" },
 ];
 
 const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {

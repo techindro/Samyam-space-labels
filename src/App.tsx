@@ -42,6 +42,10 @@ import CookieConsent from "./components/CookieConsent";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Enterprise from "./pages/Enterprise";
+import Changelog from "./pages/Changelog";
+import Security from "./pages/Security";
+import Integrations from "./pages/Integrations";
+import Status from "./pages/Status";
 import { FloatingAiWidget } from "./components/FloatingAiWidget";
 
 
@@ -94,6 +98,10 @@ const App = () => (
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
             <Route path="/case-studies" element={<CaseStudyDetail />} />
+            <Route path="/changelog" element={<Changelog />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/integrations" element={<Integrations />} />
+            <Route path="/status" element={<Status />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

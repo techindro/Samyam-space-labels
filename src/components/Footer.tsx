@@ -1,6 +1,8 @@
-import { Linkedin, Twitter, Instagram, Facebook, Youtube } from "lucide-react";
+import { useState } from "react";
+import { Linkedin, Twitter, Instagram, Facebook, Youtube, ArrowRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
+import { useToast } from "@/hooks/use-toast";
 
 const footerLinks: Record<string, { label: string; href: string }[]> = {
   Products: [
@@ -9,14 +11,15 @@ const footerLinks: Record<string, { label: string; href: string }[]> = {
     { label: "Mission Simulation", href: "/products/mission-simulation" },
     { label: "Model Evaluation", href: "/products/model-evaluation" },
     { label: "Space Data Engine", href: "/products/data-engine" },
+    { label: "Integrations", href: "/integrations" },
   ],
   Resources: [
     { label: "Documentation", href: "/docs" },
     { label: "API Reference", href: "/developers/text-to-speech" },
+    { label: "Changelog", href: "/changelog" },
+    { label: "System Status", href: "/status" },
     { label: "Research Papers", href: "/research/papers" },
     { label: "Blog", href: "/research/blog" },
-    { label: "Frontier Leaderboards", href: "/research/frontier-leaderboards" },
-    { label: "Learn", href: "/learn" },
   ],
   Company: [
     { label: "About", href: "/about" },
@@ -28,16 +31,70 @@ const footerLinks: Record<string, { label: string; href: string }[]> = {
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
-    { label: "Security", href: "/privacy" },
+    { label: "Security & Compliance", href: "/security" },
     { label: "Cookie Policy", href: "/privacy" },
   ],
 };
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes("@")) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setSubscribed(true);
+    toast({
+      title: "Subscribed Successfully! 🎉",
+      description: "Thank you for subscribing to Samyam product updates.",
+    });
+    setEmail("");
+  };
+
   return (
     <footer className="py-16 bg-card/50 relative overflow-hidden">
       <ParallelWebBg />
       <div className="container mx-auto px-4 relative z-10">
+        {/* Top Newsletter Strip */}
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-cosmic-purple/10 via-background to-cosmic-teal/10 p-6 md:p-8 mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="max-w-md text-center md:text-left">
+            <h3 className="font-bold font-display text-lg text-foreground">Stay ahead with Samyam updates</h3>
+            <p className="text-sm text-muted-foreground mt-1">Get monthly insights on space AI, satellite data labeling, and platform updates.</p>
+          </div>
+          <form onSubmit={handleSubscribe} className="flex w-full md:w-auto items-center gap-2 max-w-md">
+            {subscribed ? (
+              <div className="flex items-center gap-2 text-emerald-400 text-sm font-semibold px-4 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 w-full justify-center">
+                <Check className="h-4 w-4" /> You are subscribed!
+              </div>
+            ) : (
+              <>
+                <input
+                  type="email"
+                  placeholder="Enter your work email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="px-4 py-2.5 rounded-xl bg-black/50 border border-white/10 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-cosmic-purple transition-colors w-full md:w-64"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white font-medium text-sm hover:opacity-90 transition-opacity shrink-0 flex items-center gap-1.5"
+                >
+                  Subscribe <ArrowRight className="h-4 w-4" />
+                </button>
+              </>
+            )}
+          </form>
+        </div>
+
+        {/* Links Grid */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">

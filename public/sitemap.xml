@@ -31,6 +31,26 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://samyam-space-labels.vercel.app/changelog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://samyam-space-labels.vercel.app/security</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://samyam-space-labels.vercel.app/integrations</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://samyam-space-labels.vercel.app/status</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- Space & AI -->
   <url>
