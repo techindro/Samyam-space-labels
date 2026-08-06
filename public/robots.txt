@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://samyam.ai/sitemap.xml
+Sitemap: https://samyam-space-labels.vercel.app/sitemap.xml
