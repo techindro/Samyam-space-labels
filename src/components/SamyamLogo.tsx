@@ -19,10 +19,10 @@ const textSizes = {
   lg: "text-4xl",
 };
 
-const badgeTopOffsets = {
-  sm: "-top-2.5 text-[9px]",
-  md: "-top-3.5 text-[11px]",
-  lg: "-top-4.5 text-xs",
+const badgeStyles = {
+  sm: "px-1.5 py-0.5 text-[9px] -translate-y-2.5 rounded-md",
+  md: "px-2 py-0.5 text-[11px] -translate-y-3.5 rounded-lg",
+  lg: "px-2.5 py-0.5 text-xs -translate-y-4 rounded-lg",
 };
 
 export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Props) => {
@@ -37,19 +37,16 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
         />
       </div>
 
-      {/* Typography: Samyam with borderless "AI" superscript in exact same color over letter "m" */}
+      {/* Typography: Samyam + space + power/exponent pill badge AI in solid black (ZiaLabs style) */}
       {showText && (
-        <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none pt-2">
-          <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground inline-flex items-baseline`}>
-            Samya
-            <span className="relative inline-block">
-              m
-              <span
-                className={`absolute ${badgeTopOffsets[size]} left-1/2 -translate-x-1/2 text-foreground font-mono font-bold tracking-wider uppercase select-none shrink-0 pointer-events-none`}
-              >
-                AI
-              </span>
-            </span>
+        <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none">
+          <span className={`${textSizes[size]} font-extrabold tracking-tight text-foreground`}>
+            Samyam
+          </span>
+          <span
+            className={`ml-1.5 ${badgeStyles[size]} font-mono font-black tracking-wider uppercase bg-black text-white dark:bg-white dark:text-black shadow-md select-none shrink-0 pointer-events-none`}
+          >
+            AI
           </span>
         </div>
       )}
