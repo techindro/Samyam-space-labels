@@ -459,12 +459,36 @@ export default function AnnotationTool() {
 
         {/* Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto no-scrollbar max-w-full py-0.5">
+          {/* 2D Vision Primary Image Actions (First in line so never cut off!) */}
+          {activeModality === "vision" && (
+            <>
+              <Button
+                size="sm"
+                onClick={() => imageInputRef.current?.click()}
+                className="h-7 px-2.5 sm:px-3 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold gap-1 shrink-0 shadow-[0_0_10px_rgba(99,102,241,0.5)]"
+              >
+                <Upload size={12} />
+                <span>Upload <span className="hidden sm:inline">Image</span></span>
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => setShowUrlBox(v => !v)}
+                className={`h-7 px-2.5 text-xs gap-1 transition-colors border shrink-0 ${
+                  showUrlBox ? "bg-white text-slate-950 font-bold border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" : "bg-white/10 border-white/40 text-white hover:bg-white/20 font-semibold"
+                }`}
+              >
+                <Globe size={12} />
+                <span>Paste <span className="hidden sm:inline">Image</span> Link</span>
+              </Button>
+            </>
+          )}
+
           {/* Mobile Labels Toggle Button */}
           {activeModality === "vision" && (
             <Button
               size="sm"
               onClick={() => setShowMobileLabels(v => !v)}
-              className="md:hidden h-7 px-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold gap-1 shrink-0"
+              className="md:hidden h-7 px-2 text-xs bg-indigo-950/80 border border-indigo-500/50 text-indigo-200 font-bold gap-1 shrink-0"
             >
               <Layers size={13} />
               <span>Labels ({state.annotations.length})</span>
@@ -482,6 +506,7 @@ export default function AnnotationTool() {
             <span>क/A</span>
             <span className="hidden sm:inline">Hindi Keyboard</span>
           </Button>
+
           {/* AI Pre-label Button */}
           {activeModality === "vision" && (
             <Button
@@ -494,6 +519,7 @@ export default function AnnotationTool() {
               <span>AI <span className="hidden sm:inline">Pre-label</span></span>
             </Button>
           )}
+
           {/* Meta SAM Auto-Segment Button */}
           {activeModality === "vision" && (
             <Button
@@ -505,30 +531,6 @@ export default function AnnotationTool() {
               {runningSam ? <Loader2 size={12} className="animate-spin" /> : <Target size={12} />}
               <span>SAM <span className="hidden sm:inline">Segment</span></span>
             </Button>
-          )}
-
-          {/* 2D Vision Image Upload & Paste URL buttons */}
-          {activeModality === "vision" && (
-            <>
-              <Button
-                size="sm"
-                onClick={() => setShowUrlBox(v => !v)}
-                className={`h-7 px-2.5 text-xs gap-1 transition-colors border shrink-0 ${
-                  showUrlBox ? "bg-white text-slate-950 font-bold border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" : "bg-white/10 border-white/40 text-white hover:bg-white/20 font-semibold"
-                }`}
-              >
-                <Globe size={12} />
-                <span>Paste <span className="hidden sm:inline">Image</span> Link</span>
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => imageInputRef.current?.click()}
-                className="h-7 px-2.5 sm:px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1 shrink-0"
-              >
-                <Upload size={12} />
-                <span>Upload <span className="hidden sm:inline">Image</span></span>
-              </Button>
-            </>
           )}
 
           {/* Hidden File Inputs for Vision, Audio & Video */}
@@ -719,6 +721,8 @@ export default function AnnotationTool() {
               onRedo={state.redo}
               canUndo={state.canUndo}
               canRedo={state.canRedo}
+              onUploadImage={() => imageInputRef.current?.click()}
+              onToggleUrlBox={() => setShowUrlBox(v => !v)}
             />
             <div className="flex-1 min-w-0">
               <AnnotationCanvas
