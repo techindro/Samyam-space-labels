@@ -246,14 +246,14 @@ const OpenClawChat = () => {
                 Multimodal labeling assistant for satellite, sensor and document data.
               </p>
             </div>
-            <div className="glass-card inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs sm:text-sm">
-              <span className="relative flex h-2.5 w-2.5">
+            <div className="glass-card flex flex-wrap items-center gap-1.5 sm:gap-2 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm max-w-full">
+              <span className="relative flex h-2.5 w-2.5 shrink-0">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/60" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
               </span>
-              <Radio className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="text-muted-foreground">Connected via Gateway:</span>
-              <span className="font-mono">{GATEWAY_LABEL}</span>
+              <Radio className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <span className="text-muted-foreground">Gateway:</span>
+              <span className="font-mono truncate max-w-[200px] sm:max-w-none">{GATEWAY_LABEL}</span>
             </div>
           </div>
         </section>

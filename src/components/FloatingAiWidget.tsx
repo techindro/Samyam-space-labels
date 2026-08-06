@@ -8,10 +8,10 @@ export const FloatingAiWidget = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-3">
       {/* Quick AI Preview Popover */}
       {isOpen && (
-        <div className="w-80 sm:w-96 rounded-2xl border border-cosmic-purple/30 bg-background/95 backdrop-blur-xl p-5 shadow-2xl animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className="w-[calc(100vw-24px)] max-w-sm sm:w-96 rounded-2xl border border-cosmic-purple/30 bg-background/95 backdrop-blur-xl p-4 sm:p-5 shadow-2xl animate-in fade-in slide-in-from-bottom-5 duration-200">
           <div className="flex items-center justify-between border-b border-border/40 pb-3 mb-3">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-xl bg-gradient-to-tr from-cosmic-purple to-cosmic-teal text-white">

@@ -184,6 +184,15 @@
   transform: translateY(0);
 }
 
+/* Hide scrollbar for clean touch swipe areas on mobile */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal-on-scroll {
     opacity: 1;

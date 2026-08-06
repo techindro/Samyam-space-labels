@@ -457,7 +457,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className={`md:hidden border-t px-4 py-6 space-y-4 ${isDark ? 'bg-black/90 backdrop-blur-xl border-white/10' : 'glass-card border-border/30'}`}>
+          <div className={`md:hidden border-t px-4 py-6 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto ${isDark ? 'bg-black/95 backdrop-blur-xl border-white/10' : 'glass-card border-border/30'}`}>
             {/* Mobile Products Section */}
             <div className="pt-2 pb-2">
               <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Products</p>

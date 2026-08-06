@@ -13,7 +13,7 @@ import {
   Mic, Video as VideoIcon, FileText, Radar, Play, Pause, Plus, Trash2,
   Sparkles, ThumbsUp, ThumbsDown, Layers, Activity, Sliders, CheckCircle,
   Target, Keyboard, X, Globe, Car, Building2, Radio, CheckCircle2, Cpu,
-  Upload, PlusCircle, Music, Film
+  Upload, PlusCircle, Music, Film, Satellite, Moon
 } from "lucide-react";
 
 // ─── Status badge ────────────────────────────────────────────────────────────
@@ -31,8 +31,9 @@ const DEMO_AUDIO = "https://actions.google.com/sounds/v1/ambiences/rain_heavy.og
 export const PRELOADED_DATASETS = [
   {
     id: "sat-iss",
-    name: "🛰️ NASA ISS Nadir Earth Imagery",
+    name: "NASA ISS Nadir Earth Imagery",
     category: "Satellite BBox & Polygon",
+    icon: Satellite,
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/ISS-44_Jeff_Williams_takes_a_nadir-looking_view_of_Earth.jpg/1280px-ISS-44_Jeff_Williams_takes_a_nadir-looking_view_of_Earth.jpg",
     modality: "vision",
     annotations: [
@@ -42,8 +43,9 @@ export const PRELOADED_DATASETS = [
   },
   {
     id: "sar-sentinel",
-    name: "📡 Sentinel-1 SAR Radar Ocean Vessels",
+    name: "Sentinel-1 SAR Radar Vessels",
     category: "SAR Radar Multi-Band",
+    icon: Radio,
     url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
     modality: "sar_radar",
     annotations: [
@@ -53,8 +55,9 @@ export const PRELOADED_DATASETS = [
   },
   {
     id: "indian-infra",
-    name: "🚗 Indian Road & Urban Vehicle Perception",
+    name: "Indian Urban Road Perception",
     category: "Aerial & Drone Vehicles",
+    icon: Car,
     url: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1280&auto=format&fit=crop",
     modality: "vision",
     annotations: [
@@ -64,8 +67,9 @@ export const PRELOADED_DATASETS = [
   },
   {
     id: "lunar-terrain",
-    name: "🌕 ISRO Chandrayaan Lunar Surface Craters",
+    name: "ISRO Chandrayaan Lunar Craters",
     category: "Deep Space Topography",
+    icon: Moon,
     url: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=1280&auto=format&fit=crop",
     modality: "vision",
     annotations: [
@@ -92,6 +96,7 @@ export default function AnnotationTool() {
 
   const [activeModality, setActiveModality] = useState<Modality>("vision");
   const [showHindiKb, setShowHindiKb] = useState(false);
+  const [showMobileLabels, setShowMobileLabels] = useState(false);
 
   // Task data
   const [task,       setTask]       = useState<Record<string, any> | null>(null);
@@ -394,25 +399,25 @@ export default function AnnotationTool() {
     <div className="dark h-screen flex flex-col bg-gradient-to-b from-[#080814] via-[#0c0c1b] to-[#06060f] text-white overflow-hidden select-none">
 
       {/* ── Top Bar ── */}
-      <header className="shrink-0 flex items-center justify-between gap-3 px-4 h-14 border-b border-[#25283d] bg-[#0c0d18]/95 backdrop-blur-md z-20 shadow-xl">
-        <div className="flex items-center gap-3">
+      <header className="shrink-0 flex flex-wrap md:flex-nowrap items-center justify-between gap-2 px-3 sm:px-4 py-2 min-h-14 border-b border-[#25283d] bg-[#0c0d18]/95 backdrop-blur-md z-20 shadow-xl overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button onClick={() => navigate(-1)} className="text-slate-400 hover:text-white transition-colors shrink-0 p-1.5 rounded-lg hover:bg-white/10" title="Back">
             <ArrowLeft size={18} />
           </button>
           <div>
-            <p className="text-white font-bold text-sm font-display truncate max-w-[220px]">
+            <p className="text-white font-bold text-xs sm:text-sm font-display truncate max-w-[140px] sm:max-w-[220px]">
               {task?.title ?? "Multimodal Labeling Workspace"}
             </p>
           </div>
           {task?.status && (
-            <span className={`shrink-0 text-[10px] px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColors[task.status] ?? ""}`}>
+            <span className={`shrink-0 text-[9px] sm:text-[10px] px-2 sm:px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColors[task.status] ?? ""}`}>
               {task.status.replace("_", " ")}
             </span>
           )}
         </div>
 
         {/* Modality Switcher Tabs */}
-        <div className="flex items-center gap-1 bg-[#06070d] p-1 rounded-xl border border-[#23263d] shadow-inner">
+        <div className="flex items-center gap-1 bg-[#06070d] p-1 rounded-xl border border-[#23263d] shadow-inner overflow-x-auto no-scrollbar shrink-0 max-w-full">
           {[
             { id: "vision", label: "2D Vision", icon: ImageIcon },
             { id: "audio", label: "Audio & Speech", icon: Mic },
@@ -429,26 +434,38 @@ export default function AnnotationTool() {
                   setActiveModality(m.id as Modality);
                   toast({ title: `Switched to ${m.label} Modality` });
                 }}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 ${
                   active
                     ? "bg-white text-slate-950 shadow-[0_0_12px_rgba(255,255,255,0.4)] scale-105"
                     : "text-slate-400 hover:text-white hover:bg-white/10"
                 }`}
               >
                 <Icon size={14} />
-                <span className="hidden md:inline">{m.label}</span>
+                <span className="hidden sm:inline">{m.label}</span>
               </button>
             );
           })}
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto no-scrollbar max-w-full py-0.5">
+          {/* Mobile Labels Toggle Button */}
+          {activeModality === "vision" && (
+            <Button
+              size="sm"
+              onClick={() => setShowMobileLabels(v => !v)}
+              className="md:hidden h-7 px-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold gap-1 shrink-0"
+            >
+              <Layers size={13} />
+              <span>Labels ({state.annotations.length})</span>
+            </Button>
+          )}
+
           {/* Devanagari Keyboard Toggle */}
           <Button
             size="sm"
             onClick={() => setShowHindiKb(v => !v)}
-            className={`h-7 px-2.5 text-xs gap-1 transition-colors border ${
+            className={`h-7 px-2.5 text-xs gap-1 transition-colors border shrink-0 ${
               showHindiKb ? "bg-white text-slate-950 font-bold border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" : "bg-[#1e2238] border-[#343956] text-slate-200 hover:bg-[#282d4a]"
             }`}
           >
@@ -461,10 +478,10 @@ export default function AnnotationTool() {
               size="sm"
               onClick={handleAiPrelabel}
               disabled={runningAi}
-              className="h-7 px-2.5 text-xs bg-white/10 border border-white/40 text-white hover:bg-white/20 gap-1 font-semibold"
+              className="h-7 px-2.5 text-xs bg-white/10 border border-white/40 text-white hover:bg-white/20 gap-1 font-semibold shrink-0"
             >
               {runningAi ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-              <span>AI Pre-label</span>
+              <span>AI <span className="hidden sm:inline">Pre-label</span></span>
             </Button>
           )}
           {/* Meta SAM Auto-Segment Button */}
@@ -473,10 +490,10 @@ export default function AnnotationTool() {
               size="sm"
               onClick={handleSamSegment}
               disabled={runningSam}
-              className="h-7 px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)]"
+              className="h-7 px-2.5 sm:px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0"
             >
               {runningSam ? <Loader2 size={12} className="animate-spin" /> : <Target size={12} />}
-              <span>SAM Segment</span>
+              <span>SAM <span className="hidden sm:inline">Segment</span></span>
             </Button>
           )}
 
@@ -488,7 +505,7 @@ export default function AnnotationTool() {
             <Button
               size="sm"
               onClick={() => audioInputRef.current?.click()}
-              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5"
+              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5 shrink-0"
             >
               <Upload size={12} />
               <span>Upload Audio File</span>
@@ -499,17 +516,17 @@ export default function AnnotationTool() {
             <Button
               size="sm"
               onClick={() => videoInputRef.current?.click()}
-              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5"
+              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5 shrink-0"
             >
               <Upload size={12} />
               <span>Upload Video File</span>
             </Button>
           )}
 
-          <Button size="sm" onClick={handleExport} className="h-7 px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1.5 font-medium">
-            <Download size={13} /> Export JSON
+          <Button size="sm" onClick={handleExport} className="h-7 px-2.5 sm:px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1 font-medium shrink-0">
+            <Download size={13} /> Export <span className="hidden sm:inline">JSON</span>
           </Button>
-          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3.5 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)]">
+          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0">
             {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
             Save
           </Button>
@@ -517,28 +534,30 @@ export default function AnnotationTool() {
       </header>
 
       {/* ── Pre-loaded Satellite & SAR Sample Datasets Bar ── */}
-      <div className="shrink-0 bg-[#0c0e1e] border-b border-[#23263d] px-4 py-2 flex items-center justify-between gap-3 overflow-x-auto z-10">
+      <div className="shrink-0 bg-[#0c0e1e] border-b border-[#23263d] px-4 py-2 flex items-center justify-between gap-3 overflow-x-auto z-10 no-scrollbar">
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Globe size={13} className="text-indigo-400" /> Pre-Loaded Demo Datasets:
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 whitespace-nowrap">
+            <Globe size={13} className="text-indigo-400" /> Demo Datasets:
           </span>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto py-0.5 no-scrollbar">
           {PRELOADED_DATASETS.map((ds) => {
             const isSelected = ds.id === selectedDatasetId;
+            const DsIcon = ds.icon;
             return (
               <button
                 key={ds.id}
                 onClick={() => handleSelectPresetDataset(ds.id)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold shrink-0 transition-all border flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-all border flex items-center gap-2 whitespace-nowrap ${
                   isSelected
                     ? "bg-white text-slate-950 border-white shadow-[0_0_12px_rgba(255,255,255,0.4)]"
                     : "bg-[#16182c] text-slate-300 border-[#2b2e4a] hover:bg-[#202340] hover:text-white"
                 }`}
               >
+                <DsIcon size={14} className={`shrink-0 ${isSelected ? "text-slate-950" : "text-indigo-400"}`} />
                 <span>{ds.name}</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${isSelected ? "bg-slate-950 text-white" : "bg-white/10 text-slate-400"}`}>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${isSelected ? "bg-slate-950 text-white" : "bg-white/10 text-slate-400"}`}>
                   {ds.category}
                 </span>
               </button>
@@ -559,7 +578,7 @@ export default function AnnotationTool() {
             <span className="text-xs font-semibold text-white flex items-center gap-1.5">
               <Keyboard size={14} className="text-indigo-400" /> Devanagari (देवनागरी/हिन्दी) On-Screen Keyboard Pad
             </span>
-            <span className="text-[10px] text-white/50">Click any character to copy to clipboard & insert into annotations</span>
+            <span className="text-[10px] text-white/50 hidden sm:inline">Click any character to copy to clipboard & insert into annotations</span>
             <button onClick={() => setShowHindiKb(false)} className="text-white/40 hover:text-white text-xs flex items-center gap-1">
               <X size={12} /> Close
             </button>
@@ -584,7 +603,7 @@ export default function AnnotationTool() {
       {/* ── Image URL & Preset Picker ── */}
       {showUrlBox && activeModality === "vision" && (
         <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 px-4 py-2 bg-[#0f0f1e] border-b border-white/10 z-10">
-          <div className="flex items-center gap-1.5 overflow-x-auto py-1 sm:py-0">
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1 sm:py-0 no-scrollbar">
             <span className="text-[11px] font-semibold text-slate-400 whitespace-nowrap">Presets:</span>
             {[
               { label: "Earth Satellite", icon: Globe, url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200" },
@@ -654,16 +673,47 @@ export default function AnnotationTool() {
                 onCommitMove={state.commitAnnotationMove}
               />
             </div>
-            <LabelPanel
-              labels={state.labels}
-              activeLabel={state.activeLabel}
-              annotations={state.annotations}
-              selectedId={state.selectedId}
-              onSelectLabel={state.setActiveLabel}
-              onAddLabel={state.addLabel}
-              onSelectAnnotation={state.setSelectedId}
-              onDeleteAnnotation={state.deleteAnnotation}
-            />
+            {/* Desktop Label Panel */}
+            <div className="hidden md:flex shrink-0">
+              <LabelPanel
+                labels={state.labels}
+                activeLabel={state.activeLabel}
+                annotations={state.annotations}
+                selectedId={state.selectedId}
+                onSelectLabel={state.setActiveLabel}
+                onAddLabel={state.addLabel}
+                onSelectAnnotation={state.setSelectedId}
+                onDeleteAnnotation={state.deleteAnnotation}
+              />
+            </div>
+
+            {/* Mobile Drawer Label Panel */}
+            {showMobileLabels && (
+              <div className="md:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-end">
+                <div className="w-80 max-w-[85vw] h-full bg-[#0c0c1b] border-l border-white/20 flex flex-col p-3 shadow-2xl relative animate-in slide-in-from-right duration-200">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-2">
+                    <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                      <Tag size={14} className="text-indigo-400" /> Labels & Annotations
+                    </span>
+                    <button onClick={() => setShowMobileLabels(false)} className="text-white/60 hover:text-white text-xs p-1">
+                      <X size={16} />
+                    </button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto">
+                    <LabelPanel
+                      labels={state.labels}
+                      activeLabel={state.activeLabel}
+                      annotations={state.annotations}
+                      selectedId={state.selectedId}
+                      onSelectLabel={(l) => { state.setActiveLabel(l); setShowMobileLabels(false); }}
+                      onAddLabel={state.addLabel}
+                      onSelectAnnotation={state.setSelectedId}
+                      onDeleteAnnotation={state.deleteAnnotation}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )}
 

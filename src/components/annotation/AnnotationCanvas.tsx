@@ -494,19 +494,23 @@ export default function AnnotationCanvas({
     let touchStartScale = 1;
 
     const onTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
       if (e.touches.length === 2) {
-        e.preventDefault();
         touchStartDist = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
         );
         touchStartScale = d.transform.scale;
+      } else if (e.touches.length === 1) {
+        const t = e.touches[0];
+        const dummyMouse = { clientX: t.clientX, clientY: t.clientY, button: 0, preventDefault: () => {} } as MouseEvent;
+        onMouseDown(dummyMouse);
       }
     };
 
     const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
       if (e.touches.length === 2 && touchStartDist > 0) {
-        e.preventDefault();
         const dist = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
@@ -522,7 +526,17 @@ export default function AnnotationCanvas({
           ty: midY - (midY - d.transform.ty) * (newScale / d.transform.scale),
         };
         render();
+      } else if (e.touches.length === 1) {
+        const t = e.touches[0];
+        const dummyMouse = { clientX: t.clientX, clientY: t.clientY, button: 0, preventDefault: () => {} } as MouseEvent;
+        onMouseMove(dummyMouse);
       }
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      e.preventDefault();
+      const dummyMouse = { button: 0, preventDefault: () => {} } as MouseEvent;
+      onMouseUp(dummyMouse);
     };
 
     const onWheel = (e: WheelEvent) => {
@@ -580,6 +594,7 @@ export default function AnnotationCanvas({
     canvas.addEventListener("dblclick",  onDblClick);
     canvas.addEventListener("touchstart", onTouchStart, { passive: false });
     canvas.addEventListener("touchmove",  onTouchMove, { passive: false });
+    canvas.addEventListener("touchend",   onTouchEnd, { passive: false });
     canvas.addEventListener("wheel",     onWheel, { passive: false });
     window.addEventListener("keydown",   onKeyDown);
     window.addEventListener("keyup",     onKeyUp);
@@ -591,6 +606,7 @@ export default function AnnotationCanvas({
       canvas.removeEventListener("dblclick",  onDblClick);
       canvas.removeEventListener("touchstart", onTouchStart);
       canvas.removeEventListener("touchmove",  onTouchMove);
+      canvas.removeEventListener("touchend",   onTouchEnd);
       canvas.removeEventListener("wheel",     onWheel);
       window.removeEventListener("keydown",   onKeyDown);
       window.removeEventListener("keyup",     onKeyUp);
