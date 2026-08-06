@@ -1,8 +1,9 @@
+import { motion } from "framer-motion";
 import { ArrowLeft, Shield, Lock, Eye, Server, FileCheck, Globe, CheckCircle2, BadgeCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import MonochromeGridBg from "@/components/MonochromeGridBg";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const certifications = [
   { name: "SOC 2 Type II", status: "In Progress", icon: Shield, description: "Annual audit for security, availability, and confidentiality controls." },
@@ -47,60 +48,69 @@ const securityFeatures = [
 
 const Security = () => {
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <div className="min-h-screen bg-background text-foreground relative">
       <Navbar />
-      <MonochromeGridBg />
-
-      <main className="pt-28 pb-20 relative z-10">
-        <div className="container mx-auto px-4 max-w-5xl">
+      <main className="pt-28 pb-20 relative z-10 overflow-hidden">
+        <ParallelWebBg />
+        <div className="container mx-auto px-4 max-w-5xl relative z-10">
           {/* Header */}
-          <div className="text-center mb-16">
-            <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-16"
+          >
+            <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
               <ArrowLeft className="h-4 w-4" /> Back to Home
             </Link>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-sm font-medium mb-6 mx-auto">
-              <Shield className="h-4 w-4 text-white" /> Enterprise-Grade Security
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cosmic-purple/10 border border-cosmic-purple/20 text-cosmic-purple text-sm font-medium mb-6 mx-auto">
+              <Shield className="h-4 w-4" /> Enterprise-Grade Security
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold font-display mb-4 text-white">
+            <h1 className="text-4xl md:text-5xl font-bold font-display mb-4 text-foreground">
               Security & Compliance
             </h1>
-            <p className="text-lg text-white/70 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Your data is our highest priority. Samyam is built from the ground up with defense-grade security for space agencies, military contractors, and enterprises.
             </p>
-          </div>
+          </motion.div>
 
           {/* Trust Banner */}
-          <div className="rounded-2xl border border-white/20 bg-white/[0.04] p-6 mb-16 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left backdrop-blur-md">
-            <div className="p-3 rounded-xl bg-white/10">
-              <CheckCircle2 className="h-8 w-8 text-white" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="rounded-2xl border border-border/50 bg-card/60 p-6 mb-16 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left backdrop-blur-md"
+          >
+            <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-500">
+              <CheckCircle2 className="h-8 w-8" />
             </div>
             <div>
-              <h3 className="font-bold text-lg text-white">All Systems Operational</h3>
-              <p className="text-sm text-white/70">
-                Samyam platform uptime: <span className="text-white font-semibold">99.95%</span> over the last 90 days. 
-                <Link to="/status" className="text-white underline hover:text-white/80 ml-1.5 font-medium">View Status →</Link>
+              <h3 className="font-bold text-lg text-foreground">All Systems Operational</h3>
+              <p className="text-sm text-muted-foreground">
+                Samyam platform uptime: <span className="text-foreground font-semibold">99.95%</span> over the last 90 days. 
+                <Link to="/status" className="text-cosmic-purple underline hover:text-cosmic-purple/80 ml-1.5 font-medium">View Status →</Link>
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Compliance Certifications */}
           <section className="mb-16">
-            <h2 className="text-2xl font-bold font-display mb-6 text-white">Compliance & Certifications</h2>
+            <h2 className="text-2xl font-bold font-display mb-6 text-foreground">Compliance & Certifications</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {certifications.map((cert) => {
                 const CertIcon = cert.icon;
                 return (
-                  <div key={cert.name} className="rounded-xl border border-white/10 bg-white/[0.03] p-5 hover:border-white/30 transition-colors">
+                  <div key={cert.name} className="rounded-xl border border-border/50 bg-card/60 p-5 hover:border-border transition-colors backdrop-blur-sm">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <CertIcon className="h-5 w-5 text-white" />
-                        <h3 className="font-semibold text-sm text-white">{cert.name}</h3>
+                        <CertIcon className="h-5 w-5 text-cosmic-purple" />
+                        <h3 className="font-semibold text-sm text-foreground">{cert.name}</h3>
                       </div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-white/20 bg-white/10 text-white">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-border/60 bg-muted/50 text-foreground">
                         {cert.status}
                       </span>
                     </div>
-                    <p className="text-xs text-white/60 leading-relaxed">{cert.description}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{cert.description}</p>
                   </div>
                 );
               })}
@@ -109,17 +119,17 @@ const Security = () => {
 
           {/* Security Features */}
           <section className="mb-16">
-            <h2 className="text-2xl font-bold font-display mb-6 text-white">Security Architecture</h2>
+            <h2 className="text-2xl font-bold font-display mb-6 text-foreground">Security Architecture</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {securityFeatures.map((feature) => {
                 const FeatureIcon = feature.icon;
                 return (
-                  <div key={feature.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-6 hover:border-white/30 transition-all group">
-                    <div className="p-2.5 rounded-lg bg-white/10 w-fit mb-4 group-hover:bg-white/20 transition-colors">
-                      <FeatureIcon className="h-5 w-5 text-white" />
+                  <div key={feature.title} className="rounded-xl border border-border/50 bg-card/60 p-6 hover:border-cosmic-purple/30 transition-all group backdrop-blur-sm">
+                    <div className="p-2.5 rounded-lg bg-cosmic-purple/10 w-fit mb-4 group-hover:bg-cosmic-purple/20 transition-colors text-cosmic-purple">
+                      <FeatureIcon className="h-5 w-5" />
                     </div>
-                    <h3 className="font-semibold mb-2 text-white">{feature.title}</h3>
-                    <p className="text-sm text-white/60 leading-relaxed">{feature.description}</p>
+                    <h3 className="font-semibold mb-2 text-foreground">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
                   </div>
                 );
               })}
@@ -127,14 +137,14 @@ const Security = () => {
           </section>
 
           {/* Responsible Disclosure */}
-          <section className="rounded-2xl border border-white/20 bg-white/[0.03] p-8 text-center backdrop-blur-md">
-            <h2 className="text-2xl font-bold font-display mb-3 text-white">Responsible Disclosure</h2>
-            <p className="text-white/70 max-w-xl mx-auto mb-6">
+          <section className="rounded-2xl border border-border/50 bg-card/60 p-8 text-center backdrop-blur-md">
+            <h2 className="text-2xl font-bold font-display mb-3 text-foreground">Responsible Disclosure</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto mb-6">
               Found a vulnerability? We take security reports seriously. Please report any security issues to our dedicated security team.
             </p>
             <a
               href="mailto:security@samyam.ai"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black font-semibold text-sm hover:bg-white/90 transition-opacity"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-semibold text-sm hover:opacity-90 transition-opacity"
             >
               <Shield className="h-4 w-4" /> Report a Vulnerability
             </a>
