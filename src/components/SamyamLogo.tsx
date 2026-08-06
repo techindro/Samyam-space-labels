@@ -22,7 +22,7 @@ const textSizes = {
 export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Props) => {
   return (
     <Link to="/" className={`inline-flex items-center gap-3 group select-none ${className}`}>
-      {/* Larger Emblem Image Container */}
+      {/* Emblem Image Container */}
       <div className={`relative ${sizeClasses[size]} shrink-0 rounded-full overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-300`}>
         <img
           src={samyamLogoImg}
@@ -31,11 +31,21 @@ export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Pro
         />
       </div>
 
-      {/* Typography: Samyam AI */}
+      {/* Typography: Samyam with "ai" floating above the letter "m" */}
       {showText && (
-        <div className="flex items-center gap-1.5 font-sans tracking-tight text-foreground leading-none">
-          <span className={`${textSizes[size]} font-bold tracking-tight text-foreground`}>Samyam</span>
-          <span className={`${size === "sm" ? "text-sm" : size === "lg" ? "text-xl" : "text-lg"} font-extrabold tracking-tight bg-gradient-to-r from-cosmic-purple to-cosmic-teal bg-clip-text text-transparent`}>AI</span>
+        <div className="relative inline-flex items-center font-sans tracking-tight text-foreground leading-none pt-1">
+          <span className={`${textSizes[size]} font-bold tracking-tight text-foreground inline-flex items-baseline`}>
+            Samya
+            <span className="relative inline-block">
+              m
+              <span
+                className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-[10px] font-extrabold tracking-tight bg-gradient-to-r from-cosmic-purple to-cosmic-teal bg-clip-text text-transparent select-none font-mono"
+                style={{ fontSize: size === "sm" ? "9px" : size === "lg" ? "13px" : "11px" }}
+              >
+                ai
+              </span>
+            </span>
+          </span>
         </div>
       )}
     </Link>
