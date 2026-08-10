@@ -23,40 +23,43 @@ const API_BASE_URL = import.meta.env.VITE_FASTAPI_URL || "http://localhost:8000"
 
 export const samyamApi = {
   /**
-   * Trigger CLIP (ViT-B/32) AI Pre-labeling on image URL
+   * Live AI pre-labeling (vision model via Lovable Cloud edge function).
+   * Returns bounding boxes in IMAGE PIXEL space using imageW/imageH.
    */
   async runClipPrelabel(
     imageUrl: string,
-    candidateLabels: string[] = ["Satellite", "Terrain", "Orbital Debris", "Auto-rickshaw", "Pothole"]
+    candidateLabels: string[] = ["Satellite", "Terrain", "Orbital Debris", "Auto-rickshaw", "Pothole"],
+    imageW = 1280,
+    imageH = 720,
   ): Promise<PrelabelResult[]> {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/prelabel/clip`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          image_url: imageUrl,
-          candidate_labels: candidateLabels,
-          confidence_threshold: 0.35,
-        }),
-      });
+    const { data, error } = await supabase.functions.invoke("ai-prelabel", {
+      body: { imageUrl, mode: "detect", candidateLabels },
+    });
 
-      if (!res.ok) throw new Error("FastAPI engine unreachable");
-      const data = await res.json();
-      return data.annotations.map((ann: any) => ({
-        id: ann.id,
-        label: ann.label,
-        confidence: ann.confidence,
-        bbox: ann.bbox,
-      }));
-    } catch (e) {
-      console.warn("[SamyamLM API] FastAPI offline, using client-side pre-labeling pipeline", e);
-      // Fallback pre-labeling response
-      return [
-        { id: `ai-1`, label: candidateLabels[0] || "Satellite", confidence: 0.94, bbox: { x: 140, y: 90, w: 210, h: 160 } },
-        { id: `ai-2`, label: candidateLabels[1] || "Terrain", confidence: 0.82, bbox: { x: 380, y: 220, w: 140, h: 110 } },
-      ];
+    if (error || (data as any)?.error) {
+      const msg = (data as any)?.error || error?.message || "Inference failed";
+      throw new Error(typeof msg === "string" ? msg : "Inference failed");
     }
+
+    const detections = ((data as any)?.detections ?? []) as Array<{
+      label: string;
+      confidence: number;
+      box: [number, number, number, number];
+    }>;
+
+    return detections.map((d, i) => ({
+      id: `ai-${Date.now()}-${i}`,
+      label: d.label,
+      confidence: d.confidence,
+      bbox: {
+        x: Math.round(d.box[0] * imageW),
+        y: Math.round(d.box[1] * imageH),
+        w: Math.round(d.box[2] * imageW),
+        h: Math.round(d.box[3] * imageH),
+      },
+    }));
   },
+
 
   /**
    * Fetch ISRO Resourcesat-2A satellite tile coordinates
