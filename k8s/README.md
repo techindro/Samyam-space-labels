@@ -41,11 +41,11 @@ docker push your-username/samyam-frontend:v1
 
 ### 2. Build AI Engine Image
 ```bash
-docker build -t your-username/samyam-ai-engine:v1 ./python
-docker push your-username/samyam-ai-engine:v1
+docker build -t techindro/samyam-ai-engine:v1 ./python
+docker push techindro/samyam-ai-engine:v1
 ```
 
-*(Note: Replace `your-username/samyam-frontend:v1` in `frontend-deployment.yaml` and `ai-engine-deployment.yaml` with your actual image tag).*
+*(Note: Replace `techindro/samyam-frontend:v1` in `frontend-deployment.yaml` and `ai-engine-deployment.yaml` with your actual image tag).*
 
 ---
 
