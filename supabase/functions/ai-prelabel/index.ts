@@ -97,12 +97,8 @@ Deno.serve(async (req) => {
 
     const result = await generateText({
       model,
-      system,
-      output:
-        mode === "segment"
-          ? Output.object({ schema: SegmentOutput })
-          : Output.object({ schema: DetectOutput }),
       messages: [
+        { role: "system", content: system },
         {
           role: "user",
           content: [
@@ -113,12 +109,38 @@ Deno.serve(async (req) => {
       ],
     });
 
+    const raw = (await result.text).trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+    let parsedJson: unknown;
+    try {
+      parsedJson = JSON.parse(raw);
+    } catch {
+      const match = raw.match(/[[{][\s\S]*[\]}]/);
+      parsedJson = match ? JSON.parse(match[0]) : null;
+    }
 
-    const output = await result.output;
+    if (mode === "segment") {
+      const obj = Array.isArray(parsedJson) ? parsedJson[0] : parsedJson;
+      const safe = SegmentOutput.safeParse(obj);
+      if (!safe.success) {
+        return new Response(JSON.stringify({ mode, polygon: [], label: "", confidence: 0 }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      return new Response(JSON.stringify({ mode, ...safe.data }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
-    return new Response(JSON.stringify({ mode, ...output }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    const candidate = Array.isArray(parsedJson)
+      ? { detections: parsedJson }
+      : (parsedJson as Record<string, unknown>) ?? { detections: [] };
+    const safe = DetectOutput.safeParse(candidate);
+
+    return new Response(
+      JSON.stringify({ mode, detections: safe.success ? safe.data.detections : [] }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+
   } catch (err) {
     const message = err instanceof Error ? err.message : "";
     const status = message.includes("429") ? 429 : message.includes("402") ? 402 : 500;
