@@ -67,10 +67,15 @@ Deno.serve(async (req) => {
             pointX !== undefined && pointY !== undefined
               ? ` located near normalized point (${pointX.toFixed(3)}, ${pointY.toFixed(3)})`
               : ""
-          }. Return a tight outline polygon (8-24 points) tracing the object boundary, the best matching label from this list if one fits, otherwise a short descriptive label. Candidate labels: ${candidateLabels.join(", ")}.`
-        : `Detect every clearly visible instance of these classes: ${candidateLabels.join(
-            ", ",
-          )}. Return up to 12 tight bounding boxes as [x, y, width, height] normalized to the image. Prefer precision over recall; skip anything below 0.35 confidence.`;
+          }. Candidate labels: ${candidateLabels.join(", ")}. ` +
+          `Reply with ONLY raw JSON, no markdown, in exactly this shape: ` +
+          `{"label":"string","confidence":0.0,"polygon":[[x,y],[x,y], ...]} with 8-24 normalized points tracing the object boundary.`
+        : `Detect every clearly visible instance of these classes: ${candidateLabels.join(", ")}. ` +
+          `Reply with ONLY raw JSON, no markdown, in exactly this shape: ` +
+          `{"detections":[{"label":"string","confidence":0.0,"box":[x,y,width,height]}]} ` +
+          `with up to 12 tight boxes normalized 0-1. Prefer precision over recall; skip anything below 0.35 confidence. ` +
+          `If nothing matches, return {"detections":[]}.`;
+
 
     // Fetch the image ourselves — some hosts (e.g. Wikimedia) reject default UAs.
     const imgRes = await fetch(imageUrl, {
