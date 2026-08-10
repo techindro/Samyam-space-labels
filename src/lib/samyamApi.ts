@@ -104,31 +104,38 @@ export const samyamApi = {
     }
   },
   /**
-   * Run Meta SAM (Segment Anything Model) zero-shot promptable segmentation
+   * Live promptable segmentation — returns polygon in IMAGE PIXEL space.
    */
-  async runSamSegment(imageUrl: string, pointX: number = 250, pointY: number = 180): Promise<{ polygon: number[][]; label: string; confidence: number }> {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/prelabel/sam`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_url: imageUrl, point_x: pointX, point_y: pointY }),
-      });
-      if (!res.ok) throw new Error("SAM engine error");
-      const data = await res.json();
-      return { polygon: data.polygon, label: data.label_suggestion, confidence: data.iou_confidence };
-    } catch (e) {
-      return {
-        polygon: [
-          [pointX - 60, pointY - 45],
-          [pointX + 80, pointY - 50],
-          [pointX + 95, pointY + 60],
-          [pointX - 40, pointY + 75],
-          [pointX - 70, pointY + 20],
-        ],
-        label: "SAM Pixel-Perfect Mask",
-        confidence: 0.964,
-      };
+  async runSamSegment(
+    imageUrl: string,
+    pointX = 250,
+    pointY = 180,
+    imageW = 1280,
+    imageH = 720,
+    candidateLabels: string[] = ["Object", "Region", "Background"],
+  ): Promise<{ polygon: number[][]; label: string; confidence: number }> {
+    const { data, error } = await supabase.functions.invoke("ai-prelabel", {
+      body: {
+        imageUrl,
+        mode: "segment",
+        candidateLabels,
+        pointX: Math.min(1, Math.max(0, pointX / imageW)),
+        pointY: Math.min(1, Math.max(0, pointY / imageH)),
+      },
+    });
+
+    if (error || (data as any)?.error) {
+      const msg = (data as any)?.error || error?.message || "Segmentation failed";
+      throw new Error(typeof msg === "string" ? msg : "Segmentation failed");
     }
+
+    const poly = ((data as any)?.polygon ?? []) as [number, number][];
+    return {
+      polygon: poly.map(([x, y]) => [Math.round(x * imageW), Math.round(y * imageH)]),
+      label: (data as any)?.label || "Segment",
+      confidence: (data as any)?.confidence ?? 0,
+    };
   },
+
 };
 
