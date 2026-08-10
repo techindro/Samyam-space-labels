@@ -4,6 +4,8 @@
  * for CLIP pre-labeling, ISRO satellite fetch, and Indic VQA inference.
  */
 
+import { supabase } from "@/integrations/supabase/client";
+
 export interface PrelabelResult {
   id: string;
   label: string;
