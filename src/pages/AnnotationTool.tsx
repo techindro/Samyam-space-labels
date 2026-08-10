@@ -141,44 +141,104 @@ export default function AnnotationTool() {
 
   const [runningAi, setRunningAi] = useState(false);
 
+  // Natural size of the currently loaded image (needed to map normalized AI boxes → pixels)
+  const [imageDims, setImageDims] = useState<{ w: number; h: number }>({ w: 1280, h: 720 });
+  useEffect(() => {
+    if (!imageUrl) return;
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => setImageDims({ w: img.naturalWidth || 1280, h: img.naturalHeight || 720 });
+    img.src = imageUrl;
+  }, [imageUrl]);
+
   const handleAiPrelabel = useCallback(async () => {
-    setRunningAi(true);
-    toast({ title: "Running CLIP AI Pre-labeling...", description: "Querying FastAPI / PyTorch Vision-Language Engine" });
-    const candidateLabels = state.labels.map(l => l.name);
-    const results = await samyamApi.runClipPrelabel(imageUrl, candidateLabels);
-    setRunningAi(false);
-
-    results.forEach((r) => {
-      const targetLabel = state.labels.find(l => l.name === r.label) || state.activeLabel;
-      state.addAnnotation({
-        id: `ai-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-        type: "bbox",
-        label: targetLabel.name,
-        color: targetLabel.color,
-        bbox: r.bbox,
+    if (/^blob:|^data:/.test(imageUrl)) {
+      toast({
+        title: "Public image required",
+        description: "AI pre-labeling needs a hosted image URL. Load a dataset or paste an image URL.",
+        variant: "destructive",
       });
-    });
+      return;
+    }
+    setRunningAi(true);
+    toast({ title: "Running AI pre-labeling…", description: "Vision model inference in progress" });
+    const candidateLabels = state.labels.map(l => l.name);
+    try {
+      const results = await samyamApi.runClipPrelabel(imageUrl, candidateLabels, imageDims.w, imageDims.h);
 
-    toast({ title: "AI Pre-labeling Complete", description: `Generated ${results.length} bounding box annotations via CLIP engine.` });
-  }, [imageUrl, state, toast]);
+      results.forEach((r) => {
+        const targetLabel = state.labels.find(l => l.name.toLowerCase() === r.label.toLowerCase()) || state.activeLabel;
+        state.addAnnotation({
+          id: `ai-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          type: "bbox",
+          label: `${targetLabel.name} (${Math.round(r.confidence * 100)}%)`,
+          color: targetLabel.color,
+          bbox: r.bbox,
+        });
+      });
+
+      toast({
+        title: "AI pre-labeling complete",
+        description: results.length
+          ? `Generated ${results.length} bounding box${results.length === 1 ? "" : "es"}.`
+          : "No confident detections found in this image.",
+      });
+    } catch (e) {
+      toast({
+        title: "Pre-labeling failed",
+        description: e instanceof Error ? e.message : "Inference error",
+        variant: "destructive",
+      });
+    } finally {
+      setRunningAi(false);
+    }
+  }, [imageUrl, imageDims, state, toast]);
 
   const [runningSam, setRunningSam] = useState(false);
   const handleSamSegment = useCallback(async () => {
+    if (/^blob:|^data:/.test(imageUrl)) {
+      toast({
+        title: "Public image required",
+        description: "Segmentation needs a hosted image URL.",
+        variant: "destructive",
+      });
+      return;
+    }
     setRunningSam(true);
-    toast({ title: "Running Meta SAM Segment Anything Model...", description: "Generating pixel-perfect zero-shot polygon mask" });
-    const result = await samyamApi.runSamSegment(imageUrl, 250, 180);
-    setRunningSam(false);
+    toast({ title: "Running segmentation…", description: "Generating object outline polygon" });
+    try {
+      const result = await samyamApi.runSamSegment(
+        imageUrl,
+        imageDims.w / 2,
+        imageDims.h / 2,
+        imageDims.w,
+        imageDims.h,
+        state.labels.map(l => l.name),
+      );
 
-    state.addAnnotation({
-      id: `sam-${Date.now()}`,
-      type: "polygon",
-      label: state.activeLabel.name,
-      color: state.activeLabel.color,
-      points: result.polygon.map(pt => [pt[0], pt[1]] as [number, number]),
-    });
+      state.addAnnotation({
+        id: `sam-${Date.now()}`,
+        type: "polygon",
+        label: result.label || state.activeLabel.name,
+        color: state.activeLabel.color,
+        points: result.polygon.map(pt => [pt[0], pt[1]] as [number, number]),
+      });
 
-    toast({ title: "SAM Segmentation Complete", description: `Generated pixel-perfect mask for ${result.label} (IoU: ${result.confidence})` });
-  }, [imageUrl, state, toast]);
+      toast({
+        title: "Segmentation complete",
+        description: `Mask for ${result.label} (confidence: ${Math.round(result.confidence * 100)}%)`,
+      });
+    } catch (e) {
+      toast({
+        title: "Segmentation failed",
+        description: e instanceof Error ? e.message : "Inference error",
+        variant: "destructive",
+      });
+    } finally {
+      setRunningSam(false);
+    }
+  }, [imageUrl, imageDims, state, toast]);
+
 
   // ── Audio Modality State ──
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);

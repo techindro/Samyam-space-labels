@@ -4,6 +4,8 @@
  * for CLIP pre-labeling, ISRO satellite fetch, and Indic VQA inference.
  */
 
+import { supabase } from "@/integrations/supabase/client";
+
 export interface PrelabelResult {
   id: string;
   label: string;
@@ -23,40 +25,43 @@ const API_BASE_URL = import.meta.env.VITE_FASTAPI_URL || "http://localhost:8000"
 
 export const samyamApi = {
   /**
-   * Trigger CLIP (ViT-B/32) AI Pre-labeling on image URL
+   * Live AI pre-labeling (vision model via Lovable Cloud edge function).
+   * Returns bounding boxes in IMAGE PIXEL space using imageW/imageH.
    */
   async runClipPrelabel(
     imageUrl: string,
-    candidateLabels: string[] = ["Satellite", "Terrain", "Orbital Debris", "Auto-rickshaw", "Pothole"]
+    candidateLabels: string[] = ["Satellite", "Terrain", "Orbital Debris", "Auto-rickshaw", "Pothole"],
+    imageW = 1280,
+    imageH = 720,
   ): Promise<PrelabelResult[]> {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/prelabel/clip`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          image_url: imageUrl,
-          candidate_labels: candidateLabels,
-          confidence_threshold: 0.35,
-        }),
-      });
+    const { data, error } = await supabase.functions.invoke("ai-prelabel", {
+      body: { imageUrl, mode: "detect", candidateLabels },
+    });
 
-      if (!res.ok) throw new Error("FastAPI engine unreachable");
-      const data = await res.json();
-      return data.annotations.map((ann: any) => ({
-        id: ann.id,
-        label: ann.label,
-        confidence: ann.confidence,
-        bbox: ann.bbox,
-      }));
-    } catch (e) {
-      console.warn("[SamyamLM API] FastAPI offline, using client-side pre-labeling pipeline", e);
-      // Fallback pre-labeling response
-      return [
-        { id: `ai-1`, label: candidateLabels[0] || "Satellite", confidence: 0.94, bbox: { x: 140, y: 90, w: 210, h: 160 } },
-        { id: `ai-2`, label: candidateLabels[1] || "Terrain", confidence: 0.82, bbox: { x: 380, y: 220, w: 140, h: 110 } },
-      ];
+    if (error || (data as any)?.error) {
+      const msg = (data as any)?.error || error?.message || "Inference failed";
+      throw new Error(typeof msg === "string" ? msg : "Inference failed");
     }
+
+    const detections = ((data as any)?.detections ?? []) as Array<{
+      label: string;
+      confidence: number;
+      box: [number, number, number, number];
+    }>;
+
+    return detections.map((d, i) => ({
+      id: `ai-${Date.now()}-${i}`,
+      label: d.label,
+      confidence: d.confidence,
+      bbox: {
+        x: Math.round(d.box[0] * imageW),
+        y: Math.round(d.box[1] * imageH),
+        w: Math.round(d.box[2] * imageW),
+        h: Math.round(d.box[3] * imageH),
+      },
+    }));
   },
+
 
   /**
    * Fetch ISRO Resourcesat-2A satellite tile coordinates
@@ -99,31 +104,38 @@ export const samyamApi = {
     }
   },
   /**
-   * Run Meta SAM (Segment Anything Model) zero-shot promptable segmentation
+   * Live promptable segmentation — returns polygon in IMAGE PIXEL space.
    */
-  async runSamSegment(imageUrl: string, pointX: number = 250, pointY: number = 180): Promise<{ polygon: number[][]; label: string; confidence: number }> {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/v1/prelabel/sam`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_url: imageUrl, point_x: pointX, point_y: pointY }),
-      });
-      if (!res.ok) throw new Error("SAM engine error");
-      const data = await res.json();
-      return { polygon: data.polygon, label: data.label_suggestion, confidence: data.iou_confidence };
-    } catch (e) {
-      return {
-        polygon: [
-          [pointX - 60, pointY - 45],
-          [pointX + 80, pointY - 50],
-          [pointX + 95, pointY + 60],
-          [pointX - 40, pointY + 75],
-          [pointX - 70, pointY + 20],
-        ],
-        label: "SAM Pixel-Perfect Mask",
-        confidence: 0.964,
-      };
+  async runSamSegment(
+    imageUrl: string,
+    pointX = 250,
+    pointY = 180,
+    imageW = 1280,
+    imageH = 720,
+    candidateLabels: string[] = ["Object", "Region", "Background"],
+  ): Promise<{ polygon: number[][]; label: string; confidence: number }> {
+    const { data, error } = await supabase.functions.invoke("ai-prelabel", {
+      body: {
+        imageUrl,
+        mode: "segment",
+        candidateLabels,
+        pointX: Math.min(1, Math.max(0, pointX / imageW)),
+        pointY: Math.min(1, Math.max(0, pointY / imageH)),
+      },
+    });
+
+    if (error || (data as any)?.error) {
+      const msg = (data as any)?.error || error?.message || "Segmentation failed";
+      throw new Error(typeof msg === "string" ? msg : "Segmentation failed");
     }
+
+    const poly = ((data as any)?.polygon ?? []) as [number, number][];
+    return {
+      polygon: poly.map(([x, y]) => [Math.round(x * imageW), Math.round(y * imageH)]),
+      label: (data as any)?.label || "Segment",
+      confidence: (data as any)?.confidence ?? 0,
+    };
   },
+
 };
 

@@ -1,0 +1,166 @@
+import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { generateText } from "npm:ai";
+import { z } from "npm:zod";
+import { createLovableAiGatewayProvider } from "../_shared/ai-gateway.ts";
+
+const BodySchema = z.object({
+  imageUrl: z.string().url().max(4000),
+  mode: z.enum(["detect", "segment"]).default("detect"),
+  candidateLabels: z.array(z.string().min(1).max(60)).min(1).max(30),
+  // Optional focus point (normalized 0..1) used by segment mode
+  pointX: z.number().min(0).max(1).optional(),
+  pointY: z.number().min(0).max(1).optional(),
+});
+
+const DetectOutput = z.object({
+  detections: z
+    .array(
+      z.object({
+        label: z.string(),
+        confidence: z.number().min(0).max(1),
+        // normalized 0..1 [x, y, w, h]
+        box: z.array(z.number().min(0).max(1)).length(4),
+      }),
+    )
+    .max(20),
+});
+
+const SegmentOutput = z.object({
+  label: z.string(),
+  confidence: z.number().min(0).max(1),
+  // normalized 0..1 polygon [[x,y], ...]
+  polygon: z.array(z.array(z.number().min(0).max(1)).length(2)).min(3).max(40),
+});
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  try {
+    const apiKey = Deno.env.get("LOVABLE_API_KEY");
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: "AI is not configured" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const parsed = BodySchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: parsed.error.flatten().fieldErrors }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { imageUrl, mode, candidateLabels, pointX, pointY } = parsed.data;
+
+    const gateway = createLovableAiGatewayProvider(apiKey);
+    const model = gateway("google/gemini-3.6-flash");
+
+    const system =
+      "You are a precise vision pre-labeling engine for satellite, aerial, SAR and ground imagery. " +
+      "All coordinates you output are normalized to the image size, in the range 0 to 1, with origin at the top-left. " +
+      "Only report objects you can actually see. Never invent objects.";
+
+    const instruction =
+      mode === "segment"
+        ? `Segment the single most salient object${
+            pointX !== undefined && pointY !== undefined
+              ? ` located near normalized point (${pointX.toFixed(3)}, ${pointY.toFixed(3)})`
+              : ""
+          }. Candidate labels: ${candidateLabels.join(", ")}. ` +
+          `Reply with ONLY raw JSON, no markdown, in exactly this shape: ` +
+          `{"label":"string","confidence":0.0,"polygon":[[x,y],[x,y], ...]} with 8-24 normalized points tracing the object boundary.`
+        : `Detect every clearly visible instance of these classes: ${candidateLabels.join(", ")}. ` +
+          `Reply with ONLY raw JSON, no markdown, in exactly this shape: ` +
+          `{"detections":[{"label":"string","confidence":0.0,"box":[x,y,width,height]}]} ` +
+          `with up to 12 tight boxes normalized 0-1. Prefer precision over recall; skip anything below 0.35 confidence. ` +
+          `If nothing matches, return {"detections":[]}.`;
+
+
+    // Fetch the image ourselves — some hosts (e.g. Wikimedia) reject default UAs.
+    const imgRes = await fetch(imageUrl, {
+      headers: {
+        "User-Agent": "SamyamLabelingBot/1.0 (https://samyam-space-label.lovable.app)",
+        Accept: "image/*",
+      },
+      redirect: "follow",
+    });
+    if (!imgRes.ok) {
+      return new Response(
+        JSON.stringify({ error: `Could not download the image (HTTP ${imgRes.status}).` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+    const mediaType = (imgRes.headers.get("content-type") || "image/jpeg").split(";")[0];
+    const bytes = new Uint8Array(await imgRes.arrayBuffer());
+    if (bytes.byteLength > 12 * 1024 * 1024) {
+      return new Response(JSON.stringify({ error: "Image too large (max 12 MB)." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const result = await generateText({
+      model,
+      instructions: system,
+      messages: [
+
+        {
+          role: "user",
+          content: [
+            { type: "text", text: instruction },
+            { type: "image", image: bytes, mediaType },
+          ],
+        },
+      ],
+    });
+
+    const raw = (await result.text).trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+    let parsedJson: unknown;
+    try {
+      parsedJson = JSON.parse(raw);
+    } catch {
+      const match = raw.match(/[[{][\s\S]*[\]}]/);
+      parsedJson = match ? JSON.parse(match[0]) : null;
+    }
+
+    if (mode === "segment") {
+      const obj = Array.isArray(parsedJson) ? parsedJson[0] : parsedJson;
+      const safe = SegmentOutput.safeParse(obj);
+      if (!safe.success) {
+        return new Response(JSON.stringify({ mode, polygon: [], label: "", confidence: 0 }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      return new Response(JSON.stringify({ mode, ...safe.data }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const candidate = Array.isArray(parsedJson)
+      ? { detections: parsedJson }
+      : (parsedJson as Record<string, unknown>) ?? { detections: [] };
+    const safe = DetectOutput.safeParse(candidate);
+
+    return new Response(
+      JSON.stringify({ mode, detections: safe.success ? safe.data.detections : [] }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "";
+    const status = message.includes("429") ? 429 : message.includes("402") ? 402 : 500;
+    console.error("[ai-prelabel] error", err);
+    return new Response(
+      JSON.stringify({
+        error:
+          status === 429
+            ? "Rate limit reached. Please retry in a moment."
+            : status === 402
+              ? "AI credits exhausted. Please add credits to continue."
+              : "Internal server error",
+      }),
+      { status, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
+  }
+});
