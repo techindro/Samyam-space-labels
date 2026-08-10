@@ -72,6 +72,29 @@ Deno.serve(async (req) => {
             ", ",
           )}. Return up to 12 tight bounding boxes as [x, y, width, height] normalized to the image. Prefer precision over recall; skip anything below 0.35 confidence.`;
 
+    // Fetch the image ourselves — some hosts (e.g. Wikimedia) reject default UAs.
+    const imgRes = await fetch(imageUrl, {
+      headers: {
+        "User-Agent": "SamyamLabelingBot/1.0 (https://samyam-space-label.lovable.app)",
+        Accept: "image/*",
+      },
+      redirect: "follow",
+    });
+    if (!imgRes.ok) {
+      return new Response(
+        JSON.stringify({ error: `Could not download the image (HTTP ${imgRes.status}).` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+    const mediaType = (imgRes.headers.get("content-type") || "image/jpeg").split(";")[0];
+    const bytes = new Uint8Array(await imgRes.arrayBuffer());
+    if (bytes.byteLength > 12 * 1024 * 1024) {
+      return new Response(JSON.stringify({ error: "Image too large (max 12 MB)." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const result = await generateText({
       model,
       system,
@@ -84,11 +107,12 @@ Deno.serve(async (req) => {
           role: "user",
           content: [
             { type: "text", text: instruction },
-            { type: "image", image: new URL(imageUrl) },
+            { type: "image", image: bytes, mediaType },
           ],
         },
       ],
     });
+
 
     const output = await result.output;
 
