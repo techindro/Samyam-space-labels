@@ -102,8 +102,9 @@ Deno.serve(async (req) => {
 
     const result = await generateText({
       model,
+      instructions: system,
       messages: [
-        { role: "system", content: system },
+
         {
           role: "user",
           content: [
