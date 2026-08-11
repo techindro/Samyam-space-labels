@@ -103,6 +103,9 @@ export default function AnnotationTool() {
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState<string | null>(null);
   const [saving,     setSaving]     = useState(false);
+  const [lastSaved,  setLastSaved]  = useState<Date | null>(null);
+  const [dirty,      setDirty]      = useState(false);
+
   const [imageUrl,   setImageUrl]   = useState<string>(DEMO_IMAGE);
   const [customUrl,  setCustomUrl]  = useState("");
   const [showUrlBox, setShowUrlBox] = useState(false);
@@ -342,10 +345,36 @@ export default function AnnotationTool() {
   const [sarImageUrl, setSarImageUrl] = useState(DEMO_IMAGE);
   const [customSarInputUrl, setCustomSarInputUrl] = useState("");
 
-  // ── Load task from Supabase ──
+  // ── Local (demo) persistence key ──
+  const demoStorageKey = "samyam.annotations.demo";
+
+  // ── Load task from Supabase (or restore demo work from localStorage) ──
   useEffect(() => {
     if (!taskId || taskId === "demo") {
       setLoading(false);
+      try {
+        const raw = localStorage.getItem(demoStorageKey);
+        if (raw) {
+          const saved = JSON.parse(raw) as {
+            annotations?: Annotation[];
+            modality?: Modality;
+            imageUrl?: string;
+            savedAt?: string;
+          };
+          if (saved.annotations?.length) {
+            state.setAnnotations(saved.annotations);
+            if (saved.modality) setActiveModality(saved.modality);
+            if (saved.imageUrl) setImageUrl(saved.imageUrl);
+            if (saved.savedAt) setLastSaved(new Date(saved.savedAt));
+            toast({
+              title: "Restored previous work",
+              description: `${saved.annotations.length} annotation${saved.annotations.length === 1 ? "" : "s"} loaded from this browser.`,
+            });
+          }
+        }
+      } catch {
+        /* ignore malformed local data */
+      }
       return;
     }
 
@@ -368,10 +397,12 @@ export default function AnnotationTool() {
         const result = data.result as Record<string, any> | null;
         if (result?.annotations) {
           state.setAnnotations(result.annotations as Annotation[]);
+          if (data.updated_at) setLastSaved(new Date(data.updated_at));
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
+
 
   // ── Keyboard shortcuts ──
   useEffect(() => {
@@ -390,28 +421,75 @@ export default function AnnotationTool() {
     return () => window.removeEventListener("keydown", onKey);
   }, [activeModality, state]);
 
-  // ── Save ──
-  const handleSave = useCallback(async () => {
+  // ── Save (DB for real tasks, localStorage for demo) ──
+  const persist = useCallback(async (silent = false) => {
+    const payload = {
+      annotations: state.annotations,
+      labels: state.labels,
+      modality: activeModality,
+      imageUrl,
+      savedAt: new Date().toISOString(),
+    };
+
     if (!taskId || taskId === "demo") {
-      toast({ title: "✓ Demo Annotations Saved", description: `Saved ${activeModality.toUpperCase()} annotations in memory.` });
+      try {
+        localStorage.setItem(demoStorageKey, JSON.stringify(payload));
+        setLastSaved(new Date());
+        setDirty(false);
+        if (!silent) {
+          toast({
+            title: "✓ Annotations saved",
+            description: `${state.annotations.length} annotation${state.annotations.length === 1 ? "" : "s"} stored in this browser.`,
+          });
+        }
+      } catch {
+        if (!silent) toast({ title: "Save failed", description: "Browser storage unavailable.", variant: "destructive" });
+      }
       return;
     }
+
     setSaving(true);
     const { error: err } = await supabase
       .from("annotation_tasks")
       .update({
-        result: { annotations: state.annotations, labels: state.labels, modality: activeModality } as any,
+        result: payload as any,
         status: "in_progress",
         updated_at: new Date().toISOString(),
       })
       .eq("id", taskId);
     setSaving(false);
     if (err) {
-      toast({ title: "Save failed", description: err.message, variant: "destructive" });
+      if (!silent) toast({ title: "Save failed", description: err.message, variant: "destructive" });
     } else {
-      toast({ title: "✓ Annotations saved!" });
+      setLastSaved(new Date());
+      setDirty(false);
+      if (!silent) toast({ title: "✓ Annotations saved!" });
     }
-  }, [taskId, state.annotations, state.labels, activeModality, toast]);
+  }, [taskId, state.annotations, state.labels, activeModality, imageUrl, toast]);
+
+  const handleSave = useCallback(() => persist(false), [persist]);
+
+  // Mark dirty whenever annotations/labels change
+  useEffect(() => {
+    setDirty(true);
+  }, [state.annotations, state.labels]);
+
+  // Debounced autosave
+  useEffect(() => {
+    if (!dirty) return;
+    const t = setTimeout(() => { void persist(true); }, 1500);
+    return () => clearTimeout(t);
+  }, [dirty, persist]);
+
+  // Warn before leaving with unsaved changes
+  useEffect(() => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (dirty) { e.preventDefault(); e.returnValue = ""; }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty]);
+
 
   // ── Export ──
   const handleExport = useCallback(() => {
@@ -602,7 +680,11 @@ export default function AnnotationTool() {
             <Download size={13} /> Export <span className="hidden sm:inline">JSON</span>
           </Button>
 
+          <span className="text-[10px] text-white/50 shrink-0 hidden sm:inline">
+            {saving ? "Saving…" : dirty ? "Unsaved changes" : lastSaved ? `Saved ${lastSaved.toLocaleTimeString()}` : ""}
+          </span>
           <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0">
+
             {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
             <span>Save</span>
           </Button>
