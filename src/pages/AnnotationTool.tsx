@@ -342,10 +342,36 @@ export default function AnnotationTool() {
   const [sarImageUrl, setSarImageUrl] = useState(DEMO_IMAGE);
   const [customSarInputUrl, setCustomSarInputUrl] = useState("");
 
-  // ── Load task from Supabase ──
+  // ── Local (demo) persistence key ──
+  const demoStorageKey = "samyam.annotations.demo";
+
+  // ── Load task from Supabase (or restore demo work from localStorage) ──
   useEffect(() => {
     if (!taskId || taskId === "demo") {
       setLoading(false);
+      try {
+        const raw = localStorage.getItem(demoStorageKey);
+        if (raw) {
+          const saved = JSON.parse(raw) as {
+            annotations?: Annotation[];
+            modality?: Modality;
+            imageUrl?: string;
+            savedAt?: string;
+          };
+          if (saved.annotations?.length) {
+            state.setAnnotations(saved.annotations);
+            if (saved.modality) setActiveModality(saved.modality);
+            if (saved.imageUrl) setImageUrl(saved.imageUrl);
+            if (saved.savedAt) setLastSaved(new Date(saved.savedAt));
+            toast({
+              title: "Restored previous work",
+              description: `${saved.annotations.length} annotation${saved.annotations.length === 1 ? "" : "s"} loaded from this browser.`,
+            });
+          }
+        }
+      } catch {
+        /* ignore malformed local data */
+      }
       return;
     }
 
@@ -368,10 +394,12 @@ export default function AnnotationTool() {
         const result = data.result as Record<string, any> | null;
         if (result?.annotations) {
           state.setAnnotations(result.annotations as Annotation[]);
+          if (data.updated_at) setLastSaved(new Date(data.updated_at));
         }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
+
 
   // ── Keyboard shortcuts ──
   useEffect(() => {
