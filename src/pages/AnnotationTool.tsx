@@ -680,7 +680,11 @@ export default function AnnotationTool() {
             <Download size={13} /> Export <span className="hidden sm:inline">JSON</span>
           </Button>
 
+          <span className="text-[10px] text-white/50 shrink-0 hidden sm:inline">
+            {saving ? "Saving…" : dirty ? "Unsaved changes" : lastSaved ? `Saved ${lastSaved.toLocaleTimeString()}` : ""}
+          </span>
           <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0">
+
             {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
             <span>Save</span>
           </Button>
