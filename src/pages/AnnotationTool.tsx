@@ -103,6 +103,9 @@ export default function AnnotationTool() {
   const [loading,    setLoading]    = useState(true);
   const [error,      setError]      = useState<string | null>(null);
   const [saving,     setSaving]     = useState(false);
+  const [lastSaved,  setLastSaved]  = useState<Date | null>(null);
+  const [dirty,      setDirty]      = useState(false);
+
   const [imageUrl,   setImageUrl]   = useState<string>(DEMO_IMAGE);
   const [customUrl,  setCustomUrl]  = useState("");
   const [showUrlBox, setShowUrlBox] = useState(false);
