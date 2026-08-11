@@ -70,6 +70,72 @@ export type Database = {
           },
         ]
       }
+      dataset_files: {
+        Row: {
+          created_at: string
+          dataset_id: string | null
+          file_name: string
+          id: string
+          media_type: string
+          metadata: Json
+          mime_type: string | null
+          owner_id: string
+          preview_url: string | null
+          size_bytes: number
+          status: string
+          storage_path: string
+          task_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          dataset_id?: string | null
+          file_name: string
+          id?: string
+          media_type?: string
+          metadata?: Json
+          mime_type?: string | null
+          owner_id: string
+          preview_url?: string | null
+          size_bytes?: number
+          status?: string
+          storage_path: string
+          task_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          dataset_id?: string | null
+          file_name?: string
+          id?: string
+          media_type?: string
+          metadata?: Json
+          mime_type?: string | null
+          owner_id?: string
+          preview_url?: string | null
+          size_bytes?: number
+          status?: string
+          storage_path?: string
+          task_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dataset_files_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "datasets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dataset_files_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "annotation_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       datasets: {
         Row: {
           created_at: string
