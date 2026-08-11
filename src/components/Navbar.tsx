@@ -227,7 +227,33 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                       </div>
                       <ArrowRight size={14} className="text-foreground opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
                     </a>
+
+                    <a
+                      href="/upload"
+                      onClick={(e) => { e.preventDefault(); setProductsOpen(false); navigate("/upload"); }}
+                      className={`mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
+                        isDark
+                          ? 'bg-white/10 hover:bg-white/20 text-white border border-white/10'
+                          : 'bg-secondary/60 hover:bg-secondary text-foreground border border-border/40'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1 text-foreground shrink-0">
+                        <Square size={13} />
+                        <Hexagon size={13} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold">Data Upload Pipeline</span>
+                          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-secondary text-foreground font-bold">NEW</span>
+                        </div>
+                        <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>
+                          Upload tiles · Auto dataset · Task creation
+                        </span>
+                      </div>
+                      <ArrowRight size={14} className="text-foreground opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
+                    </a>
                   </div>
+
                 </div>
               )}
             </div>
