@@ -421,28 +421,75 @@ export default function AnnotationTool() {
     return () => window.removeEventListener("keydown", onKey);
   }, [activeModality, state]);
 
-  // ── Save ──
-  const handleSave = useCallback(async () => {
+  // ── Save (DB for real tasks, localStorage for demo) ──
+  const persist = useCallback(async (silent = false) => {
+    const payload = {
+      annotations: state.annotations,
+      labels: state.labels,
+      modality: activeModality,
+      imageUrl,
+      savedAt: new Date().toISOString(),
+    };
+
     if (!taskId || taskId === "demo") {
-      toast({ title: "✓ Demo Annotations Saved", description: `Saved ${activeModality.toUpperCase()} annotations in memory.` });
+      try {
+        localStorage.setItem(demoStorageKey, JSON.stringify(payload));
+        setLastSaved(new Date());
+        setDirty(false);
+        if (!silent) {
+          toast({
+            title: "✓ Annotations saved",
+            description: `${state.annotations.length} annotation${state.annotations.length === 1 ? "" : "s"} stored in this browser.`,
+          });
+        }
+      } catch {
+        if (!silent) toast({ title: "Save failed", description: "Browser storage unavailable.", variant: "destructive" });
+      }
       return;
     }
+
     setSaving(true);
     const { error: err } = await supabase
       .from("annotation_tasks")
       .update({
-        result: { annotations: state.annotations, labels: state.labels, modality: activeModality } as any,
+        result: payload as any,
         status: "in_progress",
         updated_at: new Date().toISOString(),
       })
       .eq("id", taskId);
     setSaving(false);
     if (err) {
-      toast({ title: "Save failed", description: err.message, variant: "destructive" });
+      if (!silent) toast({ title: "Save failed", description: err.message, variant: "destructive" });
     } else {
-      toast({ title: "✓ Annotations saved!" });
+      setLastSaved(new Date());
+      setDirty(false);
+      if (!silent) toast({ title: "✓ Annotations saved!" });
     }
-  }, [taskId, state.annotations, state.labels, activeModality, toast]);
+  }, [taskId, state.annotations, state.labels, activeModality, imageUrl, toast]);
+
+  const handleSave = useCallback(() => persist(false), [persist]);
+
+  // Mark dirty whenever annotations/labels change
+  useEffect(() => {
+    setDirty(true);
+  }, [state.annotations, state.labels]);
+
+  // Debounced autosave
+  useEffect(() => {
+    if (!dirty) return;
+    const t = setTimeout(() => { void persist(true); }, 1500);
+    return () => clearTimeout(t);
+  }, [dirty, persist]);
+
+  // Warn before leaving with unsaved changes
+  useEffect(() => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (dirty) { e.preventDefault(); e.returnValue = ""; }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty]);
+
 
   // ── Export ──
   const handleExport = useCallback(() => {
