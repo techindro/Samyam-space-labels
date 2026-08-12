@@ -8,6 +8,10 @@ import AnnotationToolbar  from "@/components/annotation/AnnotationToolbar";
 import LabelPanel         from "@/components/annotation/LabelPanel";
 import { Button }         from "@/components/ui/button";
 import { useToast }       from "@/hooks/use-toast";
+import {
+  DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { toCoco, toYolo, toGeoJson, toCsv, downloadFile } from "@/lib/annotationExport";
 import { 
   Save, Download, ArrowLeft, Loader2, AlertCircle, Tag, Image as ImageIcon,
   Mic, Video as VideoIcon, FileText, Radar, Play, Pause, Plus, Trash2,
@@ -510,15 +514,48 @@ export default function AnnotationTool() {
       exportData = { modality: "sar_radar", band: selectedBand, overlayOpacity: opacityOverlay };
     }
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement("a");
-    a.href     = url;
-    a.download = `samyam_${activeModality}_${taskId ?? "demo"}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    downloadFile(
+      `samyam_${activeModality}_${taskId ?? "demo"}.json`,
+      JSON.stringify(exportData, null, 2),
+      "application/json",
+    );
     toast({ title: `Exported ${activeModality.toUpperCase()} JSON` });
   }, [activeModality, state.annotations, state.labels, audioSegments, totalVideoFrames, videoTracks, rlhfPrompt, rlhfRank, nerTokens, selectedBand, opacityOverlay, task, taskId, toast]);
+
+  // ── Dataset exports (COCO / YOLO / GeoJSON / CSV) ──
+  const exportCtx = useCallback(() => ({
+    annotations: state.annotations,
+    labels: state.labels,
+    imageWidth: imageDims.w,
+    imageHeight: imageDims.h,
+    imageName: (imageUrl.split("/").pop() || "image.jpg").split("?")[0],
+    title: task?.title ?? "samyam annotation export",
+  }), [state.annotations, state.labels, imageDims, imageUrl, task]);
+
+  const handleDatasetExport = useCallback((fmt: "coco" | "yolo" | "geojson" | "csv") => {
+    if (activeModality !== "vision") {
+      toast({ title: "Vision only", description: "COCO / YOLO / GeoJSON exports need image annotations.", variant: "destructive" });
+      return;
+    }
+    if (!state.annotations.length) {
+      toast({ title: "Nothing to export", description: "Draw or generate some annotations first.", variant: "destructive" });
+      return;
+    }
+    const ctx = exportCtx();
+    const base = `samyam_${taskId ?? "demo"}`;
+    if (fmt === "coco") {
+      downloadFile(`${base}_coco.json`, JSON.stringify(toCoco(ctx), null, 2), "application/json");
+    } else if (fmt === "yolo") {
+      const { labelsTxt, dataYaml } = toYolo(ctx);
+      downloadFile(`${base}_yolo.txt`, labelsTxt, "text/plain");
+      setTimeout(() => downloadFile(`${base}_data.yaml`, dataYaml, "text/yaml"), 250);
+    } else if (fmt === "geojson") {
+      downloadFile(`${base}.geojson`, JSON.stringify(toGeoJson(ctx), null, 2), "application/geo+json");
+    } else {
+      downloadFile(`${base}_labels.csv`, toCsv(ctx), "text/csv");
+    }
+    toast({ title: `Exported ${fmt.toUpperCase()}`, description: `${ctx.annotations.length} annotation${ctx.annotations.length === 1 ? "" : "s"}.` });
+  }, [activeModality, state.annotations, exportCtx, taskId, toast]);
 
   const handleSelectForDelete = useCallback((id: string | null) => {
     state.setSelectedId(id);
@@ -676,9 +713,32 @@ export default function AnnotationTool() {
             </Button>
           )}
 
-          <Button size="sm" onClick={handleExport} className="h-7 px-2.5 sm:px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1 font-medium shrink-0">
-            <Download size={13} /> Export <span className="hidden sm:inline">JSON</span>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" className="h-7 px-2.5 sm:px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1 font-medium shrink-0">
+                <Download size={13} /> Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 bg-[#12142a] border-[#343956] text-slate-200">
+              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-white/40">Dataset formats</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => handleDatasetExport("coco")} className="text-xs focus:bg-white/10 focus:text-white">
+                COCO JSON <span className="ml-auto text-white/30">.json</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDatasetExport("yolo")} className="text-xs focus:bg-white/10 focus:text-white">
+                YOLO (txt + yaml) <span className="ml-auto text-white/30">.txt</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDatasetExport("geojson")} className="text-xs focus:bg-white/10 focus:text-white">
+                GeoJSON <span className="ml-auto text-white/30">.geojson</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDatasetExport("csv")} className="text-xs focus:bg-white/10 focus:text-white">
+                CSV <span className="ml-auto text-white/30">.csv</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-[#343956]" />
+              <DropdownMenuItem onClick={handleExport} className="text-xs focus:bg-white/10 focus:text-white">
+                Raw session JSON <span className="ml-auto text-white/30">.json</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <span className="text-[10px] text-white/50 shrink-0 hidden sm:inline">
             {saving ? "Saving…" : dirty ? "Unsaved changes" : lastSaved ? `Saved ${lastSaved.toLocaleTimeString()}` : ""}
