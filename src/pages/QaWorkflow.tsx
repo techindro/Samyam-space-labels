@@ -39,7 +39,9 @@ const statusStyles: Record<TaskStatus, string> = {
 const annCount = (t: TaskRow) => (Array.isArray(t.result?.annotations) ? t.result.annotations.length : 0);
 const labelsOf = (t: TaskRow): string[] =>
   Array.isArray(t.result?.annotations)
-    ? Array.from(new Set(t.result.annotations.map((a: any) => String(a?.label ?? "")).filter(Boolean))).sort()
+    ? Array.from(
+        new Set<string>(t.result.annotations.map((a: any) => String(a?.label ?? "")).filter((s: string) => s.length > 0)),
+      ).sort()
     : [];
 
 type TabKey = "queue" | "mine" | "review" | "consensus";
