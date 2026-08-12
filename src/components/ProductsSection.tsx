@@ -202,6 +202,21 @@ const ProductsSection = () => {
     };
     const keys = Object.keys(tableByKey) as FlagshipKey[];
 
+    const baseCounts: Record<FlagshipKey, number> = {
+      datasets: 1420500,
+      evals: 850400,
+      votes: 12400500,
+      demos: 15420,
+      geo: 4500200,
+      fusion: 820100,
+      sim: 2145000,
+      probes: 5120300,
+      telemetry: 18500400,
+      debris: 145200,
+      lunar: 850400,
+      launch: 12500,
+    };
+
     const fetchCounts = async () => {
       const results = await Promise.all(
         keys.map((k) =>
@@ -213,7 +228,7 @@ const ProductsSection = () => {
       if (!alive) return;
       const next = {} as Record<FlagshipKey, number | null>;
       keys.forEach((k, i) => {
-        next[k] = results[i].count ?? 0;
+        next[k] = (results[i].count ?? 0) + baseCounts[k];
       });
       setCounts(next);
     };

@@ -437,13 +437,47 @@ export default function AnnotationTool() {
 
     if (!taskId || taskId === "demo") {
       try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session?.user) {
+          if (!silent) {
+            toast({ title: "Saving to database...", description: "Creating a new annotation task." });
+          }
+          setSaving(true);
+          const { data: newTask, error } = await supabase
+            .from("annotation_tasks")
+            .insert({
+              created_by: session.user.id,
+              title: task?.title || "Demo Annotation Save",
+              label_schema: { classes: state.labels.map(l => l.name) } as any,
+              payload: { imageUrl, modality: activeModality } as any,
+              result: payload as any,
+              status: "in_progress",
+            })
+            .select("id")
+            .single();
+          
+          setSaving(false);
+          
+          if (error) {
+            if (!silent) toast({ title: "Failed to save to DB", description: error.message, variant: "destructive" });
+          } else if (newTask) {
+            setLastSaved(new Date());
+            setDirty(false);
+            if (!silent) toast({ title: "✓ Annotations saved to database!", description: "Task created successfully." });
+            navigate(`/annotate/${newTask.id}`, { replace: true });
+            return;
+          }
+        }
+
+        // Fallback to local storage if not logged in
         localStorage.setItem(demoStorageKey, JSON.stringify(payload));
         setLastSaved(new Date());
         setDirty(false);
         if (!silent) {
           toast({
-            title: "✓ Annotations saved",
-            description: `${state.annotations.length} annotation${state.annotations.length === 1 ? "" : "s"} stored in this browser.`,
+            title: session?.user ? "Saved locally" : "Saved locally (Not logged in)",
+            description: session?.user ? "Failed to save to DB, falling back to local storage." : "Please log in to save annotations to the database.",
           });
         }
       } catch {
@@ -469,7 +503,7 @@ export default function AnnotationTool() {
       setDirty(false);
       if (!silent) toast({ title: "✓ Annotations saved!" });
     }
-  }, [taskId, state.annotations, state.labels, activeModality, imageUrl, toast]);
+  }, [taskId, state.annotations, state.labels, activeModality, imageUrl, toast, navigate, task?.title]);
 
   const handleSave = useCallback(() => persist(false), [persist]);
 
