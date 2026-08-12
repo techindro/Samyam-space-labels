@@ -33,6 +33,7 @@ import OAuthConsent from "./pages/OAuthConsent";
 import AutoScrollReveal from "./components/AutoScrollReveal";
 import AnnotationTool from "./pages/AnnotationTool";
 import DataUpload from "./pages/DataUpload";
+import QaWorkflow from "./pages/QaWorkflow";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -87,6 +88,7 @@ const App = () => (
             <Route path="/oauth/consent" element={<OAuthConsent />} />
             {/* Annotation Tool — demo mode (no auth) */}
             <Route path="/upload" element={<ProtectedRoute><DataUpload /></ProtectedRoute>} />
+            <Route path="/qa" element={<ProtectedRoute><QaWorkflow /></ProtectedRoute>} />
             <Route path="/annotate/demo" element={<AnnotationTool />} />
             {/* Annotation Tool — task-specific (protected) */}
             <Route path="/annotate/:taskId" element={<ProtectedRoute><AnnotationTool /></ProtectedRoute>} />
