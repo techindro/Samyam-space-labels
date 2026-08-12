@@ -9,14 +9,14 @@ interface Props {
 
 const sizeClasses = {
   sm: "h-8 w-8",
-  md: "h-11 w-11",
-  lg: "h-14 w-14",
+  md: "h-9 w-9 md:h-11 md:w-11",
+  lg: "h-12 w-12 md:h-14 md:w-14",
 };
 
 const textSizes = {
-  sm: "text-xl",
-  md: "text-2xl sm:text-[26px]",
-  lg: "text-3xl sm:text-4xl",
+  sm: "text-lg md:text-xl",
+  md: "text-xl sm:text-2xl md:text-[26px]",
+  lg: "text-2xl sm:text-3xl md:text-4xl",
 };
 
 export const SamyamLogo = ({ className = "", showText = true, size = "md" }: Props) => {

@@ -147,16 +147,16 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   return (
     <>
       {/* Announcement Banner */}
-      <div className={`w-full border-b py-2 px-4 text-center text-sm ${isDark ? 'bg-white/5 border-white/10 text-white/70' : 'bg-secondary/60 border-border/50 text-muted-foreground'}`}>
+      <div className={`w-full border-b py-1.5 md:py-2 px-3 md:px-4 text-center flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-[11px] md:text-sm ${isDark ? 'bg-white/5 border-white/10 text-white/70' : 'bg-secondary/60 border-border/50 text-muted-foreground'}`}>
         <span>Samyam launches satellite data labeling platform</span>
-        <a href="/learn" className={`ml-2 inline-flex items-center gap-1 font-medium ${isDark ? 'text-white hover:text-white/80' : 'text-foreground hover:text-foreground/80'}`}>
-          Learn more <ArrowRight className="h-3 w-3" />
+        <a href="/learn" className={`inline-flex items-center gap-1 font-medium ${isDark ? 'text-white hover:text-white/80' : 'text-foreground hover:text-foreground/80'}`}>
+          Learn more <ArrowRight className="h-2.5 w-2.5 md:h-3 md:w-3" />
         </a>
       </div>
 
       {/* Navbar */}
       <nav className={`sticky top-0 z-50 w-full border-b ${isDark ? 'bg-black/80 backdrop-blur-xl border-white/10' : 'glass-card border-border/30'}`}>
-        <div className="container mx-auto flex items-center justify-between h-20 px-4">
+        <div className="container mx-auto flex items-center justify-between h-16 md:h-20 px-4">
           {/* Logo */}
           <SamyamLogo size="md" />
 
