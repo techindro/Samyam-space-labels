@@ -256,20 +256,20 @@ const Resources = () => {
           >
             <div className="p-6">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200 font-medium">
+                <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-secondary text-foreground border border-border font-medium">
                   {post.category}
                 </span>
                 <span className="text-muted-foreground text-xs flex items-center gap-1">
                   <Clock className="w-3 h-3" /> {post.readTime}
                 </span>
               </div>
-              <h3 className="text-lg font-semibold text-foreground group-hover:text-blue-600 transition-colors leading-tight mb-2">
+              <h3 className="text-lg font-semibold text-foreground group-hover:text-foreground/70 transition-colors leading-tight mb-2">
                 {post.title}
               </h3>
               <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">{post.excerpt}</p>
               <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/40">
                 <span className="text-muted-foreground/70 text-xs">{post.author} · {new Date(post.publishedAt).toLocaleDateString()}</span>
-                <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-1 transition-all" />
               </div>
             </div>
           </motion.article>
@@ -294,20 +294,20 @@ const Resources = () => {
             className="group rounded-2xl border border-border/60 bg-background hover:bg-secondary/40 hover:shadow-lg transition-all duration-300 p-6"
           >
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 font-medium">
+              <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-secondary text-foreground border border-border font-medium">
                 {cs.industry}
               </span>
             </div>
-            <h3 className="text-lg font-semibold text-foreground group-hover:text-emerald-600 transition-colors mb-2">{cs.title}</h3>
+            <h3 className="text-lg font-semibold text-foreground group-hover:text-foreground/70 transition-colors mb-2">{cs.title}</h3>
             <p className="text-muted-foreground text-sm mb-4">{cs.client}</p>
             <div className="flex items-center gap-4 pt-4 border-t border-border/40">
               <div>
-                <p className="text-2xl font-bold text-emerald-600">{cs.metricValue}</p>
+                <p className="text-2xl font-bold text-foreground">{cs.metricValue}</p>
                 <p className="text-muted-foreground text-xs">{cs.metric}</p>
               </div>
               <Link
                 to={`/case-studies/${cs.slug}`}
-                className="ml-auto text-sm text-muted-foreground hover:text-emerald-600 flex items-center gap-1 transition-colors"
+                className="ml-auto text-sm text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
               >
                 Read more <ChevronRight className="w-3.5 h-3.5" />
               </Link>
@@ -335,23 +335,23 @@ const Resources = () => {
           >
             <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${
               w.status === "upcoming"
-                ? "bg-gradient-to-br from-violet-100 to-blue-100 border border-violet-200"
+                ? "bg-secondary border border-border"
                 : "bg-secondary/60 border border-border/50"
             }`}>
-              {w.status === "upcoming" ? <Calendar className="w-6 h-6 text-violet-600" /> : <Play className="w-6 h-6 text-muted-foreground" />}
+              {w.status === "upcoming" ? <Calendar className="w-6 h-6 text-foreground" /> : <Play className="w-6 h-6 text-muted-foreground" />}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full font-medium ${
                   w.status === "upcoming"
-                    ? "bg-violet-50 text-violet-600 border border-violet-200"
+                    ? "bg-secondary text-foreground border border-border"
                     : "bg-secondary/60 text-muted-foreground border border-border/50"
                 }`}>
                   {w.status === "upcoming" ? "Upcoming" : "Recorded"}
                 </span>
                 <span className="text-muted-foreground text-xs">{w.duration}</span>
               </div>
-              <h3 className="text-base font-semibold text-foreground group-hover:text-violet-600 transition-colors truncate">{w.title}</h3>
+              <h3 className="text-base font-semibold text-foreground group-hover:text-foreground/70 transition-colors truncate">{w.title}</h3>
               <p className="text-muted-foreground text-sm">{w.speaker} · {w.date}</p>
             </div>
             <Button
@@ -386,7 +386,7 @@ const Resources = () => {
               <MessageCircle className="w-4 h-4 text-muted-foreground" />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-medium text-foreground group-hover:text-blue-600 transition-colors truncate">{t.title}</h4>
+              <h4 className="text-sm font-medium text-foreground group-hover:text-foreground/70 transition-colors truncate">{t.title}</h4>
               <p className="text-muted-foreground/70 text-xs">{t.author} · {t.replies} replies · {t.lastActivity}</p>
             </div>
             <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-secondary/60 text-muted-foreground border border-border/50 shrink-0">
@@ -427,7 +427,7 @@ const Resources = () => {
                   >
                     <FileText className="w-4 h-4 text-muted-foreground/50 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm text-foreground group-hover:text-blue-600 transition-colors truncate">{article.title}</h4>
+                      <h4 className="text-sm text-foreground group-hover:text-foreground/70 transition-colors truncate">{article.title}</h4>
                       <p className="text-muted-foreground/60 text-xs">{article.views.toLocaleString()} views · Updated {article.lastUpdated}</p>
                     </div>
                     <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-muted-foreground transition-colors shrink-0" />
@@ -449,28 +449,28 @@ const Resources = () => {
             tier: "Technology Partner",
             description: "Integrate Samyam annotation & AI APIs into your platform for mutual customers.",
             benefits: ["API access & sandbox", "Co-marketing opportunities", "Technical integration support", "Partner badge & listing"],
-            gradient: "from-blue-50 to-cyan-50",
-            borderColor: "border-blue-200",
-            textColor: "text-blue-600",
-            iconBg: "bg-blue-100",
+            gradient: "from-secondary/80 to-secondary/40",
+            borderColor: "border-border",
+            textColor: "text-foreground",
+            iconBg: "bg-secondary",
           },
           {
             tier: "Consulting Partner",
             description: "Deliver Samyam-powered data labeling solutions to your enterprise clients.",
             benefits: ["Deal registration", "Solution architect access", "Revenue share program", "Priority support SLA"],
-            gradient: "from-violet-50 to-purple-50",
-            borderColor: "border-violet-200",
-            textColor: "text-violet-600",
-            iconBg: "bg-violet-100",
+            gradient: "from-secondary/80 to-secondary/40",
+            borderColor: "border-border",
+            textColor: "text-foreground",
+            iconBg: "bg-secondary",
           },
           {
             tier: "Academic Partner",
             description: "Access free annotation tools and compute credits for research and education.",
             benefits: ["Free annotation quota", "Research dataset access", "Publication co-authorship", "Student intern pipeline"],
-            gradient: "from-emerald-50 to-teal-50",
-            borderColor: "border-emerald-200",
-            textColor: "text-emerald-600",
-            iconBg: "bg-emerald-100",
+            gradient: "from-secondary/80 to-secondary/40",
+            borderColor: "border-border",
+            textColor: "text-foreground",
+            iconBg: "bg-secondary",
           },
         ].map((partner, i) => (
           <motion.div
@@ -490,7 +490,7 @@ const Resources = () => {
             <ul className="space-y-2 mb-6">
               {partner.benefits.map((b) => (
                 <li key={b} className="flex items-center gap-2 text-sm text-foreground/70">
-                  <Star className="w-3 h-3 text-amber-500 shrink-0" />
+                  <Star className="w-3 h-3 text-foreground shrink-0" />
                   {b}
                 </li>
               ))}
@@ -609,15 +609,15 @@ const Resources = () => {
       <section className="py-16 px-4 border-t border-border/40">
         <div className="container mx-auto max-w-2xl text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-100 to-violet-100 border border-blue-200 flex items-center justify-center mx-auto mb-4">
-              <Rss className="w-5 h-5 text-blue-600" />
+            <div className="w-12 h-12 rounded-2xl bg-secondary border border-border flex items-center justify-center mx-auto mb-4">
+              <Rss className="w-5 h-5 text-foreground" />
             </div>
             <h2 className="text-2xl font-bold text-foreground mb-2">Stay Updated</h2>
             <p className="text-muted-foreground text-sm mb-6">
               Get the latest product updates, engineering deep dives, and community highlights delivered to your inbox.
             </p>
             {subscribed ? (
-              <p className="text-emerald-600 text-sm font-medium">✓ Subscribed successfully!</p>
+              <p className="text-foreground text-sm font-medium">✓ Subscribed successfully!</p>
             ) : (
               <div className="flex items-center gap-2 max-w-md mx-auto">
                 <div className="relative flex-1">

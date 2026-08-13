@@ -28,6 +28,7 @@ import DeveloperTextToSpeech from "./pages/DeveloperTextToSpeech";
 import DeveloperSpeechToText from "./pages/DeveloperSpeechToText";
 import DeveloperDocumentDigitisation from "./pages/DeveloperDocumentDigitisation";
 import GovernmentPage from "./pages/GovernmentPage";
+import GovernmentHub from "./pages/GovernmentHub";
 import ProductPage from "./pages/ProductPage";
 import OAuthConsent from "./pages/OAuthConsent";
 import AutoScrollReveal from "./components/AutoScrollReveal";
@@ -87,6 +88,7 @@ const App = () => (
             <Route path="/developers/text-to-speech" element={<DeveloperTextToSpeech />} />
             <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
             <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
+            <Route path="/government" element={<GovernmentHub />} />
             <Route path="/government/:slug" element={<GovernmentPage />} />
             <Route path="/products/:slug" element={<ProductPage />} />
             <Route path="/oauth/consent" element={<OAuthConsent />} />
