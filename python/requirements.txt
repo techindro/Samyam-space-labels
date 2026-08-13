@@ -12,4 +12,4 @@ redis>=4.6.0
 psycopg2-binary>=2.9.6
 kafka-python-headless>=2.0.2
 segment-anything>=1.0
-
+deep-translator>=1.11.4

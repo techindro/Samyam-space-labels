@@ -123,6 +123,64 @@ SamyamLM is the first data labeling platform purpose-built for India's linguisti
 
 ---
 
+### 🔄 Human-in-the-Loop (HITL) & Active Learning
+
+SamyamLM doesn't just use static AI models. It employs a continuous learning pipeline to get smarter with every annotation:
+
+- **Model-Assisted Labeling (MAL):** Our Active Learning pipeline continuously retrains the model in the background as humans correct its mistakes, making the pre-labeling smarter over time.
+- **Similarity Search / Hard Example Mining:** Leverage vector embeddings to find edge cases. Users can query, *"Find me all images in my dataset that look similar to this one where the model failed,"* accelerating the curation of difficult datasets.
+
+---
+
+### 🎨 Advanced Annotation Capabilities
+
+SamyamLM supports complex data formats required for cutting-edge AI:
+- **3D Point Cloud / LiDAR Labeling:** Critical for autonomous vehicle datasets, support for drawing cuboids directly on LiDAR point clouds.
+- **Polygon & Keypoint Interpolation:** For video annotation, draw a polygon on frame 1 and frame 10, and the platform automatically interpolates the shape for frames 2-9.
+- **NER (Named Entity Recognition):** Advanced text annotation tools for highlighting and linking specific entities in Hindi text.
+
+### 👥 Workforce & Project Management
+
+Managing large-scale annotation teams requires robust tooling:
+- **Role-Based Access Control (RBAC):** Distinct permissions for Annotators, Reviewers, Project Managers, and Admins to ensure data integrity.
+- **Annotator Analytics:** Track the performance of individual labelers, monitoring metrics like average time per label, accuracy, and rejection rates.
+- **Task Assignment & Queues:** Automatically distribute batches of data to available annotators and manage complex task states (Pending, In Progress, Review, Completed).
+
+### ✅ Advanced Quality Assurance (QA) Workflows
+
+In high-stakes environments like defense and self-driving, robust QA is essential:
+- **Consensus Scoring:** Automatically assign the same data to multiple annotators. If their labels (IoU) match, it's approved; if they disagree, it's flagged for a senior reviewer.
+- **Gold Standard (Honeypot) Tasks:** Randomly insert pre-labeled "perfect" examples into an annotator's queue to constantly measure and maintain their accuracy score.
+
+### 🗂️ Ontology & Taxonomy Management
+
+- **Hierarchical Classes:** Go beyond flat lists with strict ontologies (e.g., `Vehicle -> Four-Wheeler -> Commercial -> Truck`).
+- **Dynamic Attributes:** Conditional UI menus (e.g., selecting "Traffic Light" automatically prompts for `State: [Red, Yellow, Green]`).
+
+### 📊 Data Diagnostics & Debugging
+
+- **Class Imbalance Dashboard:** Visual graphs showing if your dataset is biased (e.g., lacking enough examples of auto-rickshaws or night driving).
+- **Model Error Analysis:** Dedicated views to see exactly where the AI pre-labeling model was most confused, guiding data collection strategies.
+
+### 🏢 Enterprise Integrations & Data Management
+
+- **Cloud Storage Integrations:** Connect your AWS S3, Google Cloud Storage (GCS), or Azure Blob buckets directly without manually uploading files.
+- **Webhooks & API-First Design:** Programmatically trigger labeling jobs via API when new data hits your servers, and receive webhooks upon approval.
+- **Dataset Versioning:** Save "Version 1.0" of a dataset, make corrections, and branch off "Version 1.1" without losing history.
+
+### 🔒 Security & Compliance (Defense & Govt)
+
+Built for classified and sensitive workloads:
+- **Data Anonymization Pipeline:** Automatically blur faces and license plates in ground camera footage *before* human annotators see it (GDPR/privacy compliant).
+- **Air-Gapped / On-Premise Deployment:** We provide a dedicated `docker-compose.onprem.yml` that replaces cloud dependencies with local PostgreSQL and MinIO. Deploy entirely on your own isolated servers. 
+
+**To run the air-gapped on-premise version:**
+```bash
+docker-compose -f docker-compose.onprem.yml up --build
+```
+
+---
+
 ## 🛰️ Space Tech & Defense
 
 SamyamLM extends beyond roads and language — it is built to power **next-generation space and defense AI**.

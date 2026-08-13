@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  # React Frontend Web App
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: samyam-frontend-onprem
+    ports:
+      - "8080:80"
+    environment:
+      - VITE_FASTAPI_URL=http://localhost:8000
+    depends_on:
+      - ai-engine
+    restart: always
+
+  # Python FastAPI AI Engine
+  ai-engine:
+    build:
+      context: ./python
+      dockerfile: Dockerfile
+    container_name: samyam-ai-engine-onprem
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - DATABASE_URL=postgresql://samyam:samyampassword@postgres:5432/samyamdb
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+    depends_on:
+      - kafka
+      - postgres
+      - minio
+    restart: always
+
+  # Apache Kafka Zookeeper Service
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: samyam-zookeeper-onprem
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  # Apache Kafka Event Streaming Broker
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: samyam-kafka-onprem
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  # PostgreSQL - Local Database (Replaces Supabase for air-gapped environments)
+  postgres:
+    image: postgres:15-alpine
+    container_name: samyam-postgres-onprem
+    environment:
+      POSTGRES_USER: samyam
+      POSTGRES_PASSWORD: samyampassword
+      POSTGRES_DB: samyamdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  # MinIO - Local S3-compatible Object Storage (Replaces AWS S3)
+  minio:
+    image: minio/minio
+    container_name: samyam-minio-onprem
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - miniodata:/data
+    restart: always
+
+volumes:
+  pgdata:
+  miniodata:

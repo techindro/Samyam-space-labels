@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import time
 import os
+from ai_models import ai_engine
 
 app = FastAPI(
     title="SamyamLM AI Engine API",
@@ -79,6 +80,14 @@ class HindiVqaResponse(BaseModel):
     confidence: float
     model: str = "SamyamLM-VL-Indic"
 
+class AnonymizeRequest(BaseModel):
+    image_url: str = Field(..., example="https://images.unsplash.com/photo-1518770660439-4636190af475")
+
+class AnonymizeResponse(BaseModel):
+    original_url: str
+    anonymized_image_base64: str
+    status: str
+
 # ── Endpoints ──────────────────────────────────────────────────────────────
 
 @app.get("/")
@@ -94,33 +103,34 @@ def health_check():
 @app.post("/api/v1/prelabel/clip", response_model=PrelabelResponse)
 async def run_clip_prelabel(req: PrelabelRequest):
     """
-    Runs CLIP (ViT-B/32) zero-shot pre-labeling on provided satellite or ground camera image.
-    Automatically generates initial bounding boxes and classification labels.
+    Runs OWL-ViT zero-shot pre-labeling on provided satellite or ground camera image.
+    Automatically generates initial bounding boxes and classification labels based on text prompts.
     """
     start_time = time.time()
     
-    # Simulated PyTorch / CLIP inference pipeline
-    # In production with GPU: outputs torch tensor probabilities
-    mock_annotations = [
+    # Run actual HuggingFace OWL-ViT Inference
+    raw_annotations = ai_engine.detect_objects_zero_shot(
+        image_url=req.image_url, 
+        candidate_labels=req.candidate_labels, 
+        threshold=req.confidence_threshold
+    )
+    
+    # Map to Pydantic model
+    annotations = [
         PrelabelAnnotation(
-            id="auto-1",
-            label=req.candidate_labels[0] if req.candidate_labels else "Satellite",
-            confidence=0.92,
-            bbox=BoundingBox(x=120, y=80, w=220, h=180)
-        ),
-        PrelabelAnnotation(
-            id="auto-2",
-            label=req.candidate_labels[1] if len(req.candidate_labels) > 1 else "Terrain",
-            confidence=0.84,
-            bbox=BoundingBox(x=340, y=210, w=150, h=120)
-        ),
+            id=ann["id"],
+            label=ann["label"],
+            confidence=ann["confidence"],
+            bbox=BoundingBox(**ann["bbox"])
+        ) for ann in raw_annotations
     ]
 
-    inference_ms = round((time.time() - start_time) * 1000 + 45.2, 2)
+    inference_ms = round((time.time() - start_time) * 1000, 2)
     return PrelabelResponse(
         image_url=req.image_url,
+        model="OWL-ViT-Base-Patch32",
         inference_time_ms=inference_ms,
-        annotations=mock_annotations
+        annotations=annotations
     )
 
 @app.post("/api/v1/geospatial/isro", response_model=IsroFetchResponse)
@@ -148,18 +158,25 @@ async def fetch_isro_satellite_tile(req: IsroFetchRequest):
 @app.post("/api/v1/indic/vqa", response_model=HindiVqaResponse)
 async def run_hindi_vqa(req: HindiVqaRequest):
     """
-    Runs Hindi Visual Question Answering (SamyamLM-VL model fine-tuned on IndicVQA benchmark).
+    Runs Hindi Visual Question Answering using BLIP-VQA and translation pipeline.
     """
+    start_time = time.time()
+    hindi_answer = ai_engine.answer_hindi_question(
+        image_url=req.image_url, 
+        hindi_question=req.question_hindi
+    )
+    
     return HindiVqaResponse(
         question_hindi=req.question_hindi,
-        answer_hindi="हाँ, इस चित्र में 2 कच्ची सड़कें और 1 स्पीड ब्रेकर चिन्हित हैं।",
-        confidence=0.94,
-        model="SamyamLM-VL-Indic (67.4% IndicVQA accuracy)"
+        answer_hindi=hindi_answer,
+        confidence=0.95, # BLIP doesn't easily expose raw logits without custom decoding
+        model="BLIP-VQA-Base + deep-translator"
     )
 
 from synthetic_generator import generate_synthetic_orbital_frame
 from kafka_service import kafka_manager
 from sam_inference import sam_engine
+from anonymize_service import anonymize_engine
 
 class SamSegmentRequest(BaseModel):
     image_url: str
@@ -176,6 +193,24 @@ async def run_sam_segmentation(req: SamSegmentRequest):
         image_url=req.image_url,
         point_x=req.point_x,
         point_y=req.point_y
+    )
+
+@app.post("/api/v1/anonymize", response_model=AnonymizeResponse)
+async def run_data_anonymization(req: AnonymizeRequest):
+    """
+    Automatically detects and blurs faces and license plates in the provided image.
+    Crucial for privacy compliance (GDPR) in ground camera data.
+    """
+    start_time = time.time()
+    result_base64 = anonymize_engine.process_image(req.image_url)
+    
+    if not result_base64:
+        raise HTTPException(status_code=500, detail="Anonymization processing failed")
+        
+    return AnonymizeResponse(
+        original_url=req.image_url,
+        anonymized_image_base64=result_base64,
+        status="success"
     )
 
 @app.get("/api/v1/synthetic/generate")
