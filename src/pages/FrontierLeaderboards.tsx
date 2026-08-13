@@ -425,10 +425,10 @@ const FrontierLeaderboards = () => {
                     <span>Data Authenticity & Verification Standard</span>
                   </div>
                   <h3 className="text-xl font-bold text-foreground">
-                    Sahi Data Ya Fake Data? How Frontier Benchmarks Prevent Gaming
+                    Real vs. Synthetic Metrics: How Frontier Benchmarks Prevent Data Gaming
                   </h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">
-                    Purane static benchmarks (jaise MMLU ya GSM8K) contamination aur memorization ke shikar ho sakte hain. Modern Frontier Leaderboards <strong>Dynamic Private Evaluation</strong>, <strong>Double-Blind LMSYS Elo</strong>, aur <strong>SWE-bench Sandbox Code Execution</strong> use karte hain taaki exact, unbiased real-world capability record ho sake.
+                    Legacy static benchmarks (such as MMLU or GSM8K) are vulnerable to dataset contamination and memorization. Modern Frontier Leaderboards employ <strong>Dynamic Private Evaluation</strong>, <strong>Double-Blind LMSYS Elo Pairwise Battles</strong>, and <strong>SWE-bench Sandbox Execution</strong> to measure verified, unbiased real-world AI capabilities.
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 w-full md:w-auto shrink-0 text-xs">
