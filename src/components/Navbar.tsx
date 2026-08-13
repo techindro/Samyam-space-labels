@@ -49,6 +49,7 @@ import { productPages } from "@/data/productPages";
 const navLinks: { label: string; href: string }[] = [
   { label: "Space Tech", href: "/space-tech" },
   { label: "Enterprise", href: "/enterprise" },
+  { label: "Income & Payouts", href: "/income" },
 ];
 
 

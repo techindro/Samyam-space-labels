@@ -34,6 +34,7 @@ import AutoScrollReveal from "./components/AutoScrollReveal";
 import AnnotationTool from "./pages/AnnotationTool";
 import DataUpload from "./pages/DataUpload";
 import QaWorkflow from "./pages/QaWorkflow";
+import IncomePayments from "./pages/IncomePayments";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -96,6 +97,10 @@ const App = () => (
             <Route path="/annotate/demo" element={<AnnotationTool />} />
             {/* Annotation Tool — task-specific */}
             <Route path="/annotate/:taskId" element={<AnnotationTool />} />
+            {/* Financial Operations, Income & Payout Routes */}
+            <Route path="/income" element={<IncomePayments />} />
+            <Route path="/payments" element={<IncomePayments />} />
+            <Route path="/payouts" element={<IncomePayments />} />
             {/* New Pages */}
             <Route path="/enterprise" element={<Enterprise />} />
             <Route path="/pricing" element={<Pricing />} />
