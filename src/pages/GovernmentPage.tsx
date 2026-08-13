@@ -144,32 +144,16 @@ const GovernmentPage = () => {
             </div>
             <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-3">
               {page.partners.map((p) => {
-                const partnerName = typeof p === "string" ? p : p.name;
-                const partnerLogo = typeof p === "object" ? p.logo : undefined;
-                const initials = partnerName
-                  .split(/[\s&]+/)
-                  .filter(Boolean)
-                  .slice(0, 3)
-                  .map((w) => w[0])
-                  .join("")
-                  .toUpperCase();
+                const PartnerIcon = p.icon;
                 return (
                   <div
-                    key={partnerName}
+                    key={p.name}
                     className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card/50 hover:border-foreground/40 transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-md bg-secondary/80 border border-border flex items-center justify-center p-1 shrink-0">
-                      {partnerLogo ? (
-                        <img
-                          src={partnerLogo}
-                          alt={`${partnerName} logo`}
-                          className="w-full h-full object-contain filter invert dark:invert-0"
-                        />
-                      ) : (
-                        <span className="text-foreground font-bold text-xs">{initials}</span>
-                      )}
+                    <div className="w-10 h-10 rounded-md bg-secondary/80 border border-border flex items-center justify-center p-2 text-foreground shrink-0">
+                      <PartnerIcon className="w-5 h-5" />
                     </div>
-                    <span className="text-sm font-medium leading-tight">{partnerName}</span>
+                    <span className="text-sm font-medium leading-tight">{p.name}</span>
                   </div>
                 );
               })}
