@@ -37,6 +37,15 @@ const IncomePayments = () => {
   const [activeView, setActiveView] = useState<"annotator_income" | "client_billing">("annotator_income");
   const [transactions, setTransactions] = useState<TransactionRecord[]>(INITIAL_TRANSACTIONS);
 
+  // Dynamic calculations from transaction state
+  const totalCompletedIncome = transactions
+    .filter((t) => t.type === "Payout" && t.status === "Completed")
+    .reduce((sum, t) => sum + Number(t.amount.replace(/[^0-9]/g, "")), 0);
+
+  const pendingIncome = transactions
+    .filter((t) => t.type === "Payout" && (t.status === "Pending QA" || t.status === "Processing"))
+    .reduce((sum, t) => sum + Number(t.amount.replace(/[^0-9]/g, "")), 0);
+
   // Payout Request Form State
   const [withdrawAmount, setWithdrawAmount] = useState("12400");
   const [paymentMethod, setPaymentMethod] = useState("upi");
@@ -50,13 +59,23 @@ const IncomePayments = () => {
 
   const handleRequestPayout = (e: React.FormEvent) => {
     e.preventDefault();
+    const reqAmount = Number(withdrawAmount);
+    if (reqAmount <= 0 || reqAmount > pendingIncome) {
+      toast({
+        title: "Invalid Amount",
+        description: `Maximum available balance for withdrawal is ₹${pendingIncome.toLocaleString()}.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmittingPayout(true);
 
     setTimeout(() => {
       const newTx: TransactionRecord = {
         id: `tx-${Date.now().toString().slice(-4)}`,
         type: "Payout",
-        amount: `+₹${Number(withdrawAmount).toLocaleString()}`,
+        amount: `+₹${reqAmount.toLocaleString()}`,
         status: "Processing",
         date: new Date().toISOString().split("T")[0],
         method: paymentMethod === "upi" ? `UPI (${upiId})` : "Bank Transfer",
@@ -67,7 +86,7 @@ const IncomePayments = () => {
       setIsSubmittingPayout(false);
       toast({
         title: "✓ Payout Request Submitted!",
-        description: `Requested ₹${Number(withdrawAmount).toLocaleString()} withdrawal. Approval processing in 24 hours.`,
+        description: `Requested ₹${reqAmount.toLocaleString()} withdrawal. Approval processing in 24 hours.`,
       });
     }, 1000);
   };
@@ -155,9 +174,9 @@ const IncomePayments = () => {
                       <TrendingUp className="h-4 w-4" />
                     </div>
                     <div className="text-3xl font-bold font-mono text-foreground">
-                      ₹35,100
+                      ₹{totalCompletedIncome.toLocaleString()}
                     </div>
-                    <p className="text-xs text-muted-foreground">From 7,020 completed label tasks</p>
+                    <p className="text-xs text-muted-foreground">From verified completed label tasks</p>
                   </div>
 
                   <div className="glass-card rounded-2xl p-6 border border-amber-500/30 bg-amber-500/5 space-y-2">
@@ -166,7 +185,7 @@ const IncomePayments = () => {
                       <Clock className="h-4 w-4" />
                     </div>
                     <div className="text-3xl font-bold font-mono text-foreground">
-                      ₹12,400
+                      ₹{pendingIncome.toLocaleString()}
                     </div>
                     <p className="text-xs text-muted-foreground">Available for withdrawal post QA check</p>
                   </div>
