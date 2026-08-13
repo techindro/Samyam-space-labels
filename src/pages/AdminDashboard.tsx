@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase } from "lucide-react";
+import { ArrowLeft, FileText, BookOpen, Trophy, Users, FlaskConical, Briefcase, ShieldCheck } from "lucide-react";
 import AdminPapers from "@/components/admin/AdminPapers";
 import AdminBlogPosts from "@/components/admin/AdminBlogPosts";
 import AdminFrontierLeaderboard from "@/components/admin/AdminFrontierLeaderboard";
 import AdminPreferenceLeaderboard from "@/components/admin/AdminPreferenceLeaderboard";
 import AdminLabs from "@/components/admin/AdminLabs";
 import AdminCareers from "@/components/admin/AdminCareers";
+import AdminTeamRBAC from "@/components/admin/AdminTeamRBAC";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
 const tabs = [
+  { id: "team", label: "Team & RBAC", icon: ShieldCheck },
   { id: "papers", label: "Papers", icon: FileText },
   { id: "blog", label: "Blog Posts", icon: BookOpen },
   { id: "frontier", label: "Frontier LB", icon: Trophy },
@@ -20,7 +22,7 @@ const tabs = [
 ];
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState("papers");
+  const [activeTab, setActiveTab] = useState("team");
   const navigate = useNavigate();
 
   return (
@@ -54,6 +56,7 @@ const AdminDashboard = () => {
           ))}
         </div>
 
+        {activeTab === "team" && <AdminTeamRBAC />}
         {activeTab === "papers" && <AdminPapers />}
         {activeTab === "blog" && <AdminBlogPosts />}
         {activeTab === "frontier" && <AdminFrontierLeaderboard />}

@@ -9,6 +9,10 @@ import LabelPanel         from "@/components/annotation/LabelPanel";
 import { Button }         from "@/components/ui/button";
 import { useToast }       from "@/hooks/use-toast";
 import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
+import ActiveLearningPanel from "@/components/annotation/ActiveLearningPanel";
+import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toCoco, toYolo, toGeoJson, toCsv, downloadFile } from "@/lib/annotationExport";
@@ -101,6 +105,7 @@ export default function AnnotationTool() {
   const [activeModality, setActiveModality] = useState<Modality>("vision");
   const [showHindiKb, setShowHindiKb] = useState(false);
   const [showMobileLabels, setShowMobileLabels] = useState(false);
+  const [showActiveLearningModal, setShowActiveLearningModal] = useState(false);
 
   // Task data
   const [task,       setTask]       = useState<Record<string, any> | null>(null);
@@ -719,6 +724,16 @@ export default function AnnotationTool() {
               <span>SAM <span className="hidden sm:inline">Segment</span></span>
             </Button>
           )}
+
+          {/* Active Learning Queue Button */}
+          <Button
+            size="sm"
+            onClick={() => setShowActiveLearningModal(true)}
+            className="h-7 px-2.5 sm:px-3 text-xs bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 gap-1 font-bold shrink-0"
+          >
+            <Cpu size={12} />
+            <span>Active <span className="hidden sm:inline">Learning Queue</span></span>
+          </Button>
 
           {/* Hidden File Inputs for Vision, Audio & Video */}
           <input type="file" ref={imageInputRef} accept="image/*" className="hidden" onChange={handleImageFileUpload} />
@@ -1633,6 +1648,23 @@ export default function AnnotationTool() {
             </div>
           </div>
         )}
+
+        {/* Active Learning Queue Dialog Modal */}
+        <Dialog open={showActiveLearningModal} onOpenChange={setShowActiveLearningModal}>
+          <DialogContent className="max-w-3xl bg-[#0c0d18] border-[#25283d] text-white">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold font-display text-white flex items-center gap-2">
+                <Cpu className="h-5 w-5 text-purple-400" /> Active Learning Priority Queue
+              </DialogTitle>
+            </DialogHeader>
+            <ActiveLearningPanel
+              onSelectTask={(taskId) => {
+                setShowActiveLearningModal(false);
+                toast({ title: `Loaded Task ${taskId}`, description: "Prioritized by AI model uncertainty" });
+              }}
+            />
+          </DialogContent>
+        </Dialog>
 
       </div>
     </div>
