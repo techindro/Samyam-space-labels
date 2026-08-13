@@ -43,6 +43,10 @@ import {
   History,
   Activity,
   Wallet,
+  Video,
+  HelpCircle,
+  Handshake,
+  Rss,
 } from "lucide-react";
 import { governmentPages } from "@/data/governmentPages";
 import { productPages } from "@/data/productPages";
@@ -93,16 +97,27 @@ const developerResources = [
   { label: "Security", icon: ShieldCheck, href: "/security" },
 ];
 
+const resourceLinks = [
+  { label: "Blog", subtitle: "Engineering & product updates", icon: BookOpen, href: "/resources?tab=blog" },
+  { label: "Case Studies", subtitle: "Enterprise success stories", icon: FileText, href: "/resources?tab=case-studies" },
+  { label: "Webinars & Events", subtitle: "Live sessions & recordings", icon: Video, href: "/resources?tab=webinars" },
+  { label: "Community Forum", subtitle: "Connect with developers", icon: Users, href: "/resources?tab=community" },
+  { label: "Help Center", subtitle: "Guides & troubleshooting", icon: HelpCircle, href: "/resources?tab=help" },
+  { label: "Partner Program", subtitle: "Technology & consulting", icon: Handshake, href: "/resources?tab=partners" },
+];
+
 const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const isDark = variant === "dark";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [researchOpen, setResearchOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
   const [developersOpen, setDevelopersOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [governmentOpen, setGovernmentOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
   const govDropdownRef = useRef<HTMLDivElement>(null);
   const productsDropdownRef = useRef<HTMLDivElement>(null);
+  const resourcesDropdownRef = useRef<HTMLDivElement>(null);
   const { isAdmin } = useAdminCheck();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -132,6 +147,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
       }
       if (productsDropdownRef.current && !productsDropdownRef.current.contains(e.target as Node)) {
         setProductsOpen(false);
+      }
+      if (resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(e.target as Node)) {
+        setResourcesOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -466,7 +484,53 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
               )}
             </div>
 
-            <a href="#" className={`text-sm transition-colors ${linkClass}`}>Resources</a>
+            {/* Resources Dropdown */}
+            <div ref={resourcesDropdownRef} className="relative">
+              <button
+                onClick={() => { setResourcesOpen(!resourcesOpen); setResearchOpen(false); setDevelopersOpen(false); setGovernmentOpen(false); setProductsOpen(false); }}
+                className={`text-sm transition-colors flex items-center gap-1 ${linkClass}`}
+              >
+                Resources
+                <ChevronDown className={`h-3 w-3 transition-transform ${resourcesOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {resourcesOpen && (
+                <div className={`absolute top-full right-0 mt-3 w-[420px] rounded-xl border p-5 shadow-2xl ${isDark ? 'bg-[hsl(0,0%,8%)] border-white/10' : 'bg-background border-border shadow-lg'}`}>
+                  <div className="flex items-center justify-between mb-3 px-1">
+                    <p className={`text-xs uppercase tracking-widest font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Resources — Backend</p>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full border ${isDark ? 'border-white/15 text-white/60' : 'border-border text-muted-foreground'}`}>6 sections</span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-1">
+                    {resourceLinks.map(({ label, subtitle, icon: Icon, href }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        onClick={(e) => { e.preventDefault(); setResourcesOpen(false); navigate(href); }}
+                        className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                      >
+                        <div className={`p-1.5 rounded-lg mt-0.5 ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
+                          <Icon className="h-4 w-4 shrink-0" />
+                        </div>
+                        <div>
+                          <span className="text-sm font-medium block leading-tight">{label}</span>
+                          <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>{subtitle}</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                  <div className={`mt-4 pt-3 border-t ${isDark ? 'border-white/10' : 'border-border'}`}>
+                    <a
+                      href="/resources"
+                      onClick={(e) => { e.preventDefault(); setResourcesOpen(false); navigate("/resources"); }}
+                      className={`flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${isDark ? 'text-white/50 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                    >
+                      <span className="text-sm font-medium">View all resources</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* CTA */}
@@ -611,7 +675,26 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
               </div>
             </div>
 
-            <a href="#" className={`block text-sm ${linkClass}`}>Resources</a>
+            {/* Mobile Resources Section */}
+            <div className="pt-2 pb-2">
+              <p className={`text-xs uppercase tracking-widest mb-2 font-medium ${isDark ? 'text-white/40' : 'text-muted-foreground'}`}>Resources</p>
+              <div className="grid grid-cols-2 gap-1">
+                {resourceLinks.map(({ label, subtitle, icon: Icon, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate(href); }}
+                    className={`flex items-start gap-2 px-2 py-2 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="block text-xs font-medium leading-tight">{label}</span>
+                      <span className={`text-[10px] ${isDark ? 'text-white/30' : 'text-muted-foreground/60'}`}>{subtitle}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
 
             <div className={`pt-4 border-t space-y-3 ${isDark ? 'border-white/10' : 'border-border/30'}`}>
               {user ? (

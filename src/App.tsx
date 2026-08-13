@@ -49,6 +49,7 @@ import Changelog from "./pages/Changelog";
 import Security from "./pages/Security";
 import Integrations from "./pages/Integrations";
 import Status from "./pages/Status";
+import Resources from "./pages/Resources";
 import { FloatingAiWidget } from "./components/FloatingAiWidget";
 
 
@@ -115,6 +116,7 @@ const App = () => (
             <Route path="/security" element={<Security />} />
             <Route path="/integrations" element={<Integrations />} />
             <Route path="/status" element={<Status />} />
+            <Route path="/resources" element={<Resources />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
