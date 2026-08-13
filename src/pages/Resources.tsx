@@ -95,7 +95,6 @@ const Resources = () => {
     const fetchResources = async () => {
       setLoading(true);
       try {
-        // Blog posts — attempt Supabase first, empty array if table doesn't exist
         const { data: blogData } = await supabase
           .from("blog_posts" as any)
           .select("*")
@@ -117,7 +116,6 @@ const Resources = () => {
           );
         }
 
-        // Case studies
         const { data: csData } = await supabase
           .from("case_studies" as any)
           .select("*")
@@ -138,7 +136,6 @@ const Resources = () => {
           );
         }
 
-        // Webinars
         const { data: webinarData } = await supabase
           .from("webinars" as any)
           .select("*")
@@ -159,7 +156,6 @@ const Resources = () => {
           );
         }
 
-        // Community threads
         const { data: threadData } = await supabase
           .from("community_threads" as any)
           .select("*")
@@ -179,7 +175,6 @@ const Resources = () => {
           );
         }
 
-        // Help articles
         const { data: helpData } = await supabase
           .from("help_articles" as any)
           .select("*")
@@ -198,7 +193,6 @@ const Resources = () => {
           );
         }
       } catch (err) {
-        // Supabase tables may not exist yet — graceful fallback
         console.info("Resources: Backend tables not yet provisioned. Showing empty state.");
       } finally {
         setLoading(false);
@@ -208,13 +202,11 @@ const Resources = () => {
     fetchResources();
   }, []);
 
-  /* ── Tab switch handler ──────────────────────────────────────────── */
   const handleTabChange = (tab: TabKey) => {
     setActiveTab(tab);
     setSearchParams({ tab });
   };
 
-  /* ── Newsletter subscription ─────────────────────────────────────── */
   const handleSubscribe = async () => {
     if (!newsletterEmail.trim()) return;
     try {
@@ -224,28 +216,27 @@ const Resources = () => {
       setSubscribed(true);
       setNewsletterEmail("");
     } catch {
-      // Table may not exist yet
       setSubscribed(true);
     }
   };
 
-  /* ── Empty state component ───────────────────────────────────────── */
+  /* ── Empty state ─────────────────────────────────────────────────── */
   const EmptyState = ({ icon: Icon, title, description }: { icon: any; title: string; description: string }) => (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center justify-center py-20 text-center"
     >
-      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center mb-6">
-        <Icon className="w-7 h-7 text-white/40" />
+      <div className="w-16 h-16 rounded-2xl bg-secondary/60 border border-border/50 flex items-center justify-center mb-6">
+        <Icon className="w-7 h-7 text-muted-foreground/50" />
       </div>
-      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
-      <p className="text-white/50 max-w-md text-sm leading-relaxed">{description}</p>
-      <p className="text-white/30 text-xs mt-4">Content will appear here once backend tables are provisioned in Supabase.</p>
+      <h3 className="text-xl font-semibold text-foreground mb-2">{title}</h3>
+      <p className="text-muted-foreground max-w-md text-sm leading-relaxed">{description}</p>
+      <p className="text-muted-foreground/50 text-xs mt-4">Content will appear here once backend tables are provisioned in Supabase.</p>
     </motion.div>
   );
 
-  /* ── Render helpers ──────────────────────────────────────────────── */
+  /* ── Blog ────────────────────────────────────────────────────────── */
   const renderBlog = () => {
     if (blogPosts.length === 0) {
       return <EmptyState icon={BookOpen} title="Blog Coming Soon" description="Engineering deep dives, product updates, and AI research insights will be published here." />;
@@ -261,24 +252,24 @@ const Resources = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="group rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-all duration-300 overflow-hidden"
+            className="group rounded-2xl border border-border/60 bg-background hover:bg-secondary/40 hover:shadow-lg transition-all duration-300 overflow-hidden"
           >
             <div className="p-6">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/20 font-medium">
+                <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200 font-medium">
                   {post.category}
                 </span>
-                <span className="text-white/30 text-xs flex items-center gap-1">
+                <span className="text-muted-foreground text-xs flex items-center gap-1">
                   <Clock className="w-3 h-3" /> {post.readTime}
                 </span>
               </div>
-              <h3 className="text-lg font-semibold text-white group-hover:text-blue-300 transition-colors leading-tight mb-2">
+              <h3 className="text-lg font-semibold text-foreground group-hover:text-blue-600 transition-colors leading-tight mb-2">
                 {post.title}
               </h3>
-              <p className="text-white/50 text-sm leading-relaxed line-clamp-3">{post.excerpt}</p>
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/5">
-                <span className="text-white/30 text-xs">{post.author} · {new Date(post.publishedAt).toLocaleDateString()}</span>
-                <ArrowRight className="w-4 h-4 text-white/30 group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
+              <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">{post.excerpt}</p>
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/40">
+                <span className="text-muted-foreground/70 text-xs">{post.author} · {new Date(post.publishedAt).toLocaleDateString()}</span>
+                <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
               </div>
             </div>
           </motion.article>
@@ -287,6 +278,7 @@ const Resources = () => {
     );
   };
 
+  /* ── Case Studies ────────────────────────────────────────────────── */
   const renderCaseStudies = () => {
     if (caseStudies.length === 0) {
       return <EmptyState icon={FileText} title="Case Studies Coming Soon" description="Real-world success stories from enterprise, government, and space-tech deployments." />;
@@ -299,23 +291,23 @@ const Resources = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="group rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-all duration-300 p-6"
+            className="group rounded-2xl border border-border/60 bg-background hover:bg-secondary/40 hover:shadow-lg transition-all duration-300 p-6"
           >
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 font-medium">
+              <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 font-medium">
                 {cs.industry}
               </span>
             </div>
-            <h3 className="text-lg font-semibold text-white group-hover:text-emerald-300 transition-colors mb-2">{cs.title}</h3>
-            <p className="text-white/40 text-sm mb-4">{cs.client}</p>
-            <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+            <h3 className="text-lg font-semibold text-foreground group-hover:text-emerald-600 transition-colors mb-2">{cs.title}</h3>
+            <p className="text-muted-foreground text-sm mb-4">{cs.client}</p>
+            <div className="flex items-center gap-4 pt-4 border-t border-border/40">
               <div>
-                <p className="text-2xl font-bold text-emerald-400">{cs.metricValue}</p>
-                <p className="text-white/40 text-xs">{cs.metric}</p>
+                <p className="text-2xl font-bold text-emerald-600">{cs.metricValue}</p>
+                <p className="text-muted-foreground text-xs">{cs.metric}</p>
               </div>
               <Link
                 to={`/case-studies/${cs.slug}`}
-                className="ml-auto text-sm text-white/50 hover:text-emerald-400 flex items-center gap-1 transition-colors"
+                className="ml-auto text-sm text-muted-foreground hover:text-emerald-600 flex items-center gap-1 transition-colors"
               >
                 Read more <ChevronRight className="w-3.5 h-3.5" />
               </Link>
@@ -326,6 +318,7 @@ const Resources = () => {
     );
   };
 
+  /* ── Webinars ────────────────────────────────────────────────────── */
   const renderWebinars = () => {
     if (webinars.length === 0) {
       return <EmptyState icon={Video} title="Webinars & Events Coming Soon" description="Live technical sessions, product walkthroughs, and community AMAs will be listed here." />;
@@ -338,33 +331,33 @@ const Resources = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="group flex items-center gap-6 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-all duration-300 p-5"
+            className="group flex items-center gap-6 rounded-2xl border border-border/60 bg-background hover:bg-secondary/40 hover:shadow-lg transition-all duration-300 p-5"
           >
             <div className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 ${
               w.status === "upcoming"
-                ? "bg-gradient-to-br from-violet-500/20 to-blue-500/20 border border-violet-500/30"
-                : "bg-white/5 border border-white/10"
+                ? "bg-gradient-to-br from-violet-100 to-blue-100 border border-violet-200"
+                : "bg-secondary/60 border border-border/50"
             }`}>
-              {w.status === "upcoming" ? <Calendar className="w-6 h-6 text-violet-400" /> : <Play className="w-6 h-6 text-white/40" />}
+              {w.status === "upcoming" ? <Calendar className="w-6 h-6 text-violet-600" /> : <Play className="w-6 h-6 text-muted-foreground" />}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full font-medium ${
                   w.status === "upcoming"
-                    ? "bg-violet-500/15 text-violet-400 border border-violet-500/20"
-                    : "bg-white/5 text-white/40 border border-white/10"
+                    ? "bg-violet-50 text-violet-600 border border-violet-200"
+                    : "bg-secondary/60 text-muted-foreground border border-border/50"
                 }`}>
                   {w.status === "upcoming" ? "Upcoming" : "Recorded"}
                 </span>
-                <span className="text-white/30 text-xs">{w.duration}</span>
+                <span className="text-muted-foreground text-xs">{w.duration}</span>
               </div>
-              <h3 className="text-base font-semibold text-white group-hover:text-violet-300 transition-colors truncate">{w.title}</h3>
-              <p className="text-white/40 text-sm">{w.speaker} · {w.date}</p>
+              <h3 className="text-base font-semibold text-foreground group-hover:text-violet-600 transition-colors truncate">{w.title}</h3>
+              <p className="text-muted-foreground text-sm">{w.speaker} · {w.date}</p>
             </div>
             <Button
               variant="outline"
               size="sm"
-              className="border-white/15 text-white/70 hover:text-white hover:bg-white/10 shrink-0"
+              className="border-border text-muted-foreground hover:text-foreground hover:bg-secondary shrink-0"
             >
               {w.status === "upcoming" ? "Register" : "Watch"} <ExternalLink className="w-3 h-3 ml-1" />
             </Button>
@@ -374,6 +367,7 @@ const Resources = () => {
     );
   };
 
+  /* ── Community ───────────────────────────────────────────────────── */
   const renderCommunity = () => {
     if (communityThreads.length === 0) {
       return <EmptyState icon={Users} title="Community Forum Coming Soon" description="Ask questions, share projects, and connect with other Samyam developers and annotators." />;
@@ -386,16 +380,16 @@ const Resources = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="group flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-all duration-300 p-4"
+            className="group flex items-center gap-4 rounded-xl border border-border/60 bg-background hover:bg-secondary/40 transition-all duration-300 p-4"
           >
-            <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-              <MessageCircle className="w-4.5 h-4.5 text-white/40" />
+            <div className="w-10 h-10 rounded-lg bg-secondary/60 border border-border/50 flex items-center justify-center shrink-0">
+              <MessageCircle className="w-4 h-4 text-muted-foreground" />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-medium text-white group-hover:text-blue-300 transition-colors truncate">{t.title}</h4>
-              <p className="text-white/30 text-xs">{t.author} · {t.replies} replies · {t.lastActivity}</p>
+              <h4 className="text-sm font-medium text-foreground group-hover:text-blue-600 transition-colors truncate">{t.title}</h4>
+              <p className="text-muted-foreground/70 text-xs">{t.author} · {t.replies} replies · {t.lastActivity}</p>
             </div>
-            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 text-white/40 border border-white/10 shrink-0">
+            <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-secondary/60 text-muted-foreground border border-border/50 shrink-0">
               {t.category}
             </span>
           </motion.div>
@@ -404,6 +398,7 @@ const Resources = () => {
     );
   };
 
+  /* ── Help Center ─────────────────────────────────────────────────── */
   const renderHelp = () => {
     if (helpArticles.length === 0) {
       return <EmptyState icon={HelpCircle} title="Help Center Coming Soon" description="Guides, FAQs, troubleshooting, and getting started tutorials for all Samyam products." />;
@@ -416,7 +411,7 @@ const Resources = () => {
       <div className="space-y-8">
         {categories.map((cat) => (
           <div key={cat}>
-            <h3 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
               <Tag className="w-3.5 h-3.5" /> {cat}
             </h3>
             <div className="grid md:grid-cols-2 gap-3">
@@ -428,14 +423,14 @@ const Resources = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03 }}
-                    className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] transition-all p-4 cursor-pointer"
+                    className="group flex items-center gap-3 rounded-xl border border-border/60 bg-background hover:bg-secondary/40 transition-all p-4 cursor-pointer"
                   >
-                    <FileText className="w-4 h-4 text-white/30 shrink-0" />
+                    <FileText className="w-4 h-4 text-muted-foreground/50 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm text-white group-hover:text-blue-300 transition-colors truncate">{article.title}</h4>
-                      <p className="text-white/25 text-xs">{article.views.toLocaleString()} views · Updated {article.lastUpdated}</p>
+                      <h4 className="text-sm text-foreground group-hover:text-blue-600 transition-colors truncate">{article.title}</h4>
+                      <p className="text-muted-foreground/60 text-xs">{article.views.toLocaleString()} views · Updated {article.lastUpdated}</p>
                     </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white/50 transition-colors shrink-0" />
+                    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-muted-foreground transition-colors shrink-0" />
                   </motion.div>
                 ))}
             </div>
@@ -445,34 +440,37 @@ const Resources = () => {
     );
   };
 
+  /* ── Partners ────────────────────────────────────────────────────── */
   const renderPartners = () => (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-      {/* Partner tiers */}
       <div className="grid md:grid-cols-3 gap-6">
         {[
           {
             tier: "Technology Partner",
             description: "Integrate Samyam annotation & AI APIs into your platform for mutual customers.",
             benefits: ["API access & sandbox", "Co-marketing opportunities", "Technical integration support", "Partner badge & listing"],
-            gradient: "from-blue-500/20 to-cyan-500/20",
-            borderColor: "border-blue-500/20",
-            textColor: "text-blue-400",
+            gradient: "from-blue-50 to-cyan-50",
+            borderColor: "border-blue-200",
+            textColor: "text-blue-600",
+            iconBg: "bg-blue-100",
           },
           {
             tier: "Consulting Partner",
             description: "Deliver Samyam-powered data labeling solutions to your enterprise clients.",
             benefits: ["Deal registration", "Solution architect access", "Revenue share program", "Priority support SLA"],
-            gradient: "from-violet-500/20 to-purple-500/20",
-            borderColor: "border-violet-500/20",
-            textColor: "text-violet-400",
+            gradient: "from-violet-50 to-purple-50",
+            borderColor: "border-violet-200",
+            textColor: "text-violet-600",
+            iconBg: "bg-violet-100",
           },
           {
             tier: "Academic Partner",
             description: "Access free annotation tools and compute credits for research and education.",
             benefits: ["Free annotation quota", "Research dataset access", "Publication co-authorship", "Student intern pipeline"],
-            gradient: "from-emerald-500/20 to-teal-500/20",
-            borderColor: "border-emerald-500/20",
-            textColor: "text-emerald-400",
+            gradient: "from-emerald-50 to-teal-50",
+            borderColor: "border-emerald-200",
+            textColor: "text-emerald-600",
+            iconBg: "bg-emerald-100",
           },
         ].map((partner, i) => (
           <motion.div
@@ -480,29 +478,30 @@ const Resources = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className={`rounded-2xl border ${partner.borderColor} bg-gradient-to-br ${partner.gradient} p-6 hover:scale-[1.02] transition-transform duration-300`}
+            className={`rounded-2xl border ${partner.borderColor} bg-gradient-to-br ${partner.gradient} p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-300`}
           >
             <div className="flex items-center gap-2 mb-3">
-              <Handshake className={`w-5 h-5 ${partner.textColor}`} />
-              <h3 className="text-lg font-semibold text-white">{partner.tier}</h3>
+              <div className={`p-1.5 rounded-lg ${partner.iconBg}`}>
+                <Handshake className={`w-5 h-5 ${partner.textColor}`} />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground">{partner.tier}</h3>
             </div>
-            <p className="text-white/50 text-sm mb-5 leading-relaxed">{partner.description}</p>
+            <p className="text-muted-foreground text-sm mb-5 leading-relaxed">{partner.description}</p>
             <ul className="space-y-2 mb-6">
               {partner.benefits.map((b) => (
-                <li key={b} className="flex items-center gap-2 text-sm text-white/60">
-                  <Star className="w-3 h-3 text-amber-400 shrink-0" />
+                <li key={b} className="flex items-center gap-2 text-sm text-foreground/70">
+                  <Star className="w-3 h-3 text-amber-500 shrink-0" />
                   {b}
                 </li>
               ))}
             </ul>
-            <Button className="w-full bg-white/10 border border-white/15 text-white hover:bg-white/20 text-sm">
+            <Button className={`w-full ${partner.textColor} bg-background border ${partner.borderColor} hover:bg-secondary text-sm`}>
               Apply Now <ArrowRight className="w-3.5 h-3.5 ml-1" />
             </Button>
           </motion.div>
         ))}
       </div>
 
-      {/* Partner stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Active Partners", value: "—", icon: Handshake },
@@ -510,10 +509,10 @@ const Resources = () => {
           { label: "Integrations", value: "—", icon: TrendingUp },
           { label: "Joint Customers", value: "—", icon: Users },
         ].map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center">
-            <stat.icon className="w-5 h-5 text-white/30 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-white/50">{stat.value}</p>
-            <p className="text-white/30 text-xs">{stat.label}</p>
+          <div key={stat.label} className="rounded-xl border border-border/60 bg-secondary/30 p-4 text-center">
+            <stat.icon className="w-5 h-5 text-muted-foreground mx-auto mb-2" />
+            <p className="text-2xl font-bold text-foreground/50">{stat.value}</p>
+            <p className="text-muted-foreground text-xs">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -533,21 +532,21 @@ const Resources = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(225,25%,4%)] text-white">
-      <Navbar variant="dark" />
+    <div className="min-h-screen bg-background">
+      <Navbar />
       <ParallelWebBg />
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-6xl text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/40 mb-4 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03]">
+            <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4 px-4 py-1.5 rounded-full border border-border/50 bg-secondary/40">
               <BookOpen className="w-3.5 h-3.5" /> Resource Center
             </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-b from-white via-white/90 to-white/50 bg-clip-text text-transparent mb-4 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 leading-tight">
               Resources
             </h1>
-            <p className="text-white/50 text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
               Everything you need to build, scale, and succeed with Samyam — from technical guides and case studies to live events and community support.
             </p>
           </motion.div>
@@ -559,20 +558,20 @@ const Resources = () => {
             transition={{ delay: 0.2 }}
             className="mt-8 max-w-xl mx-auto relative"
           >
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50" />
             <input
               type="text"
               placeholder="Search resources..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/25 focus:bg-white/[0.07] transition-all"
+              className="w-full pl-11 pr-4 py-3 rounded-xl bg-background border border-border/60 text-foreground placeholder-muted-foreground/50 text-sm focus:outline-none focus:border-foreground/25 focus:shadow-md transition-all"
             />
           </motion.div>
         </div>
       </section>
 
       {/* Tab navigation */}
-      <section className="sticky top-16 md:top-20 z-40 bg-[hsl(225,25%,4%)]/90 backdrop-blur-xl border-b border-white/5">
+      <section className="sticky top-16 md:top-20 z-40 bg-background/90 backdrop-blur-xl border-b border-border/40">
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-none">
             {tabs.map(({ key, label, icon: Icon }) => (
@@ -581,8 +580,8 @@ const Resources = () => {
                 onClick={() => handleTabChange(key)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
                   activeTab === key
-                    ? "bg-white/10 text-white border border-white/15"
-                    : "text-white/40 hover:text-white/60 hover:bg-white/5"
+                    ? "bg-foreground text-background shadow-md"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -598,7 +597,7 @@ const Resources = () => {
         <div className="container mx-auto max-w-6xl">
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <div className="w-8 h-8 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-muted-foreground/20 border-t-foreground rounded-full animate-spin" />
             </div>
           ) : (
             renderContent()
@@ -607,34 +606,34 @@ const Resources = () => {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="py-16 px-4 border-t border-white/5">
+      <section className="py-16 px-4 border-t border-border/40">
         <div className="container mx-auto max-w-2xl text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-violet-500/20 border border-blue-500/20 flex items-center justify-center mx-auto mb-4">
-              <Rss className="w-5 h-5 text-blue-400" />
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-100 to-violet-100 border border-blue-200 flex items-center justify-center mx-auto mb-4">
+              <Rss className="w-5 h-5 text-blue-600" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Stay Updated</h2>
-            <p className="text-white/50 text-sm mb-6">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Stay Updated</h2>
+            <p className="text-muted-foreground text-sm mb-6">
               Get the latest product updates, engineering deep dives, and community highlights delivered to your inbox.
             </p>
             {subscribed ? (
-              <p className="text-emerald-400 text-sm font-medium">✓ Subscribed successfully!</p>
+              <p className="text-emerald-600 text-sm font-medium">✓ Subscribed successfully!</p>
             ) : (
               <div className="flex items-center gap-2 max-w-md mx-auto">
                 <div className="relative flex-1">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40" />
                   <input
                     type="email"
                     placeholder="your@email.com"
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:border-white/25 transition-all"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-background border border-border/60 text-foreground placeholder-muted-foreground/50 text-sm focus:outline-none focus:border-foreground/25 transition-all"
                   />
                 </div>
                 <Button
                   onClick={handleSubscribe}
-                  className="bg-white text-black hover:bg-white/90 font-semibold px-6 py-3 rounded-xl"
+                  className="bg-foreground text-background hover:bg-foreground/90 font-semibold px-6 py-3 rounded-xl"
                 >
                   Subscribe
                 </Button>
