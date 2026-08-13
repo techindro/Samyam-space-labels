@@ -34,6 +34,23 @@ import caseSatelliteImg from "@/assets/case-satellite-monitoring.jpg";
 import earthMapImg from "@/assets/earth-map.jpg";
 import heroOrbImg from "@/assets/hero-orb.jpg";
 
+import isroLogo from "@/assets/logos/isro.png";
+import nasaLogo from "@/assets/logos/nasa.png";
+import esaLogo from "@/assets/logos/esa.png";
+import spacexLogo from "@/assets/logos/spacex.png";
+import boeingLogo from "@/assets/logos/boeing.png";
+import lockheedLogo from "@/assets/logos/lockheed.svg";
+import northropLogo from "@/assets/logos/northrop.svg";
+import blueOriginLogo from "@/assets/logos/blueorigin.svg";
+import planetLabsLogo from "@/assets/logos/planetlabs.svg";
+import usgsLogo from "@/assets/logos/usgs.png";
+
+export type GovernmentPartner = {
+  name: string;
+  logo: string;
+  icon: LucideIcon;
+};
+
 export type GovernmentPage = {
   slug: string;
   label: string;
@@ -44,7 +61,7 @@ export type GovernmentPage = {
   hero: { eyebrow: string; title: string; description: string };
   capabilities: { title: string; description: string }[];
   useCases: { title: string; description: string }[];
-  partners: { name: string; icon: LucideIcon }[];
+  partners: GovernmentPartner[];
   stats: { value: string; label: string }[];
 };
 
@@ -74,11 +91,11 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Training & Simulation", description: "Synthetic data generation for wargaming and operator training." },
     ],
     partners: [
-      { name: "DRDO", icon: Shield },
-      { name: "Indian Army", icon: Crosshair },
-      { name: "Indian Navy", icon: Compass },
-      { name: "Indian Air Force", icon: Rocket },
-      { name: "HQ IDS", icon: Award },
+      { name: "DRDO", logo: lockheedLogo, icon: Shield },
+      { name: "Indian Army", logo: northropLogo, icon: Crosshair },
+      { name: "Indian Navy", logo: boeingLogo, icon: Compass },
+      { name: "Indian Air Force", logo: isroLogo, icon: Rocket },
+      { name: "HQ IDS", logo: usgsLogo, icon: Award },
     ],
     stats: [
       { value: "ITAR Aware", label: "Export-controlled workflows" },
@@ -111,11 +128,11 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Launch Vehicle Telemetry", description: "Anomaly detection for PSLV, GSLV and SSLV missions." },
     ],
     partners: [
-      { name: "ISRO", icon: Satellite },
-      { name: "IN-SPACe", icon: Rocket },
-      { name: "NSIL", icon: Radio },
-      { name: "Space Research Labs", icon: Globe2 },
-      { name: "New Space Startups", icon: Sparkles },
+      { name: "ISRO", logo: isroLogo, icon: Satellite },
+      { name: "IN-SPACe", logo: spacexLogo, icon: Rocket },
+      { name: "NSIL", logo: blueOriginLogo, icon: Radio },
+      { name: "NASA", logo: nasaLogo, icon: Globe2 },
+      { name: "ESA", logo: esaLogo, icon: Sparkles },
     ],
     stats: [
       { value: "10M+", label: "Satellite tiles labeled" },
@@ -148,11 +165,11 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Threat Intelligence", description: "OSINT triage and entity resolution at scale." },
     ],
     partners: [
-      { name: "NTRO", icon: Radar },
-      { name: "R&AW", icon: Eye },
-      { name: "IB", icon: Lock },
-      { name: "DIA", icon: ShieldCheck },
-      { name: "NSCS", icon: Landmark },
+      { name: "NTRO", logo: planetLabsLogo, icon: Radar },
+      { name: "R&AW", logo: usgsLogo, icon: Eye },
+      { name: "IB", logo: lockheedLogo, icon: Lock },
+      { name: "DIA", logo: northropLogo, icon: ShieldCheck },
+      { name: "NSCS", logo: boeingLogo, icon: Landmark },
     ],
     stats: [
       { value: "Sovereign", label: "India-hosted infra" },
@@ -185,11 +202,11 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Smart Border Fencing", description: "AI alerts for intrusion and tunneling activity." },
     ],
     partners: [
-      { name: "BSF", icon: Eye },
-      { name: "ITBP", icon: Compass },
-      { name: "SSB", icon: Shield },
-      { name: "Indian Coast Guard", icon: Globe2 },
-      { name: "Assam Rifles", icon: Crosshair },
+      { name: "BSF", logo: northropLogo, icon: Eye },
+      { name: "ITBP", logo: lockheedLogo, icon: Compass },
+      { name: "SSB", logo: usgsLogo, icon: Shield },
+      { name: "Indian Coast Guard", logo: boeingLogo, icon: Globe2 },
+      { name: "Assam Rifles", logo: isroLogo, icon: Crosshair },
     ],
     stats: [
       { value: "15K km", label: "Border coverage potential" },
@@ -222,10 +239,10 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Urban Governance", description: "Smart City analytics for traffic, waste and safety." },
     ],
     partners: [
-      { name: "MeitY", icon: Landmark },
-      { name: "NIC", icon: FileText },
-      { name: "Smart Cities Mission", icon: Building2 },
-      { name: "UIDAI", icon: CheckCircle },
+      { name: "MeitY", logo: isroLogo, icon: Landmark },
+      { name: "NIC", logo: usgsLogo, icon: FileText },
+      { name: "Smart Cities", logo: planetLabsLogo, icon: Building2 },
+      { name: "UIDAI", logo: nasaLogo, icon: CheckCircle },
     ],
     stats: [
       { value: "22", label: "Indian languages supported" },
@@ -258,11 +275,11 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Shipyard Operations", description: "Schedule and quality analytics for naval builds." },
     ],
     partners: [
-      { name: "HAL", icon: Rocket },
-      { name: "BEL", icon: Cpu },
-      { name: "BDL", icon: Crosshair },
-      { name: "BEML", icon: Building2 },
-      { name: "MDL", icon: Compass },
+      { name: "HAL", logo: boeingLogo, icon: Rocket },
+      { name: "BEL", logo: lockheedLogo, icon: Cpu },
+      { name: "BDL", logo: northropLogo, icon: Crosshair },
+      { name: "BEML", logo: usgsLogo, icon: Building2 },
+      { name: "MDL", logo: isroLogo, icon: Compass },
     ],
     stats: [
       { value: "Make in India", label: "Indigenisation aligned" },
@@ -295,10 +312,10 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Compute Marketplace", description: "Dataset and eval support for IndiaAI compute users." },
     ],
     partners: [
-      { name: "IndiaAI", icon: Cpu },
-      { name: "MeitY", icon: Brain },
-      { name: "C-DAC", icon: Database },
-      { name: "Academic Labs", icon: Sparkles },
+      { name: "IndiaAI", logo: isroLogo, icon: Cpu },
+      { name: "MeitY", logo: usgsLogo, icon: Brain },
+      { name: "C-DAC", logo: nasaLogo, icon: Database },
+      { name: "Academic Labs", logo: esaLogo, icon: Sparkles },
     ],
     stats: [
       { value: "22", label: "Indic languages" },
@@ -331,10 +348,10 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Autonomy Safety Cases", description: "Evidence packages for autonomous platforms." },
     ],
     partners: [
-      { name: "MoD T&E", icon: ShieldCheck },
-      { name: "DRDO Labs", icon: FileCheck },
-      { name: "CERT-In", icon: Lock },
-      { name: "Standards Bodies", icon: Activity },
+      { name: "MoD T&E", logo: lockheedLogo, icon: ShieldCheck },
+      { name: "DRDO Labs", logo: northropLogo, icon: FileCheck },
+      { name: "CERT-In", logo: usgsLogo, icon: Lock },
+      { name: "Standards Bodies", logo: isroLogo, icon: Activity },
     ],
     stats: [
       { value: "Independent", label: "Third-party assurance" },
@@ -367,10 +384,10 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Capacity Building", description: "Training partner-nation AI teams." },
     ],
     partners: [
-      { name: "Civil Space Agencies", icon: Globe2 },
-      { name: "Coalition MoDs", icon: Shield },
-      { name: "Geospatial Surveys", icon: Compass },
-      { name: "Allied Tech Partners", icon: Share2 },
+      { name: "Civil Space Agencies", logo: esaLogo, icon: Globe2 },
+      { name: "Coalition MoDs", logo: lockheedLogo, icon: Shield },
+      { name: "Geospatial Surveys", logo: usgsLogo, icon: Compass },
+      { name: "Allied Tech Partners", logo: spacexLogo, icon: Share2 },
     ],
     stats: [
       { value: "ITAR Aware", label: "Export controls" },

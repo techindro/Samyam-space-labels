@@ -150,10 +150,23 @@ const GovernmentPage = () => {
                     key={p.name}
                     className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card/50 hover:border-foreground/40 transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-md bg-secondary/80 border border-border flex items-center justify-center p-2 text-foreground shrink-0">
-                      <PartnerIcon className="w-5 h-5" />
+                    <div className="w-10 h-10 rounded-md bg-secondary/80 border border-border flex items-center justify-center p-1 shrink-0 relative">
+                      {p.logo ? (
+                        <img
+                          src={p.logo}
+                          alt={`${p.name} logo`}
+                          className="w-full h-full object-contain filter invert dark:invert-0"
+                        />
+                      ) : (
+                        <PartnerIcon className="w-5 h-5 text-foreground" />
+                      )}
                     </div>
-                    <span className="text-sm font-medium leading-tight">{p.name}</span>
+                    <div>
+                      <span className="text-sm font-medium block leading-tight">{p.name}</span>
+                      <span className="text-[10px] text-muted-foreground inline-flex items-center gap-1">
+                        <PartnerIcon className="w-2.5 h-2.5" /> Official Program
+                      </span>
+                    </div>
                   </div>
                 );
               })}

@@ -198,8 +198,12 @@ const GovernmentHub = () => {
                         {pg.partners.map((p) => {
                           const PartnerIcon = p.icon;
                           return (
-                            <div key={p.name} className="h-6 px-2 py-0.5 rounded bg-secondary/80 border border-border flex items-center gap-1 shrink-0 text-foreground" title={p.name}>
-                              <PartnerIcon className="w-3 h-3 text-foreground" />
+                            <div key={p.name} className="h-6 px-2 py-0.5 rounded bg-secondary/80 border border-border flex items-center gap-1.5 shrink-0 text-foreground" title={p.name}>
+                              {p.logo ? (
+                                <img src={p.logo} alt={p.name} className="h-3.5 w-auto object-contain filter invert dark:invert-0" />
+                              ) : (
+                                <PartnerIcon className="w-3 h-3 text-foreground" />
+                              )}
                               <span className="text-[10px] font-medium">{p.name}</span>
                             </div>
                           );
