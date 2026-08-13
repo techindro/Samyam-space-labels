@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { User, Mail, Edit3, Save, LogOut, ArrowLeft, Camera, Key, Copy, Check, Plus, Trash2, Layers, ExternalLink } from "lucide-react";
+import { User, Mail, Edit3, Save, LogOut, ArrowLeft, Camera, Key, Copy, Check, Plus, Trash2, Layers, ExternalLink, Wallet } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 
 const Dashboard = () => {
@@ -261,7 +261,7 @@ const Dashboard = () => {
 
           <div className="glass-card rounded-2xl p-6 shadow-xl mt-6">
             <h2 className="text-lg font-bold font-display mb-4">Quick Workspaces</h2>
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div className="grid sm:grid-cols-3 gap-3">
               <button onClick={() => navigate("/annotate/demo")} className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/60 border border-border/30 transition-colors text-left group">
                 <div>
                   <p className="text-sm font-semibold group-hover:text-cosmic-teal transition-colors">Annotation Tool</p>
@@ -269,6 +269,15 @@ const Dashboard = () => {
                 </div>
                 <Layers className="h-4 w-4 text-muted-foreground group-hover:text-cosmic-teal transition-colors" />
               </button>
+
+              <button onClick={() => navigate("/income")} className="flex items-center justify-between p-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 transition-colors text-left group">
+                <div>
+                  <p className="text-sm font-semibold text-emerald-400">Income & Payouts</p>
+                  <p className="text-xs text-muted-foreground">Track task earnings & withdrawals</p>
+                </div>
+                <Wallet className="h-4 w-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+              </button>
+
               <button onClick={() => navigate("/docs")} className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/60 border border-border/30 transition-colors text-left group">
                 <div>
                   <p className="text-sm font-semibold group-hover:text-cosmic-teal transition-colors">Developer Docs</p>

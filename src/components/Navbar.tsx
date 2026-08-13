@@ -42,6 +42,7 @@ import {
   Layers,
   History,
   Activity,
+  Wallet,
 } from "lucide-react";
 import { governmentPages } from "@/data/governmentPages";
 import { productPages } from "@/data/productPages";
@@ -49,7 +50,6 @@ import { productPages } from "@/data/productPages";
 const navLinks: { label: string; href: string }[] = [
   { label: "Space Tech", href: "/space-tech" },
   { label: "Enterprise", href: "/enterprise" },
-  { label: "Income & Payouts", href: "/income" },
 ];
 
 
@@ -85,6 +85,7 @@ const developerApis = [
 
 const developerResources = [
   { label: "Documentation", icon: Book, href: "/docs" },
+  { label: "Income & Payouts", icon: Wallet, href: "/income" },
   { label: "Integrations", icon: Layers, href: "/integrations" },
   { label: "Changelog", icon: History, href: "/changelog" },
   { label: "System Status", icon: Activity, href: "/status" },
