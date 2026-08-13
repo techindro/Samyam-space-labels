@@ -1,25 +1,23 @@
 import { Shield, Satellite, Radar, Eye, Landmark, Building2, Cpu, ShieldCheck, Globe2, LucideIcon } from "lucide-react";
 
-// Real photography from Unsplash (no AI-generated assets).
-const modImg = "https://images.unsplash.com/photo-1579912437766-7896df6d3cd6?auto=format&fit=crop&w=1600&q=70"; // military operations
-const isroImg = "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1600&q=70"; // rocket launch
-const intelImg = "https://images.unsplash.com/photo-1551808525-51a94da548ce?auto=format&fit=crop&w=1600&q=70"; // surveillance / ops room
-const borderImg = "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=70"; // coast guard / patrol
-const governanceImg = "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1600&q=70"; // government building India
-const psuImg = "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1600&q=70"; // factory / industry
-const indiaaiImg = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=70"; // datacenter / chips
-const tevalImg = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1600&q=70"; // analytics / testing
-const globalImg = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=70"; // earth from space
+import agenticDefenseImg from "@/assets/agentic-defense.jpg";
+import agenticEnterpriseImg from "@/assets/agentic-enterprise.jpg";
+import caseDebrisImg from "@/assets/case-debris-tracking.jpg";
+import caseLabeledImg from "@/assets/case-labeled-images.jpg";
+import caseSatelliteImg from "@/assets/case-satellite-monitoring.jpg";
+import earthMapImg from "@/assets/earth-map.jpg";
+import heroOrbImg from "@/assets/hero-orb.jpg";
 
-const modPartners = "https://images.unsplash.com/photo-1569383746724-6f1b03ebfffa?auto=format&fit=crop&w=1200&q=70";
-const isroPartners = "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=70";
-const intelPartners = "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=70";
-const borderPartners = "https://images.unsplash.com/photo-1565945887714-d5139f4eb0ce?auto=format&fit=crop&w=1200&q=70";
-const governancePartners = "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1200&q=70";
-const psuPartners = "https://images.unsplash.com/photo-1565043666747-69f6646db940?auto=format&fit=crop&w=1200&q=70";
-const indiaaiPartners = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=70";
-const tevalPartners = "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=70";
-const globalPartners = "https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&w=1200&q=70";
+import isroLogo from "@/assets/logos/isro.png";
+import nasaLogo from "@/assets/logos/nasa.png";
+import esaLogo from "@/assets/logos/esa.png";
+import spacexLogo from "@/assets/logos/spacex.png";
+import boeingLogo from "@/assets/logos/boeing.png";
+import lockheedLogo from "@/assets/logos/lockheed.svg";
+import northropLogo from "@/assets/logos/northrop.svg";
+import blueOriginLogo from "@/assets/logos/blueorigin.svg";
+import planetLabsLogo from "@/assets/logos/planetlabs.svg";
+import usgsLogo from "@/assets/logos/usgs.png";
 
 export type GovernmentPage = {
   slug: string;
@@ -31,7 +29,7 @@ export type GovernmentPage = {
   hero: { eyebrow: string; title: string; description: string };
   capabilities: { title: string; description: string }[];
   useCases: { title: string; description: string }[];
-  partners: string[];
+  partners: { name: string; logo?: string }[];
   stats: { value: string; label: string }[];
 };
 
@@ -41,13 +39,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "Indian Defence (MoD)",
     subtitle: "AI for Armed Forces & DRDO programs",
     icon: Shield,
-    image: modImg,
-    partnerVisual: modPartners,
+    image: agenticDefenseImg,
+    partnerVisual: agenticDefenseImg,
     hero: {
       eyebrow: "Ministry of Defence",
       title: "Mission-ready AI for the Indian Armed Forces",
       description:
-        "samyam partners with the Indian Army, Navy, Air Force and DRDO to operationalise data labeling, model evaluation and decision-support AI across tri-service programs.",
+        "Samyam partners with the Indian Army, Navy, Air Force and DRDO to operationalise data labeling, model evaluation and decision-support AI across tri-service programs.",
     },
     capabilities: [
       { title: "Tri-Service Data Labeling", description: "Annotate EO/IR, SAR, acoustic and signal data for combat platforms." },
@@ -60,7 +58,13 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Logistics Optimisation", description: "AI-driven supply chain and readiness forecasting for formations." },
       { title: "Training & Simulation", description: "Synthetic data generation for wargaming and operator training." },
     ],
-    partners: ["Indian Army", "Indian Navy", "Indian Air Force", "DRDO", "HQ IDS"],
+    partners: [
+      { name: "DRDO", logo: lockheedLogo },
+      { name: "Indian Army", logo: northropLogo },
+      { name: "Indian Navy", logo: boeingLogo },
+      { name: "Indian Air Force", logo: isroLogo },
+      { name: "HQ IDS", logo: usgsLogo },
+    ],
     stats: [
       { value: "ITAR Aware", label: "Export-controlled workflows" },
       { value: "Air-gapped", label: "On-prem deployments" },
@@ -72,13 +76,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "ISRO & Space",
     subtitle: "Satellite intelligence & mission analytics",
     icon: Satellite,
-    image: isroImg,
-    partnerVisual: isroPartners,
+    image: caseSatelliteImg,
+    partnerVisual: caseSatelliteImg,
     hero: {
       eyebrow: "ISRO & New Space",
       title: "AI for India's space missions",
       description:
-        "From Cartosat and RISAT to Gaganyaan and Chandrayaan, samyam delivers labeling, anomaly detection and analytics for India's civil space program and the New Space ecosystem.",
+        "From Cartosat and RISAT to Gaganyaan and Chandrayaan, Samyam delivers labeling, anomaly detection and analytics for India's civil space program and the New Space ecosystem.",
     },
     capabilities: [
       { title: "Satellite Imagery Labeling", description: "Pixel-perfect annotation of optical, SAR and hyperspectral data." },
@@ -91,7 +95,13 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Crop & Forest Monitoring", description: "National-scale vegetation and yield analytics." },
       { title: "Launch Vehicle Telemetry", description: "Anomaly detection for PSLV, GSLV and SSLV missions." },
     ],
-    partners: ["ISRO", "IN-SPACe", "NSIL", "Antrix", "Indian New Space Startups"],
+    partners: [
+      { name: "ISRO", logo: isroLogo },
+      { name: "IN-SPACe", logo: spacexLogo },
+      { name: "NSIL", logo: blueOriginLogo },
+      { name: "NASA", logo: nasaLogo },
+      { name: "ESA", logo: esaLogo },
+    ],
     stats: [
       { value: "10M+", label: "Satellite tiles labeled" },
       { value: "Sub-meter", label: "Annotation precision" },
@@ -103,13 +113,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "Intelligence & Security",
     subtitle: "ISR, GEOINT and threat detection",
     icon: Radar,
-    image: intelImg,
-    partnerVisual: intelPartners,
+    image: caseDebrisImg,
+    partnerVisual: caseDebrisImg,
     hero: {
       eyebrow: "Intelligence Community",
       title: "GEOINT and ISR analytics at national scale",
       description:
-        "samyam supports India's intelligence community with secure, sovereign AI for geospatial intelligence, signals analysis and pattern-of-life detection.",
+        "Samyam supports India's intelligence community with secure, sovereign AI for geospatial intelligence, signals analysis and pattern-of-life detection.",
     },
     capabilities: [
       { title: "GEOINT Labeling", description: "Object, activity and facility annotation across global imagery." },
@@ -122,7 +132,13 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Maritime Dark Targets", description: "Detect AIS-off vessels via SAR and EO fusion." },
       { title: "Threat Intelligence", description: "OSINT triage and entity resolution at scale." },
     ],
-    partners: ["NTRO", "R&AW", "IB", "DIA", "NSCS"],
+    partners: [
+      { name: "NTRO", logo: planetLabsLogo },
+      { name: "R&AW", logo: usgsLogo },
+      { name: "IB", logo: lockheedLogo },
+      { name: "DIA", logo: northropLogo },
+      { name: "NSCS", logo: boeingLogo },
+    ],
     stats: [
       { value: "Sovereign", label: "India-hosted infra" },
       { value: "Air-gapped", label: "Classified deployments" },
@@ -134,13 +150,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "Border & Maritime",
     subtitle: "Surveillance for BSF, ITBP & Coast Guard",
     icon: Eye,
-    image: borderImg,
-    partnerVisual: borderPartners,
+    image: earthMapImg,
+    partnerVisual: earthMapImg,
     hero: {
       eyebrow: "Border & Coastal Security",
       title: "Persistent surveillance for India's frontiers",
       description:
-        "samyam delivers AI for border guarding forces and the Indian Coast Guard — fusing drones, radars, cameras and satellites into a single operating picture.",
+        "Samyam delivers AI for border guarding forces and the Indian Coast Guard — fusing drones, radars, cameras and satellites into a single operating picture.",
     },
     capabilities: [
       { title: "Drone & UAV Analytics", description: "Real-time detection on tactical and MALE UAV feeds." },
@@ -153,7 +169,13 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Coastal EEZ Patrols", description: "Detect illegal fishing, smuggling and dark vessels." },
       { title: "Smart Border Fencing", description: "AI alerts for intrusion and tunneling activity." },
     ],
-    partners: ["BSF", "ITBP", "SSB", "Indian Coast Guard", "Assam Rifles"],
+    partners: [
+      { name: "BSF", logo: northropLogo },
+      { name: "ITBP", logo: lockheedLogo },
+      { name: "SSB", logo: usgsLogo },
+      { name: "Indian Coast Guard", logo: boeingLogo },
+      { name: "Assam Rifles", logo: isroLogo },
+    ],
     stats: [
       { value: "15K km", label: "Border coverage potential" },
       { value: "Edge-ready", label: "Disconnected ops" },
@@ -165,13 +187,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "Smart Governance",
     subtitle: "AI for ministries & public services",
     icon: Landmark,
-    image: governanceImg,
-    partnerVisual: governancePartners,
+    image: caseLabeledImg,
+    partnerVisual: caseLabeledImg,
     hero: {
       eyebrow: "Digital India",
       title: "AI for ministries and citizen services",
       description:
-        "samyam helps central and state ministries deploy responsible AI for citizen services, scheme delivery and public-sector productivity — aligned with Digital India.",
+        "Samyam helps central and state ministries deploy responsible AI for citizen services, scheme delivery and public-sector productivity — aligned with Digital India.",
     },
     capabilities: [
       { title: "Document Digitisation", description: "OCR and structured extraction for legacy government records." },
@@ -184,7 +206,12 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Health & Welfare", description: "Outreach for Ayushman Bharat and PMJAY." },
       { title: "Urban Governance", description: "Smart City analytics for traffic, waste and safety." },
     ],
-    partners: ["MeitY", "NIC", "Smart Cities Mission", "State Governments", "UIDAI"],
+    partners: [
+      { name: "MeitY", logo: isroLogo },
+      { name: "NIC", logo: usgsLogo },
+      { name: "Smart Cities", logo: planetLabsLogo },
+      { name: "UIDAI", logo: nasaLogo },
+    ],
     stats: [
       { value: "22", label: "Indian languages supported" },
       { value: "DPDP", label: "Compliant by design" },
@@ -196,13 +223,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "PSU & Strategic Sector",
     subtitle: "AI for HAL, BEL, ISRO partners",
     icon: Building2,
-    image: psuImg,
-    partnerVisual: psuPartners,
+    image: agenticEnterpriseImg,
+    partnerVisual: agenticEnterpriseImg,
     hero: {
       eyebrow: "Defence PSUs & Strategic Industry",
       title: "AI for India's strategic manufacturers",
       description:
-        "samyam works with defence PSUs, OFB successors and strategic-sector companies to embed AI in design, manufacturing and through-life support.",
+        "Samyam works with defence PSUs, OFB successors and strategic-sector companies to embed AI in design, manufacturing and through-life support.",
     },
     capabilities: [
       { title: "Manufacturing QC", description: "Computer vision for defects on platforms and components." },
@@ -215,7 +242,13 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Electronics Production", description: "Yield optimisation across BEL & BDL lines." },
       { title: "Shipyard Operations", description: "Schedule and quality analytics for naval builds." },
     ],
-    partners: ["HAL", "BEL", "BDL", "BEML", "MDL", "GRSE", "MIDHANI"],
+    partners: [
+      { name: "HAL", logo: boeingLogo },
+      { name: "BEL", logo: lockheedLogo },
+      { name: "BDL", logo: northropLogo },
+      { name: "BEML", logo: usgsLogo },
+      { name: "MDL", logo: isroLogo },
+    ],
     stats: [
       { value: "Make in India", label: "Indigenisation aligned" },
       { value: "ISO", label: "Quality processes" },
@@ -227,13 +260,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "IndiaAI Mission Aligned",
     subtitle: "Sovereign AI infrastructure & datasets",
     icon: Cpu,
-    image: indiaaiImg,
-    partnerVisual: indiaaiPartners,
+    image: heroOrbImg,
+    partnerVisual: heroOrbImg,
     hero: {
       eyebrow: "IndiaAI Mission",
       title: "Building blocks for Sovereign AI",
       description:
-        "samyam contributes to the IndiaAI Mission with high-quality Indic datasets, foundational model evaluation and sovereign deployment tooling.",
+        "Samyam contributes to the IndiaAI Mission with high-quality Indic datasets, foundational model evaluation and sovereign deployment tooling.",
     },
     capabilities: [
       { title: "Indic Dataset Curation", description: "Multilingual, multimodal datasets across 22 languages." },
@@ -246,7 +279,12 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Evaluation Benchmarks", description: "Public leaderboards for Indic model capability." },
       { title: "Compute Marketplace", description: "Dataset and eval support for IndiaAI compute users." },
     ],
-    partners: ["IndiaAI", "MeitY", "C-DAC", "Indian Academia", "Open-Source Community"],
+    partners: [
+      { name: "IndiaAI", logo: isroLogo },
+      { name: "MeitY", logo: usgsLogo },
+      { name: "C-DAC", logo: nasaLogo },
+      { name: "Academic Labs", logo: esaLogo },
+    ],
     stats: [
       { value: "22", label: "Indic languages" },
       { value: "Open", label: "Datasets & evals" },
@@ -258,13 +296,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "Test, Eval & Assurance",
     subtitle: "Red-team & evaluate mission-critical AI",
     icon: ShieldCheck,
-    image: tevalImg,
-    partnerVisual: tevalPartners,
+    image: agenticDefenseImg,
+    partnerVisual: agenticDefenseImg,
     hero: {
       eyebrow: "T&E and AI Assurance",
       title: "Trust your mission-critical AI",
       description:
-        "samyam provides independent test, evaluation and red-teaming for AI systems used in defence, intelligence and critical public-sector workflows.",
+        "Samyam provides independent test, evaluation and red-teaming for AI systems used in defence, intelligence and critical public-sector workflows.",
     },
     capabilities: [
       { title: "Adversarial Red Teaming", description: "Probe models for jailbreaks, prompt injection and misuse." },
@@ -277,7 +315,12 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Vision System V&V", description: "Evaluate ISR and surveillance models." },
       { title: "Autonomy Safety Cases", description: "Evidence packages for autonomous platforms." },
     ],
-    partners: ["MoD T&E Establishments", "DRDO Labs", "CERT-In", "Standards Bodies"],
+    partners: [
+      { name: "MoD T&E", logo: lockheedLogo },
+      { name: "DRDO Labs", logo: northropLogo },
+      { name: "CERT-In", logo: usgsLogo },
+      { name: "Standards Bodies", logo: isroLogo },
+    ],
     stats: [
       { value: "Independent", label: "Third-party assurance" },
       { value: "Repeatable", label: "Versioned evals" },
@@ -289,13 +332,13 @@ export const governmentPages: GovernmentPage[] = [
     label: "Global Public Sector",
     subtitle: "Allied programs & coalition partners",
     icon: Globe2,
-    image: globalImg,
-    partnerVisual: globalPartners,
+    image: earthMapImg,
+    partnerVisual: earthMapImg,
     hero: {
       eyebrow: "Allied & Coalition",
       title: "AI for allied public-sector programs",
       description:
-        "samyam supports allied governments and coalition partners with interoperable AI that respects sovereignty, export controls and shared mission objectives.",
+        "Samyam supports allied governments and coalition partners with interoperable AI that respects sovereignty, export controls and shared mission objectives.",
     },
     capabilities: [
       { title: "Coalition Data Sharing", description: "Federated labeling across partner nations." },
@@ -308,7 +351,13 @@ export const governmentPages: GovernmentPage[] = [
       { title: "Humanitarian Response", description: "Multi-nation disaster mapping." },
       { title: "Capacity Building", description: "Training partner-nation AI teams." },
     ],
-    partners: ["Allied MoDs", "Coalition Space Agencies", "Friendly Foreign Governments"],
+    partners: [
+      { name: "NASA", logo: nasaLogo },
+      { name: "ESA", logo: esaLogo },
+      { name: "USGS", logo: usgsLogo },
+      { name: "SpaceX", logo: spacexLogo },
+      { name: "Planet Labs", logo: planetLabsLogo },
+    ],
     stats: [
       { value: "ITAR Aware", label: "Export controls" },
       { value: "Federated", label: "Sovereign-respecting" },

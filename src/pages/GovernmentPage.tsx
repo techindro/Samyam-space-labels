@@ -144,7 +144,9 @@ const GovernmentPage = () => {
             </div>
             <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-3">
               {page.partners.map((p) => {
-                const initials = p
+                const partnerName = typeof p === "string" ? p : p.name;
+                const partnerLogo = typeof p === "object" ? p.logo : undefined;
+                const initials = partnerName
                   .split(/[\s&]+/)
                   .filter(Boolean)
                   .slice(0, 3)
@@ -153,13 +155,21 @@ const GovernmentPage = () => {
                   .toUpperCase();
                 return (
                   <div
-                    key={p}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card/50 hover:border-primary/40 transition-colors"
+                    key={partnerName}
+                    className="flex items-center gap-3 p-3 rounded-lg border border-border bg-card/50 hover:border-foreground/40 transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-semibold text-xs shrink-0">
-                      {initials}
+                    <div className="w-10 h-10 rounded-md bg-secondary/80 border border-border flex items-center justify-center p-1 shrink-0">
+                      {partnerLogo ? (
+                        <img
+                          src={partnerLogo}
+                          alt={`${partnerName} logo`}
+                          className="w-full h-full object-contain filter invert dark:invert-0"
+                        />
+                      ) : (
+                        <span className="text-foreground font-bold text-xs">{initials}</span>
+                      )}
                     </div>
-                    <span className="text-sm font-medium leading-tight">{p}</span>
+                    <span className="text-sm font-medium leading-tight">{partnerName}</span>
                   </div>
                 );
               })}

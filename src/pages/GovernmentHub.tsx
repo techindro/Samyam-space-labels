@@ -193,6 +193,23 @@ const GovernmentHub = () => {
                     </div>
 
                     <div>
+                      <div className="flex items-center gap-1.5 mb-3 overflow-x-auto py-1 scrollbar-none">
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-wider shrink-0 font-medium">Partners:</span>
+                        {pg.partners.map((p) => {
+                          const partnerName = typeof p === "string" ? p : p.name;
+                          const partnerLogo = typeof p === "object" ? p.logo : undefined;
+                          return partnerLogo ? (
+                            <div key={partnerName} className="h-5 px-1.5 py-0.5 rounded bg-secondary/80 border border-border flex items-center shrink-0" title={partnerName}>
+                              <img src={partnerLogo} alt={partnerName} className="h-3.5 w-auto object-contain filter invert dark:invert-0" />
+                            </div>
+                          ) : (
+                            <span key={partnerName} className="text-[9px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground shrink-0 border border-border">
+                              {partnerName}
+                            </span>
+                          );
+                        })}
+                      </div>
+
                       <div className="border-t border-border/50 pt-3 mb-4 space-y-1">
                         {pg.capabilities.slice(0, 2).map((cap) => (
                           <div key={cap.title} className="flex items-center gap-2 text-xs text-muted-foreground">
