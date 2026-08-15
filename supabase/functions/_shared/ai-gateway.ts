@@ -1,13 +1,13 @@
 import { createOpenAICompatible } from "npm:@ai-sdk/openai-compatible";
 
 /**
- * Provider bound to the Lovable AI Gateway.
- * The API key is sent via the `Lovable-API-Key` header (never `Authorization`).
+ * Samyam AI Gateway Provider
  */
-export function createLovableAiGatewayProvider(apiKey: string) {
+export function createSamyamAiGatewayProvider(apiKey: string) {
+  const baseURL = Deno.env.get("AI_GATEWAY_URL") || "https://generativelanguage.googleapis.com/v1beta/openai";
   return createOpenAICompatible({
-    name: "lovable-gateway",
-    baseURL: "https://ai.gateway.lovable.dev/v1",
-    headers: { "Lovable-API-Key": apiKey },
+    name: "samyam-ai-gateway",
+    baseURL,
+    headers: { Authorization: `Bearer ${apiKey}` },
   });
 }

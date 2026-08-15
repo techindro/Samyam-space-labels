@@ -1,7 +1,7 @@
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { corsHeaders } from "../_shared/cors.ts";
 import { generateText } from "npm:ai";
 import { z } from "npm:zod";
-import { createLovableAiGatewayProvider } from "../_shared/ai-gateway.ts";
+import { createSamyamAiGatewayProvider } from "../_shared/ai-gateway.ts";
 
 const BodySchema = z.object({
   imageUrl: z.string().url().max(4000),
@@ -32,11 +32,11 @@ const SegmentOutput = z.object({
   polygon: z.array(z.array(z.number().min(0).max(1)).length(2)).min(3).max(40),
 });
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const apiKey = Deno.env.get("LOVABLE_API_KEY");
+    const apiKey = Deno.env.get("AI_API_KEY") || Deno.env.get("GEMINI_API_KEY") || Deno.env.get("OPENAI_API_KEY");
     if (!apiKey) {
       return new Response(JSON.stringify({ error: "AI is not configured" }), {
         status: 500,
@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
     }
     const { imageUrl, mode, candidateLabels, pointX, pointY } = parsed.data;
 
-    const gateway = createLovableAiGatewayProvider(apiKey);
+    const gateway = createSamyamAiGatewayProvider(apiKey);
     const model = gateway("google/gemini-3.6-flash");
 
     const system =
@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
     // Fetch the image ourselves — some hosts (e.g. Wikimedia) reject default UAs.
     const imgRes = await fetch(imageUrl, {
       headers: {
-        "User-Agent": "SamyamLabelingBot/1.0 (https://samyam-space-label.lovable.app)",
+        "User-Agent": "SamyamLM/1.0 (https://samyam-space-labels.vercel.app)",
         Accept: "image/*",
       },
       redirect: "follow",

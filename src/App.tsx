@@ -97,6 +97,7 @@ const App = () => (
             <Route path="/data-upload" element={<DataUpload />} />
             <Route path="/qa" element={<QaWorkflow />} />
             <Route path="/qa-workflow" element={<QaWorkflow />} />
+            <Route path="/annotate" element={<AnnotationTool />} />
             <Route path="/annotate/demo" element={<AnnotationTool />} />
             {/* Annotation Tool — task-specific */}
             <Route path="/annotate/:taskId" element={<AnnotationTool />} />

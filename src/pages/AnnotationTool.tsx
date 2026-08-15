@@ -16,6 +16,8 @@ import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toCoco, toYolo, toGeoJson, toCsv, downloadFile } from "@/lib/annotationExport";
+import IndicVoiceAnnotator from "@/components/IndicVoiceAnnotator";
+import MonopolyExportSuite from "@/components/MonopolyExportSuite";
 import { 
   Save, Download, ArrowLeft, Loader2, AlertCircle, Tag, Image as ImageIcon,
   Mic, Video as VideoIcon, FileText, Radar, Play, Pause, Plus, Trash2,
@@ -1643,6 +1645,12 @@ export default function AnnotationTool() {
                     onChange={(e) => setOpacityOverlay(Number(e.target.value))}
                     className="w-full accent-white cursor-pointer h-2 bg-[#25293d] rounded-lg"
                   />
+                </div>
+
+                {/* Monopoly Suite: Indic Voice & Instant Multi-Format Export */}
+                <div className="mt-8 space-y-6">
+                  <IndicVoiceAnnotator />
+                  <MonopolyExportSuite />
                 </div>
               </div>
             </div>

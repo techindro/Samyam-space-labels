@@ -1,4 +1,4 @@
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { corsHeaders } from "../_shared/cors.ts";
 
 const SYSTEM_PROMPT = `You are samyam's OpenClaw-backed operations agent.
 samyam is a multimodal satellite data labeling platform for space and defense
@@ -11,7 +11,7 @@ const MAX_MESSAGES = 20;
 
 type ChatMessage = { role: "system" | "user" | "assistant"; content: string };
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }

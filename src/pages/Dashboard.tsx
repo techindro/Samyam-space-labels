@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { User, Mail, Edit3, Save, LogOut, ArrowLeft, Camera, Key, Copy, Check, Plus, Trash2, Layers, ExternalLink, Wallet } from "lucide-react";
-import ParallelWebBg from "@/components/ParallelWebBg";
+import InstallAppButton from "@/components/InstallAppButton";
 
 const Dashboard = () => {
   const [user, setUser] = useState<any>(null);
@@ -131,9 +131,12 @@ const Dashboard = () => {
             <ArrowLeft className="h-4 w-4" /> Back to Home
           </button>
           <span className="font-display text-xl font-bold">Dashboard</span>
-          <Button size="sm" variant="outline" onClick={handleLogout} className="gap-1">
-            <LogOut className="h-3 w-3" /> Sign Out
-          </Button>
+          <div className="flex items-center gap-3">
+            <InstallAppButton />
+            <Button size="sm" variant="outline" onClick={handleLogout} className="gap-1">
+              <LogOut className="h-3 w-3" /> Sign Out
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -262,10 +265,10 @@ const Dashboard = () => {
           <div className="glass-card rounded-2xl p-6 shadow-xl mt-6">
             <h2 className="text-lg font-bold font-display mb-4">Quick Workspaces</h2>
             <div className="grid sm:grid-cols-3 gap-3">
-              <button onClick={() => navigate("/annotate/demo")} className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/60 border border-border/30 transition-colors text-left group">
+              <button onClick={() => navigate("/annotate")} className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 hover:bg-secondary/60 border border-border/30 transition-colors text-left group">
                 <div>
                   <p className="text-sm font-semibold group-hover:text-cosmic-teal transition-colors">Annotation Tool</p>
-                  <p className="text-xs text-muted-foreground">Launch workspace demo</p>
+                  <p className="text-xs text-muted-foreground">Launch annotation workspace</p>
                 </div>
                 <Layers className="h-4 w-4 text-muted-foreground group-hover:text-cosmic-teal transition-colors" />
               </button>

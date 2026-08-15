@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import SatelliteScene from "@/components/SatelliteScene";
 
+import InstallAppButton from "@/components/InstallAppButton";
+
 const HeroSection = () => {
   return (
     <section className="relative min-h-[85vh] py-16 sm:py-20 lg:py-24 flex items-center justify-center overflow-hidden star-field">
@@ -41,13 +43,14 @@ const HeroSection = () => {
             next-generation applications.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <div className="flex flex-wrap gap-3 justify-center lg:justify-start items-center">
             <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground hover:opacity-90 border-0 text-base px-8">
               <Link to="/book-demo">Book a Demo <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary/50 text-base px-8">
               <Link to="/build-ai">Build AI <ArrowRight className="h-4 w-4 ml-2" /></Link>
             </Button>
+            <InstallAppButton className="py-2.5 px-4 text-sm" />
           </div>
         </motion.div>
 

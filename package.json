@@ -3,8 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "bin": {
+    "samyamlm": "./bin/cli.js"
+  },
   "scripts": {
     "dev": "vite",
+    "samyamlm": "node bin/cli.js",
+    "quickstart": "node bin/cli.js",
+    "doctor": "node bin/cli.js doctor",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

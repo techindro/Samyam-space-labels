@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import SamyamLogo from "@/components/SamyamLogo";
 
+import InstallAppButton from "@/components/InstallAppButton";
+
 const footerLinks: Record<string, { label: string; href: string }[]> = {
   Products: [
     { label: "Orbital Data Labeling", href: "/products/geospatial-labeling" },
@@ -45,9 +47,10 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <SamyamLogo size="md" />
-            <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+            <p className="text-sm text-muted-foreground mt-3 mb-4 leading-relaxed">
               Breakthrough AI for space data labeling, defense, and enterprise.
             </p>
+            <InstallAppButton />
           </div>
 
           {/* Links */}

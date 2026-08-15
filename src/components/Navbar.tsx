@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import SamyamLogo from "@/components/SamyamLogo";
+import InstallAppButton from "@/components/InstallAppButton";
 import {
   Menu,
   X,
@@ -224,8 +225,8 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                   {/* ── Annotation Tool CTA ── */}
                   <div className="mt-3 pt-3 border-t border-border/40">
                     <a
-                      href="/annotate/demo"
-                      onClick={(e) => { e.preventDefault(); setProductsOpen(false); navigate("/annotate/demo"); }}
+                      href="/annotate"
+                      onClick={(e) => { e.preventDefault(); setProductsOpen(false); navigate("/annotate"); }}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
                         isDark
                           ? 'bg-white/10 hover:bg-white/20 text-white border border-white/10'

@@ -32,13 +32,40 @@ Experience our AI models in action. All demos run live or on Hugging Face Spaces
 
 | Demo | Description | Link |
 |------|-------------|------|
-| 🏷️ Multimodal Labeling Workspace | Interactive 2D Vision, Audio, Video, RLHF & SAR Radar Annotator | [Try Live Demo](https://samyam-space-labels.vercel.app/annotate/demo) |
+| 🏷️ Multimodal Labeling Workspace | Interactive 2D Vision, Audio, Video, RLHF & SAR Radar Annotator | [Open Annotation Workspace](https://samyam-space-labels.vercel.app/annotate) |
 | 🛣️ Indian Road Detector | AI-powered road detection & segmentation for Indian road infrastructure | [Try Now](https://huggingface.co/spaces/techindro/SamyamLm-Demo) |
 | 🚗 Self Driving Car | Real-time object detection and lane segmentation for autonomous vehicles | [Try Now](https://huggingface.co/spaces/techindro/SamyamLm-SelfDriving) |
 | 🏥 Health Detector | Medical imaging analysis and diagnostic AI for healthcare applications | [Try Now](https://huggingface.co/spaces/techindro/SamyamLm-Health) |
 | 📚 Education Detector | Content analysis and educational material classification using NLP & vision | [Try Now](https://huggingface.co/spaces/techindro/SamyamLm-Education) |
 
 🌐 Website: [samyam-space-labels.vercel.app](https://samyam-space-labels.vercel.app)
+
+---
+
+## ⚡ 1-Line Terminal Quickstart (Laptop / PC)
+
+Single terminal commands to clone, configure, install dependencies, and launch SamyamLM on your laptop instantly:
+
+### 🪟 Windows (PowerShell)
+```powershell
+iwr -useb https://raw.githubusercontent.com/samyam-ai/SamyamLM/main/scripts/quickstart.ps1 | iex
+```
+
+### 🍏 macOS / 🐧 Linux / 💻 Git Bash
+```bash
+curl -fsSL https://raw.githubusercontent.com/samyam-ai/SamyamLM/main/scripts/quickstart.sh | bash
+```
+
+### 🛠️ Interactive SamyamLM CLI (Existing Local Clone)
+```bash
+# Diagnostic check on system tools & environment
+npm run doctor
+
+# Quickstart launcher & dev server
+npm run samyamlm
+# OR via npx
+npx samyamlm
+```
 
 ---
 

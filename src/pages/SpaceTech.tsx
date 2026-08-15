@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import SpaceEdgeExporter from "@/components/space/SpaceEdgeExporter";
 import SyntheticSpaceGenerator from "@/components/space/SyntheticSpaceGenerator";
+import SamyamSpaceRadar from "@/components/SamyamSpaceRadar";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
@@ -785,6 +786,10 @@ const SpaceTech = () => {
           <SyntheticSpaceGenerator />
 
           <SpaceEdgeExporter />
+
+          <div className="mt-8">
+            <SamyamSpaceRadar />
+          </div>
         </div>
       </section>
 

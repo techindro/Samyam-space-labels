@@ -11,8 +11,7 @@
     }
   },
   "include": [
-    "voice-agent/**/*.ts",
-    "openclaw-agent/**/*.ts",
+    "**/*.ts",
     "deno.d.ts"
   ]
 }

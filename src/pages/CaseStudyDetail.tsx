@@ -72,7 +72,7 @@ class SamyamSatelliteHealthModel(nn.Module):
     ],
     results:
       "In deployment across LEO test constellations, Samyam Machine Learning engine achieved a 94.2% precision rate with zero false negatives on critical thermal events, reducing operational ground response times by 65%.",
-    demoUrl: "/annotate/demo",
+    demoUrl: "/annotate",
   },
   "satellite-health": {
     slug: "satellite-health",
@@ -106,7 +106,7 @@ print("ML Detection Scores:", results)`,
     ],
     results:
       "Samyam Machine Learning engine achieved a 94.2% precision rate with zero false negatives on critical thermal events, reducing operational ground response times by 65%.",
-    demoUrl: "/annotate/demo",
+    demoUrl: "/annotate",
   },
   "orbital-debris": {
     slug: "orbital-debris",
@@ -135,7 +135,7 @@ curl -X POST "https://samyam-engine.vercel.app/api/v1/prelabel/clip" \\
     ],
     results:
       "Achieved sub-second debris detection with a 59% throughput speed improvement over legacy manual radar labeling pipelines.",
-    demoUrl: "/annotate/demo",
+    demoUrl: "/annotate",
   },
   "satellite-annotation": {
     slug: "satellite-annotation",
@@ -165,7 +165,7 @@ print("Extracted Bands:", bands["bands_extracted"])`,
     ],
     results:
       "Delivered over 4.5 million high-precision annotated labels across 275,000 satellite and ground driving samples with 99.1% consensus quality.",
-    demoUrl: "/annotate/demo",
+    demoUrl: "/annotate",
   },
 };
 
@@ -289,7 +289,7 @@ export default function CaseStudyDetail() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Button asChild size="lg" className="bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white border-0 gap-2">
-                  <Link to="/annotate/demo">
+                  <Link to="/annotate">
                     <Play size={16} /> Open Interactive Workspace
                   </Link>
                 </Button>
