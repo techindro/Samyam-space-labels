@@ -74,7 +74,7 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* iOS safe-area padding for notch / home indicator */
@@ -82,8 +82,8 @@
     padding-right: env(safe-area-inset-right);
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
+  h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     /* Prevent long headings blowing horizontal layout on small screens */
     overflow-wrap: break-word;
     word-wrap: break-word;

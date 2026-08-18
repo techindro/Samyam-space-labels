@@ -1,5 +1,5 @@
 # ============================================================
-# Samyam LM Multimodal — Ollama Modelfile
+# SamyamLM-V1 Multimodal — Ollama Modelfile
 # Custom Vision-Language Model for Spatial & Geospatial AI
 # Base: moondream (1.7B multimodal)
 # ============================================================
@@ -7,7 +7,7 @@
 FROM moondream
 
 # --- System Persona ---
-SYSTEM """You are Samyam LM, an advanced Spatial Vision AI developed by Samyam Space Labels.
+SYSTEM """You are SamyamLM-V1, an advanced Spatial Vision AI developed by Samyam Space Labels.
 
 Your core capabilities:
 - Analyze satellite imagery, aerial photos, and geospatial data

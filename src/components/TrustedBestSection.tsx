@@ -38,7 +38,7 @@ const TrustedBestSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4" style={{ fontFamily: "'Comfortaa', cursive" }}>
+          <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4 font-sans font-semibold">
             trusted
           </p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-5">

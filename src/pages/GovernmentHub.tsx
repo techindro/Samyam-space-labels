@@ -25,6 +25,8 @@ import {
 } from "lucide-react";
 import { governmentPages, GovernmentPage as GovPageType } from "@/data/governmentPages";
 
+import SovereignMissionConsole from "@/components/SovereignMissionConsole";
+
 const GovernmentHub = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -139,6 +141,13 @@ const GovernmentHub = () => {
               <p className="text-xs text-muted-foreground">Auditor & clearance controls</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Interactive Sovereign Mission AI Console */}
+      <section className="py-10 px-4 bg-background">
+        <div className="container mx-auto max-w-6xl">
+          <SovereignMissionConsole />
         </div>
       </section>
 

@@ -36,13 +36,12 @@ const TrustedBy = () => {
             {[...logos, ...logos].map((logo, i) => (
               <div
                 key={i}
-                className="inline-flex items-center justify-center mx-8 px-6 py-3 rounded-lg border border-border/30 bg-secondary/30 min-w-[160px] h-16"
+                className="inline-flex items-center justify-center mx-6 px-6 py-3 rounded-xl border border-border/40 bg-card/60 hover:bg-card min-w-[160px] h-16 transition-all"
               >
                 <img
                   src={logo.src}
                   alt={`${logo.name} logo`}
-                  className="h-8 max-w-[120px] object-contain"
-                  style={{ filter: 'brightness(0)' }}
+                  className="h-8 max-w-[120px] object-contain opacity-75 hover:opacity-100 dark:invert transition-opacity"
                 />
               </div>
             ))}

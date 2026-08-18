@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, ArrowLeft, CheckCircle2, ShieldCheck } from "lucide-react";
 import { getGovernmentPage, governmentPages } from "@/data/governmentPages";
+import SovereignMissionConsole from "@/components/SovereignMissionConsole";
 
 const GovernmentPage = () => {
   const { slug = "" } = useParams();
@@ -84,6 +85,13 @@ const GovernmentPage = () => {
         </div>
       </section>
 
+      {/* Sovereign Mission AI Console */}
+      <section className="py-10 bg-background/80 border-b border-border/50">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <SovereignMissionConsole initialProgram={page.slug} />
+        </div>
+      </section>
+
       {/* Capabilities */}
       <section className="py-20">
         <div className="container mx-auto px-4 max-w-5xl">
@@ -138,9 +146,6 @@ const GovernmentPage = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-3 text-center">
-                Illustrative emblem — not an official logo of any agency.
-              </p>
             </div>
             <div className="md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-3">
               {page.partners.map((p) => {
