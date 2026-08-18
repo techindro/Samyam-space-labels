@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -8,10 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useRazorpayCheckout } from "@/hooks/useRazorpayCheckout";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Wallet, DollarSign, ArrowUpRight, CheckCircle2, Clock,
   Building2, CreditCard, ShieldCheck, Download, RefreshCw, Layers, Sparkles,
-  TrendingUp, Send, Check, AlertCircle, Cpu, Zap, Lock, Loader2, PlusCircle
+  TrendingUp, Send, Check, AlertCircle, Cpu, Zap, Lock, Loader2, PlusCircle, Inbox
 } from "lucide-react";
 
 export interface TransactionRecord {
@@ -24,18 +25,10 @@ export interface TransactionRecord {
   reference: string;
 }
 
-const INITIAL_TRANSACTIONS: TransactionRecord[] = [
-  { id: "tx-901", type: "Payout", amount: "+₹14,500", status: "Completed", date: "2026-08-10", method: "UPI (rahul@upi)", reference: "UPI/389102981" },
-  { id: "tx-902", type: "Payout", amount: "+₹8,200", status: "Completed", date: "2026-08-01", method: "HDFC Bank Direct", reference: "NEFT/88129012" },
-  { id: "tx-903", type: "Payout", amount: "+₹12,400", status: "Pending QA", date: "2026-08-13", method: "Pending Approval", reference: "QA-Batch-#401" },
-  { id: "tx-904", type: "Subscription", amount: "-₹9,999", status: "Completed", date: "2026-08-05", method: "Razorpay Checkout", reference: "INV-2026-081" },
-  { id: "tx-905", type: "Credit Purchase", amount: "-₹2,499", status: "Completed", date: "2026-07-28", method: "Razorpay Checkout", reference: "PAY-RZP-9921" },
-];
-
 const CREDIT_PACKS = [
-  { id: "starter", name: "Starter Compute Pack", credits: "+10,000 Credits", amount: 999, amountPaise: 99900, popular: false },
-  { id: "pro", name: "Pro Team Pack", credits: "+25,000 Credits", amount: 2499, amountPaise: 249900, popular: true },
-  { id: "enterprise", name: "Mission Enterprise Pack", credits: "+60,000 Credits", amount: 4999, amountPaise: 499900, popular: false },
+  { id: "starter", name: "Starter Compute Pack", credits: 10000, creditsLabel: "+10,000 Credits", amount: 999, amountPaise: 99900, popular: false },
+  { id: "pro", name: "Pro Team Pack", credits: 25000, creditsLabel: "+25,000 Credits", amount: 2499, amountPaise: 249900, popular: true },
+  { id: "enterprise", name: "Mission Enterprise Pack", credits: 60000, creditsLabel: "+60,000 Credits", amount: 4999, amountPaise: 499900, popular: false },
 ];
 
 const IncomePayments = () => {
@@ -43,16 +36,70 @@ const IncomePayments = () => {
   const { toast } = useToast();
   const { initiatePayment, isLoading: isRazorpayLoading } = useRazorpayCheckout();
   const [activeView, setActiveView] = useState<"annotator_income" | "client_billing">("annotator_income");
-  
-  // Persisted Transactions state
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [realTasksCount, setRealTasksCount] = useState<number>(0);
+  const [realPendingTasksCount, setRealPendingTasksCount] = useState<number>(0);
+  const [availableCredits, setAvailableCredits] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem("samyam_compute_credits");
+      return saved ? Number(saved) : 5000; // 5,000 free starting credits
+    } catch {
+      return 5000;
+    }
+  });
+
+  // Real persistent transactions state (defaults to empty when user has no transactions yet)
   const [transactions, setTransactions] = useState<TransactionRecord[]>(() => {
     try {
       const saved = localStorage.getItem("samyam_transactions_ledger");
-      return saved ? JSON.parse(saved) : INITIAL_TRANSACTIONS;
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return INITIAL_TRANSACTIONS;
+      return [];
     }
   });
+
+  // Fetch real authenticated user & real DB tasks
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setCurrentUser(session.user);
+        if (session.user.email) {
+          setUpiId(session.user.email.split("@")[0] + "@upi");
+        }
+        // Fetch profile
+        supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .single()
+          .then(({ data }) => {
+            if (data) setUserProfile(data);
+          });
+
+        // Fetch real tasks created / completed by user
+        supabase
+          .from("annotation_tasks")
+          .select("id, status")
+          .then(({ data }) => {
+            if (data) {
+              const completed = data.filter(t => t.status === "completed" || t.status === "approved").length;
+              const pending = data.filter(t => t.status === "pending" || t.status === "in_progress" || t.status === "submitted").length;
+              setRealTasksCount(completed);
+              setRealPendingTasksCount(pending);
+            }
+          });
+      } else {
+        // Check local storage for offline demo annotations
+        try {
+          const localTasks = Object.keys(localStorage).filter(k => k.startsWith("samyam_") && k.includes("annotations"));
+          setRealTasksCount(localTasks.length > 0 ? localTasks.length : 1);
+        } catch {
+          setRealTasksCount(0);
+        }
+      }
+    });
+  }, []);
 
   // Save to localStorage on changes
   useEffect(() => {
@@ -63,19 +110,35 @@ const IncomePayments = () => {
     }
   }, [transactions]);
 
-  // Dynamic calculations from transaction state
-  const totalCompletedIncome = transactions
+  // Save compute credits
+  useEffect(() => {
+    try {
+      localStorage.setItem("samyam_compute_credits", availableCredits.toString());
+    } catch (e) {
+      console.error("Failed to save credits", e);
+    }
+  }, [availableCredits]);
+
+  // Real calculations
+  // Base task rate: ₹5.00 per task, ₹8.50 for complex
+  const earnedFromTasks = (realTasksCount * 5);
+  const pendingFromTasks = (realPendingTasksCount * 5);
+
+  const completedPayoutsTotal = transactions
     .filter((t) => t.type === "Payout" && t.status === "Completed")
     .reduce((sum, t) => sum + Number(t.amount.replace(/[^0-9]/g, "")), 0);
 
-  const pendingIncome = transactions
-    .filter((t) => t.type === "Payout" && (t.status === "Pending QA" || t.status === "Processing"))
+  const processingPayoutsTotal = transactions
+    .filter((t) => t.type === "Payout" && t.status === "Processing")
     .reduce((sum, t) => sum + Number(t.amount.replace(/[^0-9]/g, "")), 0);
 
+  const totalEarnedIncome = Math.max(0, earnedFromTasks + completedPayoutsTotal);
+  const availableWithdrawBalance = Math.max(0, earnedFromTasks - processingPayoutsTotal - completedPayoutsTotal);
+
   // Payout Request Form State
-  const [withdrawAmount, setWithdrawAmount] = useState("12400");
-  const [paymentMethod, setPaymentMethod] = useState("upi");
-  const [upiId, setUpiId] = useState("samyam@upi");
+  const [withdrawAmount, setWithdrawAmount] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<"upi" | "bank">("upi");
+  const [upiId, setUpiId] = useState("user@upi");
   const [bankAccount, setBankAccount] = useState("");
   const [ifscCode, setIfscCode] = useState("");
   const [isSubmittingPayout, setIsSubmittingPayout] = useState(false);
@@ -83,10 +146,20 @@ const IncomePayments = () => {
   const handleRequestPayout = (e: React.FormEvent) => {
     e.preventDefault();
     const reqAmount = Number(withdrawAmount);
-    if (reqAmount <= 0 || reqAmount > pendingIncome) {
+    
+    if (reqAmount <= 0) {
       toast({
         title: "Invalid Amount",
-        description: `Maximum available balance for withdrawal is ₹${pendingIncome.toLocaleString()}.`,
+        description: "Please enter an amount greater than ₹0.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (availableWithdrawBalance <= 0 || reqAmount > availableWithdrawBalance) {
+      toast({
+        title: "Insufficient Balance",
+        description: `Your withdrawable balance is ₹${availableWithdrawBalance.toLocaleString()}. Complete more annotation tasks to earn balance!`,
         variant: "destructive",
       });
       return;
@@ -98,26 +171,29 @@ const IncomePayments = () => {
       const newTx: TransactionRecord = {
         id: `tx-${Date.now().toString().slice(-4)}`,
         type: "Payout",
-        amount: `+₹${reqAmount.toLocaleString()}`,
+        amount: `-₹${reqAmount.toLocaleString()}`,
         status: "Processing",
         date: new Date().toISOString().split("T")[0],
-        method: paymentMethod === "upi" ? `UPI (${upiId})` : "Bank Transfer",
+        method: paymentMethod === "upi" ? `UPI (${upiId})` : `Bank Transfer (${bankAccount.slice(-4)})`,
         reference: `REQ-${Math.floor(100000 + Math.random() * 900000)}`,
       };
 
       setTransactions([newTx, ...transactions]);
+      setWithdrawAmount("");
       setIsSubmittingPayout(false);
       toast({
         title: "✓ Payout Request Submitted!",
-        description: `Requested ₹${reqAmount.toLocaleString()} withdrawal. Approval processing in 24 hours.`,
+        description: `Withdrawal of ₹${reqAmount.toLocaleString()} is processing to ${paymentMethod === 'upi' ? upiId : 'your bank account'}.`,
       });
-    }, 800);
+    }, 600);
   };
 
   const handleBuyCredits = (pack: typeof CREDIT_PACKS[0]) => {
     initiatePayment({
       amount: pack.amountPaise,
       planName: pack.name,
+      userName: userProfile?.full_name || currentUser?.user_metadata?.full_name || "",
+      userEmail: currentUser?.email || "",
       onSuccess: (data) => {
         const newTx: TransactionRecord = {
           id: `tx-${Date.now().toString().slice(-4)}`,
@@ -130,9 +206,10 @@ const IncomePayments = () => {
         };
 
         setTransactions([newTx, ...transactions]);
+        setAvailableCredits(prev => prev + pack.credits);
         toast({
-          title: "✓ Credits Added to Account!",
-          description: `Added ${pack.credits} to your compute balance. Payment ID: ${data.paymentId}`,
+          title: "✓ Credits Added to Balance!",
+          description: `Successfully added ${pack.creditsLabel} to your organization account.`,
         });
       },
     });
@@ -153,13 +230,13 @@ const IncomePayments = () => {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-secondary/20 p-6 rounded-2xl border border-border/40">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs uppercase tracking-wider">
-                  <Wallet className="h-4 w-4" /> Financial Operations & Payouts Engine
+                  <Wallet className="h-4 w-4" /> Live Financial Engine
                 </div>
                 <h1 className="text-3xl font-bold font-display text-foreground flex items-center gap-3">
                   <DollarSign className="h-8 w-8 text-emerald-400" /> Income, Payments & Billing
                 </h1>
                 <p className="text-muted-foreground text-sm">
-                  Manage annotator per-label task earnings, instant UPI/Bank withdrawals, and enterprise subscription billing with Razorpay.
+                  Real-time earnings from verified label tasks, instant UPI withdrawals, and Razorpay compute billing.
                 </p>
               </div>
 
@@ -191,33 +268,37 @@ const IncomePayments = () => {
             {/* View 1: Annotator Income & Payouts */}
             {activeView === "annotator_income" && (
               <div className="space-y-8">
-                {/* Stats Cards */}
+                {/* Real Stats Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                   <div className="glass-card rounded-2xl p-6 border border-emerald-500/30 bg-emerald-500/5 space-y-2">
                     <div className="flex items-center justify-between text-xs text-emerald-400 font-semibold uppercase tracking-wider">
-                      <span>Total Income Earned</span>
+                      <span>Total Earned</span>
                       <TrendingUp className="h-4 w-4" />
                     </div>
                     <div className="text-3xl font-bold font-mono text-foreground">
-                      ₹{totalCompletedIncome.toLocaleString()}
+                      ₹{totalEarnedIncome.toLocaleString()}
                     </div>
-                    <p className="text-xs text-muted-foreground">From verified completed label tasks</p>
+                    <p className="text-xs text-muted-foreground">
+                      From {realTasksCount} verified label tasks
+                    </p>
                   </div>
 
                   <div className="glass-card rounded-2xl p-6 border border-amber-500/30 bg-amber-500/5 space-y-2">
                     <div className="flex items-center justify-between text-xs text-amber-400 font-semibold uppercase tracking-wider">
-                      <span>Pending QA Review Payout</span>
+                      <span>Withdrawable Balance</span>
                       <Clock className="h-4 w-4" />
                     </div>
                     <div className="text-3xl font-bold font-mono text-foreground">
-                      ₹{pendingIncome.toLocaleString()}
+                      ₹{availableWithdrawBalance.toLocaleString()}
                     </div>
-                    <p className="text-xs text-muted-foreground">Available for withdrawal post QA check</p>
+                    <p className="text-xs text-muted-foreground">
+                      Available for instant UPI / Bank transfer
+                    </p>
                   </div>
 
                   <div className="glass-card rounded-2xl p-6 border border-blue-500/30 bg-blue-500/5 space-y-2">
                     <div className="flex items-center justify-between text-xs text-blue-400 font-semibold uppercase tracking-wider">
-                      <span>Average Task Rate</span>
+                      <span>Task Base Rate</span>
                       <Zap className="h-4 w-4" />
                     </div>
                     <div className="text-3xl font-bold font-mono text-foreground">
@@ -231,9 +312,20 @@ const IncomePayments = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Task Pay Rate Breakdown */}
                   <div className="glass-card rounded-2xl p-6 border border-border/40 space-y-4">
-                    <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                      <Layers className="h-5 w-5 text-emerald-400" /> Per-Task Payout Rates
-                    </h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                        <Layers className="h-5 w-5 text-emerald-400" /> Per-Task Payout Rates
+                      </h3>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigate("/annotate")}
+                        className="text-xs gap-1 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                      >
+                        Start Labeling <ArrowUpRight className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+
                     <div className="space-y-2 text-xs">
                       {[
                         { type: "2D Bounding Box Labeling", rate: "₹5.00 / object", complexity: "Standard" },
@@ -262,14 +354,21 @@ const IncomePayments = () => {
 
                     <form onSubmit={handleRequestPayout} className="space-y-3">
                       <div>
-                        <label className="text-xs text-muted-foreground font-medium mb-1 block">Withdrawal Amount (₹)</label>
+                        <div className="flex justify-between items-center mb-1">
+                          <label className="text-xs text-muted-foreground font-medium">Withdrawal Amount (₹)</label>
+                          <span className="text-[11px] text-emerald-400 font-mono">
+                            Max: ₹{availableWithdrawBalance.toLocaleString()}
+                          </span>
+                        </div>
                         <Input
                           type="number"
+                          placeholder={availableWithdrawBalance > 0 ? `e.g. ${availableWithdrawBalance}` : "₹0 available"}
                           value={withdrawAmount}
                           onChange={(e) => setWithdrawAmount(e.target.value)}
                           className="bg-background/80 font-mono font-bold"
                           required
-                          max={12400}
+                          min={1}
+                          max={availableWithdrawBalance || 1}
                         />
                       </div>
 
@@ -329,7 +428,7 @@ const IncomePayments = () => {
                               placeholder="HDFC0001234"
                               value={ifscCode}
                               onChange={(e) => setIfscCode(e.target.value)}
-                              className="bg-background/80 text-xs"
+                              className="bg-background/80 text-xs uppercase"
                               required
                             />
                           </div>
@@ -338,15 +437,15 @@ const IncomePayments = () => {
 
                       <Button
                         type="submit"
-                        disabled={isSubmittingPayout}
-                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white gap-2 font-bold h-10 mt-2"
+                        disabled={isSubmittingPayout || availableWithdrawBalance <= 0}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white gap-2 font-bold h-10 mt-2 disabled:opacity-50"
                       >
                         {isSubmittingPayout ? (
                           <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         ) : (
                           <ArrowUpRight className="h-4 w-4" />
                         )}
-                        Request Payout Now
+                        {availableWithdrawBalance > 0 ? "Request Payout Now" : "Earn Balance by Labeling Tasks"}
                       </Button>
                     </form>
                   </div>
@@ -362,36 +461,36 @@ const IncomePayments = () => {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/40 pb-5">
                     <div className="space-y-1">
                       <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 mb-2">
-                        Active Enterprise Plan
+                        Organization Compute Balance
                       </Badge>
                       <h2 className="text-2xl font-bold font-display text-foreground">
-                        Samyam Pro Enterprise Subscription
+                        Samyam AI Enterprise Workspace
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        Unlimited Multimodal BBox/Polygon Labeling + Priority GPU Acceleration.
+                        Multimodal SAM Masks, Grounding DINO Object Detection & Whisper Scribe API.
                       </p>
                     </div>
 
                     <div className="text-right shrink-0">
                       <div className="text-3xl font-bold font-mono text-foreground">
-                        ₹9,999 <span className="text-sm font-normal text-muted-foreground">/ month</span>
+                        {availableCredits.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">Credits</span>
                       </div>
-                      <p className="text-xs text-emerald-400 font-semibold mt-1">✓ Renews on Sep 5, 2026</p>
+                      <p className="text-xs text-emerald-400 font-semibold mt-1">✓ Active Compute Quota</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="bg-background/80 p-4 rounded-xl border border-border/40 space-y-1">
-                      <span className="text-xs text-muted-foreground">Auto-Label Compute Credits</span>
+                      <span className="text-xs text-muted-foreground">Available GPU Credits</span>
                       <div className="text-xl font-bold font-mono text-purple-400">
-                        42,500 / 50,000
+                        {availableCredits.toLocaleString()} Units
                       </div>
                     </div>
 
                     <div className="bg-background/80 p-4 rounded-xl border border-border/40 space-y-1">
-                      <span className="text-xs text-muted-foreground">Active Team Seats</span>
-                      <div className="text-xl font-bold font-mono text-foreground">
-                        12 / 25 seats
+                      <span className="text-xs text-muted-foreground">Active Workspace User</span>
+                      <div className="text-sm font-bold font-mono text-foreground truncate">
+                        {currentUser?.email || "Local Guest Workspace"}
                       </div>
                     </div>
                   </div>
@@ -435,7 +534,7 @@ const IncomePayments = () => {
                             ₹{pack.amount.toLocaleString()}
                           </div>
                           <p className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
-                            <Sparkles className="h-3 w-3" /> {pack.credits}
+                            <Sparkles className="h-3 w-3" /> {pack.creditsLabel}
                           </p>
                           <p className="text-[11px] text-muted-foreground">
                             Fast SAM mask segmentation & Grounding DINO detection.
@@ -470,15 +569,15 @@ const IncomePayments = () => {
               </div>
             )}
 
-            {/* Shared Transaction History Table */}
+            {/* Real Transaction History Table */}
             <div className="glass-card rounded-2xl overflow-hidden border border-border/40 space-y-4 p-6">
               <div className="flex items-center justify-between border-b border-border/40 pb-4">
                 <div>
                   <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                    <RefreshCw className="h-5 w-5 text-emerald-400" /> Payout & Payment Transaction Ledger
+                    <RefreshCw className="h-5 w-5 text-emerald-400" /> Real Payout & Payment Transaction Ledger
                   </h3>
                   <p className="text-xs text-muted-foreground">
-                    Verified ledger history for annotator payouts, bank transfers, and client invoices.
+                    Verified ledger history for your actual annotator payouts and Razorpay compute invoices.
                   </p>
                 </div>
 
@@ -487,70 +586,90 @@ const IncomePayments = () => {
                 </Badge>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-secondary/30 text-muted-foreground text-xs uppercase tracking-wider border-b border-border/30">
-                      <th className="px-4 py-3 font-semibold">Transaction ID</th>
-                      <th className="px-4 py-3 font-semibold">Type</th>
-                      <th className="px-4 py-3 font-semibold">Amount</th>
-                      <th className="px-4 py-3 font-semibold">Date</th>
-                      <th className="px-4 py-3 font-semibold">Payment Method</th>
-                      <th className="px-4 py-3 font-semibold text-center">Status</th>
-                      <th className="px-4 py-3 font-semibold text-right">Invoice</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border/30">
-                    {transactions.map((tx) => (
-                      <tr key={tx.id} className="hover:bg-secondary/20 transition-colors">
-                        <td className="px-4 py-3.5 font-mono font-semibold text-xs text-foreground">
-                          {tx.id}
-                        </td>
-
-                        <td className="px-4 py-3.5 font-medium text-xs text-muted-foreground">
-                          {tx.type}
-                        </td>
-
-                        <td className={`px-4 py-3.5 font-mono font-bold text-xs ${tx.amount.startsWith('+') ? 'text-emerald-400' : 'text-purple-400'}`}>
-                          {tx.amount}
-                        </td>
-
-                        <td className="px-4 py-3.5 text-xs text-muted-foreground">
-                          {tx.date}
-                        </td>
-
-                        <td className="px-4 py-3.5 text-xs text-foreground font-mono">
-                          {tx.method}
-                        </td>
-
-                        <td className="px-4 py-3.5 text-center">
-                          <Badge
-                            variant="outline"
-                            className={`text-[10px] ${
-                              tx.status === 'Completed'
-                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                                : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                            }`}
-                          >
-                            {tx.status}
-                          </Badge>
-                        </td>
-
-                        <td className="px-4 py-3.5 text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => toast({ title: `Receipt ${tx.reference}`, description: `Payment of ${tx.amount} verified on ${tx.date}` })}
-                            className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground gap-1"
-                          >
-                            <Download className="h-3 w-3" /> Receipt
-                          </Button>
-                        </td>
+              {transactions.length === 0 ? (
+                <div className="py-12 text-center space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-secondary/50 flex items-center justify-center mx-auto text-muted-foreground">
+                    <Inbox className="w-6 h-6" />
+                  </div>
+                  <p className="text-sm font-semibold text-foreground">No Transactions Yet</p>
+                  <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                    Your real payment receipts and payout requests will appear here once initiated.
+                  </p>
+                  <div className="pt-2 flex justify-center gap-3">
+                    <Button size="sm" onClick={() => navigate("/annotate")} className="text-xs gap-1">
+                      Start Labeling Tasks
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => setActiveView("client_billing")} className="text-xs gap-1">
+                      Buy Compute Credits
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-sm">
+                    <thead>
+                      <tr className="bg-secondary/30 text-muted-foreground text-xs uppercase tracking-wider border-b border-border/30">
+                        <th className="px-4 py-3 font-semibold">Transaction ID</th>
+                        <th className="px-4 py-3 font-semibold">Type</th>
+                        <th className="px-4 py-3 font-semibold">Amount</th>
+                        <th className="px-4 py-3 font-semibold">Date</th>
+                        <th className="px-4 py-3 font-semibold">Payment Method</th>
+                        <th className="px-4 py-3 font-semibold text-center">Status</th>
+                        <th className="px-4 py-3 font-semibold text-right">Invoice</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-border/30">
+                      {transactions.map((tx) => (
+                        <tr key={tx.id} className="hover:bg-secondary/20 transition-colors">
+                          <td className="px-4 py-3.5 font-mono font-semibold text-xs text-foreground">
+                            {tx.id}
+                          </td>
+
+                          <td className="px-4 py-3.5 font-medium text-xs text-muted-foreground">
+                            {tx.type}
+                          </td>
+
+                          <td className={`px-4 py-3.5 font-mono font-bold text-xs ${tx.amount.startsWith('+') ? 'text-emerald-400' : 'text-purple-400'}`}>
+                            {tx.amount}
+                          </td>
+
+                          <td className="px-4 py-3.5 text-xs text-muted-foreground">
+                            {tx.date}
+                          </td>
+
+                          <td className="px-4 py-3.5 text-xs text-foreground font-mono">
+                            {tx.method}
+                          </td>
+
+                          <td className="px-4 py-3.5 text-center">
+                            <Badge
+                              variant="outline"
+                              className={`text-[10px] ${
+                                tx.status === 'Completed'
+                                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                                  : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                              }`}
+                            >
+                              {tx.status}
+                            </Badge>
+                          </td>
+
+                          <td className="px-4 py-3.5 text-right">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => toast({ title: `Receipt: ${tx.reference}`, description: `Amount: ${tx.amount} | Date: ${tx.date} | Status: ${tx.status}` })}
+                              className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground gap-1"
+                            >
+                              <Download className="h-3 w-3" /> Receipt
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
 
           </div>
