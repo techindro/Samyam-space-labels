@@ -23,7 +23,7 @@ export interface IsroTileMetadata {
 
 export interface GroundingDinoResult {
   model: string;
-  text_prompt: str;
+  text_prompt: string;
   inference_time_ms: number;
   annotations: Array<{
     id: string;
