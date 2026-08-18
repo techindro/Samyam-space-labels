@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,10 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useRazorpayCheckout } from "@/hooks/useRazorpayCheckout";
 import {
-  Wallet, DollarSign, ArrowUpRight, ArrowDownLeft, CheckCircle2, Clock,
+  Wallet, DollarSign, ArrowUpRight, CheckCircle2, Clock,
   Building2, CreditCard, ShieldCheck, Download, RefreshCw, Layers, Sparkles,
-  TrendingUp, Send, Check, AlertCircle, Cpu, Zap, Lock
+  TrendingUp, Send, Check, AlertCircle, Cpu, Zap, Lock, Loader2, PlusCircle
 } from "lucide-react";
 
 export interface TransactionRecord {
@@ -27,15 +28,40 @@ const INITIAL_TRANSACTIONS: TransactionRecord[] = [
   { id: "tx-901", type: "Payout", amount: "+₹14,500", status: "Completed", date: "2026-08-10", method: "UPI (rahul@upi)", reference: "UPI/389102981" },
   { id: "tx-902", type: "Payout", amount: "+₹8,200", status: "Completed", date: "2026-08-01", method: "HDFC Bank Direct", reference: "NEFT/88129012" },
   { id: "tx-903", type: "Payout", amount: "+₹12,400", status: "Pending QA", date: "2026-08-13", method: "Pending Approval", reference: "QA-Batch-#401" },
-  { id: "tx-904", type: "Subscription", amount: "-₹9,999", status: "Completed", date: "2026-08-05", method: "Visa **** 4920", reference: "INV-2026-081" },
-  { id: "tx-905", type: "Credit Purchase", amount: "-₹4,999", status: "Completed", date: "2026-07-28", method: "Razorpay Checkout", reference: "PAY-RZP-9921" },
+  { id: "tx-904", type: "Subscription", amount: "-₹9,999", status: "Completed", date: "2026-08-05", method: "Razorpay Checkout", reference: "INV-2026-081" },
+  { id: "tx-905", type: "Credit Purchase", amount: "-₹2,499", status: "Completed", date: "2026-07-28", method: "Razorpay Checkout", reference: "PAY-RZP-9921" },
+];
+
+const CREDIT_PACKS = [
+  { id: "starter", name: "Starter Compute Pack", credits: "+10,000 Credits", amount: 999, amountPaise: 99900, popular: false },
+  { id: "pro", name: "Pro Team Pack", credits: "+25,000 Credits", amount: 2499, amountPaise: 249900, popular: true },
+  { id: "enterprise", name: "Mission Enterprise Pack", credits: "+60,000 Credits", amount: 4999, amountPaise: 499900, popular: false },
 ];
 
 const IncomePayments = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { initiatePayment, isLoading: isRazorpayLoading } = useRazorpayCheckout();
   const [activeView, setActiveView] = useState<"annotator_income" | "client_billing">("annotator_income");
-  const [transactions, setTransactions] = useState<TransactionRecord[]>(INITIAL_TRANSACTIONS);
+  
+  // Persisted Transactions state
+  const [transactions, setTransactions] = useState<TransactionRecord[]>(() => {
+    try {
+      const saved = localStorage.getItem("samyam_transactions_ledger");
+      return saved ? JSON.parse(saved) : INITIAL_TRANSACTIONS;
+    } catch {
+      return INITIAL_TRANSACTIONS;
+    }
+  });
+
+  // Save to localStorage on changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("samyam_transactions_ledger", JSON.stringify(transactions));
+    } catch (e) {
+      console.error("Failed to save transaction ledger", e);
+    }
+  }, [transactions]);
 
   // Dynamic calculations from transaction state
   const totalCompletedIncome = transactions
@@ -53,9 +79,6 @@ const IncomePayments = () => {
   const [bankAccount, setBankAccount] = useState("");
   const [ifscCode, setIfscCode] = useState("");
   const [isSubmittingPayout, setIsSubmittingPayout] = useState(false);
-
-  // Payment Gateway Checkout Modal State
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const handleRequestPayout = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,29 +111,31 @@ const IncomePayments = () => {
         title: "✓ Payout Request Submitted!",
         description: `Requested ₹${reqAmount.toLocaleString()} withdrawal. Approval processing in 24 hours.`,
       });
-    }, 1000);
+    }, 800);
   };
 
-  const handleBuyCredits = () => {
-    setIsProcessingPayment(true);
-    setTimeout(() => {
-      const newTx: TransactionRecord = {
-        id: `tx-${Date.now().toString().slice(-4)}`,
-        type: "Credit Purchase",
-        amount: "-₹2,499",
-        status: "Completed",
-        date: new Date().toISOString().split("T")[0],
-        method: "Razorpay / Stripe Gateway",
-        reference: `PAY-RZP-${Math.floor(100000 + Math.random() * 900000)}`,
-      };
+  const handleBuyCredits = (pack: typeof CREDIT_PACKS[0]) => {
+    initiatePayment({
+      amount: pack.amountPaise,
+      planName: pack.name,
+      onSuccess: (data) => {
+        const newTx: TransactionRecord = {
+          id: `tx-${Date.now().toString().slice(-4)}`,
+          type: "Credit Purchase",
+          amount: `-₹${pack.amount.toLocaleString()}`,
+          status: "Completed",
+          date: new Date().toISOString().split("T")[0],
+          method: "Razorpay Checkout",
+          reference: data.paymentId || `PAY-RZP-${Math.floor(100000 + Math.random() * 900000)}`,
+        };
 
-      setTransactions([newTx, ...transactions]);
-      setIsProcessingPayment(false);
-      toast({
-        title: "✓ Payment Successful!",
-        description: "Added +25,000 AI Auto-Labeling Compute Credits to your organization balance.",
-      });
-    }, 1200);
+        setTransactions([newTx, ...transactions]);
+        toast({
+          title: "✓ Credits Added to Account!",
+          description: `Added ${pack.credits} to your compute balance. Payment ID: ${data.paymentId}`,
+        });
+      },
+    });
   };
 
   return (
@@ -134,7 +159,7 @@ const IncomePayments = () => {
                   <DollarSign className="h-8 w-8 text-emerald-400" /> Income, Payments & Billing
                 </h1>
                 <p className="text-muted-foreground text-sm">
-                  Manage annotator per-label task earnings, instant UPI/Bank withdrawals, and enterprise subscription billing.
+                  Manage annotator per-label task earnings, instant UPI/Bank withdrawals, and enterprise subscription billing with Razorpay.
                 </p>
               </div>
 
@@ -355,7 +380,7 @@ const IncomePayments = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="bg-background/80 p-4 rounded-xl border border-border/40 space-y-1">
                       <span className="text-xs text-muted-foreground">Auto-Label Compute Credits</span>
                       <div className="text-xl font-bold font-mono text-purple-400">
@@ -369,22 +394,77 @@ const IncomePayments = () => {
                         12 / 25 seats
                       </div>
                     </div>
+                  </div>
+                </div>
 
-                    <div className="bg-background/80 p-4 rounded-xl border border-border/40 flex items-center justify-between">
-                      <div>
-                        <span className="text-xs text-muted-foreground block">Top-Up Credits</span>
-                        <span className="text-xs font-semibold text-foreground">+25,000 Credits</span>
-                      </div>
-                      <Button
-                        size="sm"
-                        onClick={handleBuyCredits}
-                        disabled={isProcessingPayment}
-                        className="bg-purple-600 hover:bg-purple-700 text-white text-xs gap-1 h-8"
-                      >
-                        {isProcessingPayment ? <RefreshCw className="h-3 w-3 animate-spin" /> : <Zap className="h-3 w-3" />}
-                        Buy ₹2,499
-                      </Button>
+                {/* Instant Credit Top-Up Packs Powered by Razorpay */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+                        <Zap className="h-5 w-5 text-purple-400" /> Instant Compute Credit Top-Up
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        Purchase GPU compute credits via Razorpay (UPI, Credit/Debit Cards, NetBanking).
+                      </p>
                     </div>
+                    <Badge variant="outline" className="text-xs bg-purple-500/10 text-purple-400 border-purple-500/30">
+                      <ShieldCheck className="h-3.5 w-3.5 mr-1" /> Razorpay Secured
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {CREDIT_PACKS.map((pack) => (
+                      <div
+                        key={pack.id}
+                        className={`glass-card rounded-2xl p-5 border flex flex-col justify-between relative transition-all duration-200 ${
+                          pack.popular
+                            ? "border-purple-500 bg-purple-500/10 shadow-lg shadow-purple-500/10"
+                            : "border-border/40 bg-secondary/20 hover:border-purple-500/50"
+                        }`}
+                      >
+                        {pack.popular && (
+                          <span className="absolute -top-2.5 right-4 bg-purple-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                            Most Popular
+                          </span>
+                        )}
+
+                        <div className="space-y-2 mb-4">
+                          <h4 className="font-bold text-sm text-foreground">{pack.name}</h4>
+                          <div className="text-2xl font-bold font-mono text-purple-400">
+                            ₹{pack.amount.toLocaleString()}
+                          </div>
+                          <p className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                            <Sparkles className="h-3 w-3" /> {pack.credits}
+                          </p>
+                          <p className="text-[11px] text-muted-foreground">
+                            Fast SAM mask segmentation & Grounding DINO detection.
+                          </p>
+                        </div>
+
+                        <Button
+                          onClick={() => handleBuyCredits(pack)}
+                          disabled={isRazorpayLoading}
+                          className={`w-full text-xs font-bold gap-1.5 h-9 rounded-xl ${
+                            pack.popular
+                              ? "bg-purple-600 hover:bg-purple-700 text-white"
+                              : "bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                          }`}
+                        >
+                          {isRazorpayLoading ? (
+                            <>
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              Opening Razorpay…
+                            </>
+                          ) : (
+                            <>
+                              <CreditCard className="h-3.5 w-3.5" />
+                              Pay ₹{pack.amount.toLocaleString()}
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -460,10 +540,10 @@ const IncomePayments = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => toast({ title: `Downloaded Receipt ${tx.reference}` })}
+                            onClick={() => toast({ title: `Receipt ${tx.reference}`, description: `Payment of ${tx.amount} verified on ${tx.date}` })}
                             className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground gap-1"
                           >
-                            <Download className="h-3 w-3" /> PDF
+                            <Download className="h-3 w-3" /> Receipt
                           </Button>
                         </td>
                       </tr>
