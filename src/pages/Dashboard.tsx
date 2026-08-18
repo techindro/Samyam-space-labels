@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { User, Mail, Edit3, Save, LogOut, ArrowLeft, Camera, Key, Copy, Check, Plus, Trash2, Layers, ExternalLink, Wallet } from "lucide-react";
 import InstallAppButton from "@/components/InstallAppButton";
+import ParallelWebBg from "@/components/ParallelWebBg";
 
 const Dashboard = () => {
   const [user, setUser] = useState<any>(null);
