@@ -13,6 +13,10 @@ declare module "npm:*" {
   export const createSupabaseHandler: any;
   export const createClient: any;
   export const corsHeaders: any;
+  export const createOpenAICompatible: any;
+  export const generateText: any;
+  export const streamText: any;
+  export const z: any;
 }
 
 declare module "https://*" {

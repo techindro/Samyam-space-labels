@@ -22,6 +22,7 @@ import DatasetItemCard, {
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { generateSamyamComprehensiveReply } from "@/lib/samyamPlatformKnowledge";
 
 type Attachment = DatasetItem;
 
@@ -104,11 +105,8 @@ Timestamps are aligned to the transcript so the audio can be cross-labeled with 
 Recommendation: stratified sampling plus targeted labeling of the minority class before the next training run.${schemaLine}`;
   }
 
-  return `On it — "${text.slice(0, 80)}".
-
-samyam's labeling engine can handle this across modalities: optical imagery, SAR, hyperspectral cubes and fused sensor streams. Typical flow is ingest → AI-assisted pre-labels → human review → IoU/mAP quality gates → export.
-
-Attach an image, an audio clip or a dataset file and I'll run a simulated labeling pass over it.`;
+  // Comprehensive Samyam Platform Knowledge Base lookup
+  return generateSamyamComprehensiveReply(text);
 }
 
 const OpenClawChat = () => {

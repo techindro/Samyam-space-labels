@@ -11,6 +11,11 @@ try:
 except ImportError:
     TRANSFORMERS_AVAILABLE = False
 
+from grounding_dino import grounding_dino_engine
+from sam_inference import sam_engine
+from audio_inference import whisper_engine, vggish_engine
+
+
 class AIEngine:
     def __init__(self):
         self.owlvit_processor = None
@@ -18,6 +23,10 @@ class AIEngine:
         self.blip_processor = None
         self.blip_model = None
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.grounding_dino = grounding_dino_engine
+        self.sam = sam_engine
+        self.whisper = whisper_engine
+        self.vggish = vggish_engine
 
     def _load_owlvit(self):
         if self.owlvit_model is None and TRANSFORMERS_AVAILABLE:
@@ -38,24 +47,22 @@ class AIEngine:
 
     def detect_objects_zero_shot(self, image_url: str, candidate_labels: list, threshold: float = 0.1):
         if not TRANSFORMERS_AVAILABLE:
-            return [{"id": "mock", "label": l, "confidence": 0.9, "bbox": {"x": 10, "y": 10, "w": 50, "h": 50}} for l in candidate_labels]
+            return [{"id": f"mock-{i}", "label": l, "confidence": 0.9, "bbox": {"x": 50 + i * 100, "y": 50 + i * 50, "w": 120, "h": 100}} for i, l in enumerate(candidate_labels)]
             
         self._load_owlvit()
         image = self._fetch_image(image_url)
         
-        # OWL-ViT needs text prompts in a list of lists, but for single image, just a list
         texts = [candidate_labels]
         inputs = self.owlvit_processor(text=texts, images=image, return_tensors="pt").to(self.device)
         
         with torch.no_grad():
             outputs = self.owlvit_model(**inputs)
             
-        # Target image sizes (height, width) to rescale bounding boxes back to the original image size
         target_sizes = torch.Tensor([image.size[::-1]]).to(self.device)
         results = self.owlvit_processor.post_process_object_detection(outputs=outputs, target_sizes=target_sizes, threshold=threshold)
         
         annotations = []
-        i = 0  # Retrieve predictions for the first image for the corresponding text queries
+        i = 0
         text = texts[i]
         boxes, scores, labels = results[i]["boxes"], results[i]["scores"], results[i]["labels"]
         
@@ -78,22 +85,18 @@ class AIEngine:
         self._load_blip()
         image = self._fetch_image(image_url)
         
-        # 1. Translate Hindi to English
         english_question = GoogleTranslator(source='hi', target='en').translate(hindi_question)
         print(f"Translated Q: {english_question}")
         
-        # 2. VQA Inference
         inputs = self.blip_processor(image, english_question, return_tensors="pt").to(self.device)
         with torch.no_grad():
             out = self.blip_model.generate(**inputs)
             english_answer = self.blip_processor.decode(out[0], skip_special_tokens=True)
             
         print(f"English Ans: {english_answer}")
-        
-        # 3. Translate English back to Hindi
         hindi_answer = GoogleTranslator(source='en', target='hi').translate(english_answer)
-        
         return hindi_answer
+
 
 # Singleton instance
 ai_engine = AIEngine()

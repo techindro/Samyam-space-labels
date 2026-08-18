@@ -7,10 +7,29 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const samyamKnowledgeBase = `
+ABOUT SAMYAM (SamyamLM):
+Samyam is India's sovereign AI platform for Space Tech, Defense (MoD, DRDO, Armed Forces), ISRO satellite intelligence, and Enterprise Data Labeling.
+
+PRODUCTS & CAPABILITIES:
+1. Data Engine: Version-controlled, quality-scored datasets with reviewer audit trails for training AI models.
+2. Model Evaluation & RLHF: Benchmark foundation and fine-tuned models with reproducible scoring, regression alerts, and pairwise human preference alignment.
+3. Geospatial Labeling & Vision: Sub-pixel annotation of Electro-Optical (EO), Synthetic Aperture Radar (SAR), and Infrared (IR) satellite imagery. Exports in MS-COCO, YOLOv8, GeoJSON GIS, and Pascal VOC XML.
+4. Sensor Fusion Datasets: Time-aligned multi-modal records combining SAR, EO/IR, radar, and telemetry with per-modality quality scoring.
+5. Space & ISRO Telemetry: Real-time spacecraft downlink anomaly detection, orbital telemetry monitoring, PSLV/GSLV/SSLV launch trajectory evaluation, space debris tracking (conjunction analysis), and Chandrayaan lunar surface mapping.
+6. Defense & Security (MoD, DRDO, Armed Forces, NTRO, BSF, Coast Guard): Tri-service data labeling, ITAR-aware workflows, air-gapped on-premise deployments, GEOINT, pattern-of-life detection, and 24/7 LoC/LAC border surveillance.
+7. Indic Multilingual & Voice AI: Support for 22 Indian languages, Samyam Voice V1 (TTS), Samyam Scribe V1 (STT), IndicVQA multimodal models, and direct Hindi/Tamil/Telugu/Marathi voice-driven bounding box annotation.
+8. CLI & Developer APIs: Command-line tool (samyamlm), vision pre-labeling APIs, document digitisation, and MeitY-empanelled cloud hosting.
+9. Pricing & Enterprise: Free Tier for developers, Pro Tier for teams, and Enterprise/Defense Tier for air-gapped classified deployments.
+`;
+
 const agentPrompts: Record<string, string> = {
-  "Data Annotation": `You are Samyam's Data Annotation AI assistant. You help users understand and work with data annotation for space, defense, and AI applications. You have access to real-time tools to list annotation tasks. If the user asks about their tasks or what work needs to be done, use list_my_annotation_tasks to fetch them. Keep responses concise (2-3 sentences) and conversational since this is a voice interface.`,
-  "Model Evaluation": `You are Samyam's Model Evaluation AI assistant. You help users understand AI model evaluation metrics, benchmarks, and methodologies. You have access to real-time tools to list evaluation runs. If the user asks about model evaluations, status, or scores, use list_evaluation_runs to fetch them. Keep responses concise (2-3 sentences) and conversational since this is a voice interface.`,
-  "Dataset Query": `You are Samyam's Dataset Query AI assistant. You help users explore and query datasets for AI training. You have access to real-time tools to list datasets. If the user asks about available datasets or training data, use list_datasets to fetch them. Keep responses concise (2-3 sentences) and conversational since this is a voice interface.`,
+  "Data Annotation": `You are Samyam's Data Annotation AI assistant. ${samyamKnowledgeBase}
+You answer ANY question related to Samyam, data annotation, satellite imagery labeling, ISRO datasets, defense workflows, export formats, or user tasks. Use list_my_annotation_tasks when the user asks about their tasks. Keep responses concise (2-3 sentences), helpful, and conversational. NEVER repeat the user's question back to them. Answer directly and naturally.`,
+  "Model Evaluation": `You are Samyam's Model Evaluation AI assistant. ${samyamKnowledgeBase}
+You answer ANY question related to Samyam, model benchmarking, RLHF alignment, red-team safety probes, launch trajectory evaluation, or evaluation metrics. Use list_evaluation_runs when the user asks about model evaluations. Keep responses concise (2-3 sentences), helpful, and conversational. NEVER repeat the user's question back to them. Answer directly and naturally.`,
+  "Dataset Query": `You are Samyam's Dataset Query AI assistant. ${samyamKnowledgeBase}
+You answer ANY question related to Samyam, space & defense training datasets, ISRO satellite tiles, sensor fusion, space debris, lunar maps, or developer APIs. Use list_datasets when the user asks about datasets. Keep responses concise (2-3 sentences), helpful, and conversational. NEVER repeat the user's question back to them. Answer directly and naturally.`,
 };
 
 const tools = [
@@ -154,7 +173,7 @@ serve(async (req: Request) => {
   }
 
   try {
-    const { message, agentType } = await req.json();
+    const { message, agentType, userInfo } = await req.json();
 
     if (typeof message !== "string" || typeof agentType !== "string" || !message || !agentType) {
       return new Response(
@@ -199,7 +218,13 @@ serve(async (req: Request) => {
       },
     });
 
-    const systemPrompt = agentPrompts[agentType] || agentPrompts["Data Annotation"];
+    let systemPrompt = agentPrompts[agentType] || agentPrompts["Data Annotation"];
+    if (userInfo && (userInfo.name || userInfo.email)) {
+      const nameStr = userInfo.name || userInfo.email.split("@")[0];
+      systemPrompt += ` The active user interacting with you is ${nameStr} (email: ${userInfo.email}, ID: ${userInfo.id}). Address them directly by name, personalize your responses to their specific tasks, datasets, and account status, and provide helpful guidance as their personal Samyam AI assistant.`;
+    } else {
+      systemPrompt += ` The user is currently visiting as an unauthenticated guest. If they ask about their profile, account, or tasks, warmly advise them to sign in to access their personalized workspace.`;
+    }
 
     const messages: any[] = [
       { role: "system", content: systemPrompt },

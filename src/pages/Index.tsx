@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import TrustedBy from "@/components/TrustedBy";
 import SolutionsSection from "@/components/SolutionsSection";
 import AgenticSection from "@/components/AgenticSection";
+import ExperienceSamyam from "@/components/ExperienceSamyam";
 import ProductsSection from "@/components/ProductsSection";
 import LearnAISection from "@/components/LearnAISection";
 import FeaturedResearch from "@/components/FeaturedResearch";
@@ -10,7 +11,6 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import CaseStudiesSection from "@/components/CaseStudiesSection";
 import ComplianceSection from "@/components/ComplianceSection";
 import PricingRoiCalculator from "@/components/PricingRoiCalculator";
-import ExperienceSamyam from "@/components/ExperienceSamyam";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
 

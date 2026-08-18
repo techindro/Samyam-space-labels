@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
-import { Check, Zap, Shield, Building2, ArrowRight, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Check, Zap, Shield, Building2, ArrowRight, Sparkles, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { Button } from "@/components/ui/button";
 import PricingRoiCalculator from "@/components/PricingRoiCalculator";
+import { useRazorpayCheckout } from "@/hooks/useRazorpayCheckout";
 
 const plans = [
   {
@@ -90,6 +91,19 @@ const apiPricing = [
 ];
 
 const Pricing = () => {
+  const navigate = useNavigate();
+  const { initiatePayment, isLoading: isPaymentLoading } = useRazorpayCheckout();
+
+  const handleProPlanCheckout = () => {
+    initiatePayment({
+      amount: 999900, // ₹9,999 in paise
+      planName: "Pro",
+      onSuccess: () => {
+        navigate("/dashboard");
+      },
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -171,18 +185,37 @@ const Pricing = () => {
                         ))}
                       </ul>
 
-                      <Link to={plan.href}>
+                      {plan.name === "Pro" ? (
                         <Button
-                          className={`w-full ${
-                            plan.outlined
-                              ? "border-foreground/30 hover:bg-secondary"
-                              : "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0 hover:opacity-90"
-                          }`}
-                          variant={plan.outlined ? "outline" : "default"}
+                          onClick={handleProPlanCheckout}
+                          disabled={isPaymentLoading}
+                          className="w-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0 hover:opacity-90"
                         >
-                          {plan.cta} <ArrowRight className="h-4 w-4 ml-2" />
+                          {isPaymentLoading ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Processing…
+                            </>
+                          ) : (
+                            <>
+                              {plan.cta} <ArrowRight className="h-4 w-4 ml-2" />
+                            </>
+                          )}
                         </Button>
-                      </Link>
+                      ) : (
+                        <Link to={plan.href}>
+                          <Button
+                            className={`w-full ${
+                              plan.outlined
+                                ? "border-foreground/30 hover:bg-secondary"
+                                : "bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-primary-foreground border-0 hover:opacity-90"
+                            }`}
+                            variant={plan.outlined ? "outline" : "default"}
+                          >
+                            {plan.cta} <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </Link>
+                      )}
                     </div>
                   </motion.div>
                 );

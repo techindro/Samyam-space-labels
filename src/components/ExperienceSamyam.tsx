@@ -1,354 +1,172 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { Mic, MicOff, Volume2, Loader2, X, Database, BarChart3, Search, ArrowRight } from "lucide-react";
-import { useState, useCallback, useRef } from "react";
-import { Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Database, BarChart3, Search, Mic, ArrowRight, Bot, X, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { generateSamyamComprehensiveReply } from "@/lib/samyamPlatformKnowledge";
 
-const agents = [
-  {
-    title: "Data Annotation",
-    description: "Label & annotate datasets for space and defense AI models",
-    icon: Database,
-    href: "/annotate/demo",
-  },
-  {
-    title: "Model Evaluation",
-    description: "Benchmark and evaluate AI model performance metrics",
-    icon: BarChart3,
-    href: "/research/frontier-leaderboards",
-  },
-  {
-    title: "Dataset Query",
-    description: "Explore and search curated training datasets",
-    icon: Search,
-    href: "/space-tech",
-  },
-];
-
-type AgentState = "idle" | "listening" | "processing" | "speaking";
-
-function getAnswerForQuestion(message: string, agentType: string): string {
-  const q = message.toLowerCase();
-  if (q.includes("model") || q.includes("architecture") || q.includes("vit") || q.includes("yolo") || q.includes("accuracy")) {
-    return "SamyamLM uses CLIP ViT-B/32, YOLOv8 object detection, and IndicVQA multimodal transformers for real-time space & defense inference.";
-  }
-  if (q.includes("isro") || q.includes("satellite") || q.includes("sar") || q.includes("radar") || q.includes("liss")) {
-    return "Our ISRO data engine provides sub-meter LISS-4 multispectral tiles and Sentinel-1 VV/VH polarimetric SAR radar overlays.";
-  }
-  if (q.includes("export") || q.includes("format") || q.includes("coco") || q.includes("yolo") || q.includes("geojson")) {
-    return "You can export labeled datasets directly in MS-COCO JSON, YOLOv8 PyTorch format, ISRO GeoJSON GIS, or Pascal VOC XML.";
-  }
-  if (q.includes("hindi") || q.includes("voice") || q.includes("indic") || q.includes("command")) {
-    return "Our Indic Voice engine processes direct Hindi, Tamil, Telugu, and Marathi voice commands to place bounding boxes automatically.";
-  }
-  if (q.includes("dataset") || q.includes("data") || q.includes("sample") || q.includes("task")) {
-    return `For ${agentType}, SamyamLM has over 275,000 verified space and road datasets ready for training and evaluation.`;
-  }
-  return `Regarding your question about "${message}": SamyamLM provides AI data labeling, ISRO satellite telemetry, and Indic VQA models for space and defense.`;
-}
-
-const ExperienceSamyam = () => {
-  const [activeAgent, setActiveAgent] = useState<number | null>(null);
-  const [agentStates, setAgentStates] = useState<AgentState[]>(["idle", "idle", "idle"]);
-  const [transcripts, setTranscripts] = useState<string[]>(["", "", ""]);
-  const [replies, setReplies] = useState<string[]>(["", "", ""]);
-  const recognitionRef = useRef<any>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+export default function ExperienceSamyam() {
+  const [activeVoiceAgent, setActiveVoiceAgent] = useState<{ title: string; query: string; answer: string } | null>(null);
+  const [isListening, setIsListening] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const updateState = (index: number, state: AgentState) => {
-    setAgentStates((prev) => prev.map((s, i) => (i === index ? state : s)));
-  };
-
-  const updateTranscript = (index: number, text: string) => {
-    setTranscripts((prev) => prev.map((s, i) => (i === index ? text : s)));
-  };
-
-  const updateReply = (index: number, text: string) => {
-    setReplies((prev) => prev.map((s, i) => (i === index ? text : s)));
-  };
-
-  const stopEverything = useCallback((index: number) => {
-    if (recognitionRef.current) {
-      try { recognitionRef.current.stop(); } catch {}
-      recognitionRef.current = null;
-    }
-    window.speechSynthesis.cancel();
-    updateState(index, "idle");
-    setActiveAgent(null);
-  }, []);
-
-  const pickIndianVoice = (preferFemale: boolean): SpeechSynthesisVoice | null => {
-    const voices = window.speechSynthesis.getVoices();
-    if (!voices.length) return null;
-    const indian = voices.filter((v) =>
-      /(^|[-_])(en-IN|hi-IN|hi|IN)\b/i.test(v.lang) ||
-      /(india|hindi|ravi|heera|priya|aditi|kalpana|isha|neerja|rishi)/i.test(v.name)
-    );
-    const pool = indian.length ? indian : voices;
-    const female = pool.find((v) => /female|heera|priya|aditi|isha|neerja|kalpana|swara|google हिन्दी/i.test(v.name));
-    const male = pool.find((v) => /male|ravi|rishi|hemant|google.*india.*male/i.test(v.name)) ||
-                 pool.find((v) => !/female/i.test(v.name));
-    return (preferFemale ? female || male : male || female) || pool[0];
-  };
-
-  const speakWithIndianVoice = (index: number, reply: string) => {
-    const utterance = new SpeechSynthesisUtterance(reply);
-    // Female for agents 0 and 2, Male for agent 1 (alternating)
-    const preferFemale = index % 2 === 0;
-    const voice = pickIndianVoice(preferFemale);
-    if (voice) utterance.voice = voice;
-    utterance.lang = voice?.lang || "en-IN";
-    utterance.rate = 0.95;
-    utterance.pitch = preferFemale ? 1.1 : 0.95;
-    utteranceRef.current = utterance;
-    utterance.onend = () => { updateState(index, "idle"); setActiveAgent(null); };
-    utterance.onerror = () => { updateState(index, "idle"); setActiveAgent(null); };
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const processWithAI = useCallback(async (index: number, message: string, agentType: string) => {
-    updateState(index, "processing");
-    try {
-      const { data, error } = await supabase.functions.invoke("voice-agent", {
-        body: { message, agentType },
-      });
-      let reply = data?.reply;
-      if (error || !reply) {
-        reply = getAnswerForQuestion(message, agentType);
-      }
-      updateReply(index, reply);
-      updateState(index, "speaking");
-      // Ensure voices are loaded (some browsers load async)
-      if (!window.speechSynthesis.getVoices().length) {
-        await new Promise<void>((resolve) => {
-          const timer = setTimeout(() => resolve(), 800);
-          window.speechSynthesis.onvoiceschanged = () => { clearTimeout(timer); resolve(); };
-        });
-      }
-      speakWithIndianVoice(index, reply);
-    } catch (err: any) {
-      console.warn("AI voice agent fallback for query:", message);
-      const fallbackReply = getAnswerForQuestion(message, agentType);
-      updateReply(index, fallbackReply);
-      updateState(index, "speaking");
-      speakWithIndianVoice(index, fallbackReply);
-    }
-  }, []);
-
-  const handleSpeak = useCallback(async (index: number) => {
-    if (activeAgent === index) { stopEverything(index); return; }
-    if (activeAgent !== null) { stopEverything(activeAgent); }
-
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      toast({ variant: "destructive", title: "Not supported", description: "Speech recognition is not supported in this browser. Try Chrome." });
-      return;
-    }
-
-    setActiveAgent(index);
-    updateState(index, "listening");
-    updateTranscript(index, "");
-    updateReply(index, "");
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-IN";
-    recognition.interimResults = true;
-    recognition.continuous = false;
-    recognitionRef.current = recognition;
-
-    recognition.onresult = (event: any) => {
-      const transcript = Array.from(event.results).map((r: any) => r[0].transcript).join("");
-      updateTranscript(index, transcript);
-    };
-
-    recognition.onend = async () => {
-      setTranscripts((prev) => {
-        const text = prev[index];
-        if (text && text.trim()) {
-          processWithAI(index, text, agents[index].title);
-        } else {
-          updateState(index, "idle");
-          setActiveAgent(null);
-        }
-        return prev;
-      });
-    };
-
-    recognition.onerror = (e: any) => {
-      if (e.error !== "aborted") {
-        toast({ variant: "destructive", title: "Mic error", description: `Could not access microphone: ${e.error}` });
-      }
-      updateState(index, "idle");
-      setActiveAgent(null);
-    };
-
-    try { recognition.start(); } catch {
-      updateState(index, "idle");
-      setActiveAgent(null);
-    }
-  }, [activeAgent, stopEverything, toast, processWithAI]);
-
-  const getButtonLabel = (state: AgentState) => {
-    switch (state) {
-      case "listening": return "Listening...";
-      case "processing": return "Thinking...";
-      case "speaking": return "Speaking...";
-      default: return "Start Speaking";
-    }
-  };
-
-  const getButtonIcon = (state: AgentState) => {
-    switch (state) {
-      case "listening": return <MicOff className="h-4 w-4" />;
-      case "processing": return <Loader2 className="h-4 w-4 animate-spin" />;
-      case "speaking": return <Volume2 className="h-4 w-4 animate-pulse" />;
-      default: return <Mic className="h-4 w-4" />;
-    }
+  const handleStartSpeaking = (cardTitle: string, defaultQuery: string) => {
+    const answer = generateSamyamComprehensiveReply(defaultQuery);
+    setActiveVoiceAgent({ title: cardTitle, query: defaultQuery, answer });
+    setIsListening(true);
+    toast({
+      title: `🎙️ Voice AI Agent Active: ${cardTitle}`,
+      description: "Asking Samyam AI Platform Knowledge Base…",
+    });
   };
 
   return (
-    <section className="py-24 px-4 relative">
-      <div className="container mx-auto max-w-6xl">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full border border-border bg-secondary/50">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-foreground opacity-40" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-foreground" />
-            </span>
-            <span className="text-xs font-medium tracking-widest uppercase text-muted-foreground">Live Agents</span>
+    <section className="py-20 px-4 relative overflow-hidden bg-background">
+      <div className="max-w-6xl mx-auto text-center relative z-10">
+        {/* Live Agents Pill Badge */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-secondary/80 border border-border/60 text-foreground text-xs font-semibold uppercase tracking-wider mb-5 shadow-sm">
+          <span className="w-2 h-2 rounded-full bg-[#0a0b14] animate-pulse" />
+          <span>LIVE AGENTS</span>
+        </div>
+
+        {/* Section Heading */}
+        <h2 className="text-3xl sm:text-5xl font-bold font-display text-foreground tracking-tight mb-4">
+          Experience Samyam
+        </h2>
+
+        {/* Subtitle */}
+        <p className="text-muted-foreground max-w-2xl mx-auto text-sm sm:text-base mb-12 leading-relaxed">
+          Interact with our AI agents using your voice. Ask questions about annotation, evaluation, or datasets.
+        </p>
+
+        {/* 3 Live Voice AI Agent Cards */}
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto text-left">
+          {/* Card 1: Data Annotation */}
+          <div className="p-6 rounded-2xl bg-card border border-border/60 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div className="space-y-4 mb-8">
+              <div className="w-12 h-12 rounded-xl bg-secondary/70 flex items-center justify-center text-foreground group-hover:scale-105 transition-transform">
+                <Database className="w-6 h-6" />
+              </div>
+
+              <h3 className="font-bold text-xl text-foreground">Data Annotation</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Label & annotate datasets for space and defense AI models
+              </p>
+
+              <div>
+                <Link
+                  to="/annotate/demo"
+                  className="inline-flex items-center text-xs font-bold text-foreground hover:underline gap-1 transition-all"
+                >
+                  Open Annotation Tool <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => handleStartSpeaking("Data Annotation", "How do I annotate satellite imagery, use Grounding DINO, SAM masks, and export COCO in Samyam?")}
+              className="w-full py-5 rounded-xl font-bold text-xs gap-2 transition-all shadow-md bg-slate-950 hover:bg-slate-900 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+            >
+              <Mic className="w-4 h-4" />
+              <span>Start Speaking</span>
+            </Button>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-3">
-            Experience Samyam
-          </h2>
-          <p className="text-muted-foreground max-w-lg mx-auto text-sm">
-            Interact with our AI agents using your voice. Ask questions about annotation, evaluation, or datasets.
-          </p>
+
+          {/* Card 2: Model Evaluation */}
+          <div className="p-6 rounded-2xl bg-card border border-border/60 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div className="space-y-4 mb-8">
+              <div className="w-12 h-12 rounded-xl bg-secondary/70 flex items-center justify-center text-foreground group-hover:scale-105 transition-transform">
+                <BarChart3 className="w-6 h-6" />
+              </div>
+
+              <h3 className="font-bold text-xl text-foreground">Model Evaluation</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Benchmark and evaluate AI model performance metrics
+              </p>
+
+              <div>
+                <Link
+                  to="/openclaw-chat"
+                  className="inline-flex items-center text-xs font-bold text-foreground hover:underline gap-1 transition-all"
+                >
+                  Explore <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => handleStartSpeaking("Model Evaluation", "How does Active Learning queue sorting and IoU model evaluation work in Samyam?")}
+              className="w-full py-5 rounded-xl font-bold text-xs gap-2 transition-all shadow-md bg-slate-950 hover:bg-slate-900 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+            >
+              <Mic className="w-4 h-4" />
+              <span>Start Speaking</span>
+            </Button>
+          </div>
+
+          {/* Card 3: Dataset Query */}
+          <div className="p-6 rounded-2xl bg-card border border-border/60 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+            <div className="space-y-4 mb-8">
+              <div className="w-12 h-12 rounded-xl bg-secondary/70 flex items-center justify-center text-foreground group-hover:scale-105 transition-transform">
+                <Search className="w-6 h-6" />
+              </div>
+
+              <h3 className="font-bold text-xl text-foreground">Dataset Query</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Explore and search curated training datasets
+              </p>
+
+              <div>
+                <Link
+                  to="/openclaw-chat"
+                  className="inline-flex items-center text-xs font-bold text-foreground hover:underline gap-1 transition-all"
+                >
+                  Explore <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            <Button
+              onClick={() => handleStartSpeaking("Dataset Query", "What datasets, formats, and SAR polarizations are supported in Samyam?")}
+              className="w-full py-5 rounded-xl font-bold text-xs gap-2 transition-all shadow-md bg-slate-950 hover:bg-slate-900 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+            >
+              <Mic className="w-4 h-4" />
+              <span>Start Speaking</span>
+            </Button>
+          </div>
         </div>
 
-        {/* Agent Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {agents.map((agent, i) => {
-            const state = agentStates[i];
-            const isActive = state !== "idle";
-            const Icon = agent.icon;
-
-            return (
-              <motion.div
-                key={agent.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.12, duration: 0.5 }}
-                className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden ${
-                  isActive
-                    ? "border-foreground bg-foreground text-primary-foreground shadow-[0_0_40px_-12px_hsl(var(--foreground)/0.3)]"
-                    : "border-border bg-card hover:border-foreground/30 hover:shadow-lg"
-                }`}
+        {/* Voice AI Agent Platform Knowledge Answer Modal */}
+        {activeVoiceAgent && (
+          <div className="mt-8 p-6 rounded-2xl bg-[#0c0d18] border border-[#252942] text-left max-w-4xl mx-auto shadow-2xl relative animate-in fade-in slide-in-from-bottom-4">
+            <button
+              onClick={() => setActiveVoiceAgent(null)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="flex items-center gap-2 mb-3 text-indigo-400 font-bold text-xs uppercase tracking-wider">
+              <Bot className="w-4 h-4" /> Voice AI Agent — Platform Knowledge Response
+            </div>
+            <h4 className="text-base font-bold text-white mb-2 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-indigo-400" /> {activeVoiceAgent.title}
+            </h4>
+            <div className="text-xs text-slate-300 space-y-2 leading-relaxed bg-[#131526] p-4 rounded-xl border border-[#23263d]">
+              <div className="whitespace-pre-line">{activeVoiceAgent.answer}</div>
+            </div>
+            <div className="mt-4 flex items-center justify-end gap-3">
+              <Button
+                size="sm"
+                onClick={() => navigate("/openclaw-chat")}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold gap-1 rounded-xl"
               >
-                {/* Geometric accent */}
-                <div className={`absolute top-0 right-0 w-32 h-32 rounded-bl-[80px] transition-colors duration-300 ${
-                  isActive ? "bg-primary-foreground/5" : "bg-secondary/60"
-                }`} />
-
-                <div className="relative p-8 flex flex-col min-h-[320px]">
-                  {/* Icon */}
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-colors duration-300 ${
-                    isActive ? "bg-primary-foreground/15" : "bg-secondary"
-                  }`}>
-                    <Icon className="h-5 w-5" />
-                  </div>
-
-                  {/* Title & description */}
-                  <h3 className="text-lg font-semibold font-display mb-2">{agent.title}</h3>
-                  <p className={`text-sm mb-3 leading-relaxed ${
-                    isActive ? "text-primary-foreground/70" : "text-muted-foreground"
-                  }`}>
-                    {agent.description}
-                  </p>
-
-                  {/* Quick-access link */}
-                  {agent.href && (
-                    <Link
-                      to={agent.href}
-                      className={`inline-flex items-center gap-1 text-xs font-medium mb-4 transition-colors ${
-                        isActive
-                          ? "text-primary-foreground/60 hover:text-primary-foreground"
-                          : "text-cosmic-purple hover:text-cosmic-purple/80"
-                      }`}
-                    >
-                      {i === 0 ? "Open Annotation Tool" : "Explore"}
-                      <ArrowRight size={11} />
-                    </Link>
-                  )}
-
-                  {/* Spacer */}
-                  <div className="flex-1" />
-
-                  {/* Transcript/Reply */}
-                  <AnimatePresence>
-                    {(transcripts[i] || replies[i]) && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mb-4 overflow-hidden"
-                      >
-                        {transcripts[i] && (
-                          <p className={`text-xs italic mb-1.5 ${isActive ? "text-primary-foreground/50" : "text-muted-foreground"}`}>
-                            {`"${transcripts[i]}"`}
-                          </p>
-                        )}
-                        {replies[i] && (
-                          <div className={`text-xs rounded-lg px-3 py-2.5 leading-relaxed ${
-                            isActive ? "bg-primary-foreground/10 text-primary-foreground/90" : "bg-secondary text-foreground"
-                          }`}>
-                            {replies[i]}
-                          </div>
-                        )}
-                        {state === "idle" && (
-                          <button
-                            onClick={() => { updateTranscript(i, ""); updateReply(i, ""); }}
-                            className={`mt-1.5 text-xs flex items-center gap-1 transition-colors ${
-                              isActive ? "text-primary-foreground/40 hover:text-primary-foreground/70" : "text-muted-foreground hover:text-foreground"
-                            }`}
-                          >
-                            <X className="h-3 w-3" /> Clear
-                          </button>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Voice button */}
-                  <button
-                    onClick={() => handleSpeak(i)}
-                    className={`w-full flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
-                      isActive
-                        ? "bg-primary-foreground text-foreground shadow-lg"
-                        : "bg-foreground text-primary-foreground hover:opacity-90"
-                    }`}
-                  >
-                    {getButtonIcon(state)}
-                    {getButtonLabel(state)}
-
-                    {/* Listening pulse rings */}
-                    {state === "listening" && (
-                      <>
-                        <span className="absolute inset-0 rounded-xl animate-ping border border-foreground/20 pointer-events-none" style={{ animationDuration: "1.5s" }} />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+                <span>Ask Follow-up Question in OpenClaw Chat</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
-};
-
-export default ExperienceSamyam;
+}

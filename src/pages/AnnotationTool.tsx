@@ -52,18 +52,6 @@ export const PRELOADED_DATASETS = [
     ],
   },
   {
-    id: "sar-sentinel",
-    name: "Sentinel-1 SAR Radar Vessels",
-    category: "SAR Radar Multi-Band",
-    icon: Radio,
-    url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
-    modality: "sar_radar",
-    annotations: [
-      { id: "pre-3", type: "bbox", label: "Aircraft", color: "#ef4444", bbox: [250, 190, 185, 125] },
-      { id: "pre-4", type: "bbox", label: "Infrastructure", color: "#eab308", bbox: [510, 310, 220, 140] },
-    ],
-  },
-  {
     id: "indian-infra",
     name: "Indian Urban Road Perception",
     category: "Aerial & Drone Vehicles",
@@ -84,6 +72,41 @@ export const PRELOADED_DATASETS = [
     modality: "vision",
     annotations: [
       { id: "pre-7", type: "polygon", label: "Lunar Crater", color: "#ec4899", points: [[210, 190], [330, 160], [410, 270], [290, 320]] },
+    ],
+  },
+  {
+    id: "sat-solar",
+    name: "Space Satellite Solar Array",
+    category: "Orbital Satellite Vision",
+    icon: Globe,
+    url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1280&auto=format&fit=crop",
+    modality: "vision",
+    annotations: [
+      { id: "pre-8", type: "bbox", label: "Satellite Antenna", color: "#6366f1", bbox: [220, 140, 260, 180] },
+      { id: "pre-9", type: "polygon", label: "Solar Panel", color: "#10b981", points: [[480, 120], [620, 90], [680, 220], [540, 250]] },
+    ],
+  },
+  {
+    id: "drone-topo",
+    name: "Urban Drone Aerial Map",
+    category: "High-Res Aerial Survey",
+    icon: Building2,
+    url: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1280&auto=format&fit=crop",
+    modality: "vision",
+    annotations: [
+      { id: "pre-10", type: "bbox", label: "Building", color: "#a855f7", bbox: [190, 180, 220, 190] },
+    ],
+  },
+  {
+    id: "sar-sentinel",
+    name: "Sentinel-1 SAR Radar Vessels",
+    category: "SAR Radar Multi-Band",
+    icon: Radio,
+    url: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
+    modality: "sar_radar",
+    annotations: [
+      { id: "pre-3", type: "bbox", label: "Aircraft", color: "#ef4444", bbox: [250, 190, 185, 125] },
+      { id: "pre-4", type: "bbox", label: "Infrastructure", color: "#eab308", bbox: [510, 310, 220, 140] },
     ],
   },
 ];
@@ -253,8 +276,55 @@ export default function AnnotationTool() {
     }
   }, [imageUrl, imageDims, state, toast]);
 
+  // ── Grounding DINO Zero-Shot Text Prompting State & Handler ──
+  const [groundingDinoPrompt, setGroundingDinoPrompt] = useState("satellite antenna  .  solar panel  .  vehicle  .  crater");
+  const [groundingDinoThreshold, setGroundingDinoThreshold] = useState(0.3);
+  const [runningGroundingDino, setRunningGroundingDino] = useState(false);
+
+  const handleGroundingDinoPrelabel = useCallback(async () => {
+    if (!groundingDinoPrompt.trim()) {
+      toast({ title: "Please enter a text prompt for Grounding DINO", variant: "destructive" });
+      return;
+    }
+    setRunningGroundingDino(true);
+    toast({
+      title: "Running Grounding DINO zero-shot detection…",
+      description: `Searching for: "${groundingDinoPrompt}"`
+    });
+
+    try {
+      const results = await samyamApi.runGroundingDino(imageUrl, groundingDinoPrompt, groundingDinoThreshold);
+      results.forEach((r) => {
+        const matchingLabel = state.labels.find(l => l.name.toLowerCase() === r.label.toLowerCase());
+        const color = matchingLabel ? matchingLabel.color : "#3b82f6";
+        state.addAnnotation({
+          id: `gdino-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          type: "bbox",
+          label: `${r.label} (${Math.round(r.confidence * 100)}%)`,
+          color: color,
+          bbox: r.bbox,
+        });
+      });
+
+      toast({
+        title: "Grounding DINO complete",
+        description: results.length
+          ? `Generated ${results.length} bounding box${results.length === 1 ? "" : "es"} for text prompt.`
+          : "No objects found matching text prompt.",
+      });
+    } catch (e) {
+      toast({
+        title: "Grounding DINO failed",
+        description: e instanceof Error ? e.message : "Inference error",
+        variant: "destructive",
+      });
+    } finally {
+      setRunningGroundingDino(false);
+    }
+  }, [imageUrl, groundingDinoPrompt, groundingDinoThreshold, state, toast]);
 
   // ── Audio Modality State ──
+  const [audioUrl, setAudioUrl] = useState(DEMO_AUDIO);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const [audioDuration, setAudioDuration] = useState(15.4);
@@ -274,12 +344,62 @@ export default function AnnotationTool() {
   ]);
 
   // ── Audio Upload & File handling ──
-  const [audioUrl, setAudioUrl] = useState(DEMO_AUDIO);
   const [customAudioInputUrl, setCustomAudioInputUrl] = useState("");
   const [newAudioTranscript, setNewAudioTranscript] = useState("");
   const [newAudioSpeaker, setNewAudioSpeaker] = useState("Speaker 1");
   const [showAddSegmentBox, setShowAddSegmentBox] = useState(false);
   const audioInputRef = useRef<HTMLInputElement | null>(null);
+
+  // ── Audio AI: Whisper Transcription & VGGish Event Detection State & Handlers ──
+  const [runningWhisper, setRunningWhisper] = useState(false);
+  const [runningVggish, setRunningVggish] = useState(false);
+  const [vggishEvents, setVggishEvents] = useState<import("@/lib/samyamApi").VggishEventResult[]>([]);
+
+  const handleWhisperAutoTranscribe = useCallback(async () => {
+    setRunningWhisper(true);
+    toast({ title: "Running Whisper ASR Engine…", description: "Auto-transcribing speech audio with timestamps" });
+    try {
+      const resp = await samyamApi.runWhisperTranscription(audioUrl);
+      if (resp.segments && resp.segments.length > 0) {
+        const newSegments = resp.segments.map(seg => ({
+          id: seg.id,
+          start: seg.start,
+          end: seg.end,
+          speaker: seg.speaker,
+          tag: "Whisper ASR",
+          transcript: seg.transcript
+        }));
+        setAudioSegments(newSegments);
+        toast({
+          title: "✓ Whisper Speech Transcription Complete!",
+          description: `Extracted ${resp.segments.length} timestamped speech segments.`
+        });
+      }
+    } catch (e) {
+      toast({ title: "Whisper transcription failed", description: "Inference error", variant: "destructive" });
+    } finally {
+      setRunningWhisper(false);
+    }
+  }, [audioUrl, toast]);
+
+  const handleVggishAudioEvents = useCallback(async () => {
+    setRunningVggish(true);
+    toast({ title: "Running VGGish Acoustic Event Detection…", description: "Scanning sound events across audio timeline" });
+    try {
+      const resp = await samyamApi.runVggishEventDetection(audioUrl);
+      if (resp.events && resp.events.length > 0) {
+        setVggishEvents(resp.events);
+        toast({
+          title: "✓ VGGish Acoustic Event Detection Complete!",
+          description: `Identified ${resp.events.length} sound events across audio track.`
+        });
+      }
+    } catch (e) {
+      toast({ title: "VGGish detection failed", description: "Inference error", variant: "destructive" });
+    } finally {
+      setRunningVggish(false);
+    }
+  }, [audioUrl, toast]);
 
   const handleAudioFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -622,122 +742,237 @@ export default function AnnotationTool() {
   );
 
   return (
-    <div className="dark h-screen flex flex-col bg-gradient-to-b from-[#080814] via-[#0c0c1b] to-[#06060f] text-white overflow-hidden select-none">
+    <div className="dark h-screen flex flex-col bg-[#060712] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#111536]/40 via-[#060712] to-[#030408] text-white overflow-hidden select-none">
 
-      {/* ── Top Bar ── */}
-      <header className="shrink-0 flex items-center justify-between gap-2 px-3 sm:px-4 py-2 min-h-14 border-b border-[#25283d] bg-[#0c0d18]/95 backdrop-blur-md z-20 shadow-xl overflow-x-auto no-scrollbar">
-        {/* Left: Back & Title */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      {/* ── Main Navigation Header ── */}
+      <header className="shrink-0 flex items-center justify-between gap-4 px-5 py-2.5 min-h-14 border-b border-[#1e2238]/80 bg-[#0c0d18] z-20 shadow-md">
+        {/* Left: Back Arrow + Title + Modality Switcher Tabs (Spacious & Clean) */}
+        <div className="flex items-center gap-4 shrink-0">
           <button onClick={() => navigate(-1)} className="text-slate-400 hover:text-white transition-colors shrink-0 p-1.5 rounded-lg hover:bg-white/10" title="Back">
             <ArrowLeft size={18} />
           </button>
-          <div>
-            <p className="text-white font-bold text-xs sm:text-sm font-display truncate max-w-[140px] sm:max-w-[220px]">
-              {task?.title ?? "Multimodal Labeling Workspace"}
+          
+          <div className="flex items-center gap-2.5 shrink-0">
+            <p className="text-white font-bold text-sm tracking-tight font-display truncate max-w-[200px] sm:max-w-[240px]">
+              {task?.title ?? "Samyam LM Workspace"}
             </p>
+            {task?.status && (
+              <span className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColors[task.status] ?? ""}`}>
+                {task.status.replace("_", " ")}
+              </span>
+            )}
           </div>
-          {task?.status && (
-            <span className={`shrink-0 text-[9px] sm:text-[10px] px-2 sm:px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-wider ${statusColors[task.status] ?? ""}`}>
-              {task.status.replace("_", " ")}
-            </span>
-          )}
-        </div>
 
-        {/* Modality Switcher Tabs */}
-        <div className="flex items-center gap-1 bg-[#06070d] p-1 rounded-xl border border-[#23263d] shadow-inner overflow-x-auto no-scrollbar shrink-0 max-w-full">
-          {[
-            { id: "vision", label: "2D Vision", icon: ImageIcon },
-            { id: "audio", label: "Audio & Speech", icon: Mic },
-            { id: "video", label: "Video Tracking", icon: VideoIcon },
-            { id: "text_rlhf", label: "Text & RLHF", icon: FileText },
-            { id: "sar_radar", label: "SAR & Radar", icon: Radar },
-          ].map((m) => {
-            const Icon = m.icon;
-            const active = activeModality === m.id;
-            return (
-              <button
-                key={m.id}
-                onClick={() => {
-                  setActiveModality(m.id as Modality);
-                  toast({ title: `Switched to ${m.label} Modality` });
-                }}
-                className={`flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold transition-all duration-200 shrink-0 ${
-                  active
-                    ? "bg-white text-slate-950 shadow-[0_0_12px_rgba(255,255,255,0.4)] scale-105"
-                    : "text-slate-400 hover:text-white hover:bg-white/10"
-                }`}
-              >
-                <Icon size={14} />
-                <span className="hidden sm:inline">{m.label}</span>
-              </button>
-            );
-          })}
-        </div>
+          {/* Modality Switcher Tabs (Shifted left with clean spacing to give Export/Save room) */}
+          <div className="flex items-center gap-1.5 bg-[#06070d] p-1.5 rounded-xl border border-[#23263d] shadow-inner overflow-x-auto no-scrollbar shrink-0 ml-4 pl-3 border-l border-[#252942]">
 
-        {/* Actions (Hindi Keyboard, AI Pre-label, SAM Segment, Export JSON, Save) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 overflow-x-auto no-scrollbar max-w-full py-0.5">
+            {[
+              { id: "vision", label: "2D Vision", icon: ImageIcon },
+              { id: "audio", label: "Audio & Speech", icon: Mic },
+              { id: "video", label: "Video Tracking", icon: VideoIcon },
+              { id: "text_rlhf", label: "Text & RLHF", icon: FileText },
+              { id: "sar_radar", label: "SAR & Radar", icon: Radar },
+            ].map((m) => {
+              const Icon = m.icon;
+              const active = activeModality === m.id;
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => {
+                    setActiveModality(m.id as Modality);
+                    toast({ title: `Switched to ${m.label} Modality` });
+                  }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 shrink-0 ${
+                    active
+                      ? "bg-white text-slate-950 shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+                      : "text-slate-400 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  <Icon size={14} />
+                  <span>{m.label}</span>
+                </button>
+              );
+            })}
 
-          {/* Mobile Labels Toggle Button */}
-          {activeModality === "vision" && (
-            <Button
-              size="sm"
-              onClick={() => setShowMobileLabels(v => !v)}
-              className="md:hidden h-7 px-2 text-xs bg-indigo-950/80 border border-indigo-500/50 text-indigo-200 font-bold gap-1 shrink-0"
+            {/* Separator Divider */}
+            <div className="h-4 w-px bg-[#23263d] mx-2 shrink-0" />
+
+            {/* AI Keyboard Button */}
+            <button
+              onClick={() => setShowHindiKb((v) => !v)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 shrink-0 ${
+                showHindiKb
+                  ? "bg-white text-slate-950 shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+                  : "bg-white/10 text-white hover:bg-white/20 border border-white/10"
+              }`}
+              title="Toggle Indic / Hindi AI Keyboard"
             >
-              <Layers size={13} />
-              <span>Labels ({state.annotations.length})</span>
-            </Button>
-          )}
+              <span className="font-semibold text-xs">क/A</span>
+              <span>AI Keyboard</span>
+            </button>
 
-          {/* Devanagari Keyboard Toggle */}
-          <Button
-            size="sm"
-            onClick={() => setShowHindiKb(v => !v)}
-            className={`h-7 px-2.5 text-xs gap-1 transition-colors border shrink-0 ${
-              showHindiKb ? "bg-white text-slate-950 font-bold border-white shadow-[0_0_10px_rgba(255,255,255,0.4)]" : "bg-[#1e2238] border-[#343956] text-slate-200 hover:bg-[#282d4a]"
-            }`}
-          >
-            <span>क/A</span>
-            <span className="hidden sm:inline">Hindi Keyboard</span>
-          </Button>
-
-          {/* AI Pre-label Button */}
-          {activeModality === "vision" && (
-            <Button
-              size="sm"
+            {/* AI Pre-label Button (With clear spacing ml-2.5) */}
+            <button
               onClick={handleAiPrelabel}
               disabled={runningAi}
-              className="h-7 px-2.5 text-xs bg-white/10 border border-white/40 text-white hover:bg-white/20 gap-1 font-semibold shrink-0"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 shrink-0 ml-2.5 ${
+                runningAi
+                  ? "bg-slate-200 text-slate-700 cursor-wait opacity-80"
+                  : "bg-white text-slate-950 hover:bg-slate-100 shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+              }`}
+              title="Run AI Pre-trained Labeling Models"
             >
-              {runningAi ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
-              <span>AI <span className="hidden sm:inline">Pre-label</span></span>
-            </Button>
-          )}
+              {runningAi ? <Loader2 size={14} className="animate-spin text-slate-950" /> : <Sparkles size={14} className="text-indigo-600" />}
+              <span>AI Pre-label</span>
+            </button>
+          </div>
+        </div>
 
-          {/* Meta SAM Auto-Segment Button */}
-          {activeModality === "vision" && (
+        {/* Right Side Header Actions: Export JSON, Formats & SAVE Button */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Export JSON Button */}
+          <Button
+            size="sm"
+            onClick={() => handleDatasetExport("coco")}
+            className="h-8 px-3 text-xs bg-indigo-600 hover:bg-indigo-500 text-white border-0 gap-1.5 font-bold shadow-sm shrink-0"
+            title="Download COCO JSON format dataset"
+          >
+            <Download size={14} />
+            <span>Export JSON</span>
+          </Button>
+
+          {/* Formats Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" className="h-8 px-2.5 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1 font-medium shrink-0">
+                <Sliders size={13} />
+                <span className="hidden sm:inline">Formats</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-60 bg-[#12142a] border-[#343956] text-slate-200 shadow-2xl p-2 z-50">
+              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-white/40 font-mono px-2 py-1">
+                Dataset Formats
+              </DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => handleDatasetExport("coco")} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
+                <span>COCO JSON 1.0</span>
+                <span className="text-[10px] font-mono opacity-50">.json</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDatasetExport("yolo")} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
+                <span>YOLOv8 PyTorch</span>
+                <span className="text-[10px] font-mono opacity-50">.txt</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDatasetExport("geojson")} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
+                <span>ISRO GeoJSON</span>
+                <span className="text-[10px] font-mono opacity-50">.geojson</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDatasetExport("csv")} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
+                <span>CSV Table</span>
+                <span className="text-[10px] font-mono opacity-50">.csv</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-[#343956] my-1" />
+              <DropdownMenuItem onClick={handleExport} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
+                <span>Raw Session JSON</span>
+                <span className="text-[10px] font-mono opacity-50">.json</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Prominent Save Button */}
+          <Button
+            size="sm"
+            onClick={handleSave}
+            disabled={saving}
+            className="h-8 px-3.5 text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 border-0 gap-1.5 font-bold shadow-[0_0_12px_rgba(16,185,129,0.3)] shrink-0"
+            title="Save changes to dataset"
+          >
+            {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
+            <span>Save</span>
+          </Button>
+        </div>
+      </header>
+
+      {/* ── Sub-Header: AI Tools & Prompt Bar ── */}
+      <div className="shrink-0 bg-[#0c0d18] border-b border-[#1e2238] px-4 py-2 flex flex-wrap items-center justify-between gap-3 z-10">
+        {/* Left: Grounding DINO Prompt & SAM Mask Controls (Vision/Video) */}
+        {(activeModality === "vision" || activeModality === "video") ? (
+          <div className="flex items-center gap-2.5 flex-1 min-w-[320px]">
+            {/* Input Container */}
+            <div className="flex-1 flex items-center gap-2.5 bg-[#131526] hover:bg-[#171a30] focus-within:bg-[#171a30] px-3.5 py-1.5 rounded-xl border border-[#2b304f] focus-within:border-indigo-500/80 transition-all shadow-inner">
+              <span className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-400 uppercase tracking-wider shrink-0 bg-indigo-500/10 px-2 py-0.5 rounded-md border border-indigo-500/20">
+                <Target size={13} className="text-indigo-400" />
+                <span>AI Prompt</span>
+              </span>
+              <input
+                type="text"
+                value={groundingDinoPrompt}
+                onChange={(e) => setGroundingDinoPrompt(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleGroundingDinoPrelabel(); }}
+                placeholder="Grounding DINO prompt (e.g. satellite antenna . solar panel . vehicle . crater)"
+                className="flex-1 bg-transparent text-xs sm:text-sm font-semibold tracking-wide text-white outline-none placeholder:text-slate-500 font-sans"
+              />
+              <div className="flex items-center gap-2 shrink-0 pl-3 border-l border-[#252942]">
+                <span className="text-[11px] text-slate-400 font-medium">Conf:</span>
+                <input
+                  type="range"
+                  min="0.1"
+                  max="0.8"
+                  step="0.05"
+                  value={groundingDinoThreshold}
+                  onChange={(e) => setGroundingDinoThreshold(parseFloat(e.target.value))}
+                  className="w-16 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                />
+                <span className="text-xs font-mono text-indigo-300 font-bold min-w-[32px] text-right">
+                  {Math.round(groundingDinoThreshold * 100)}%
+                </span>
+              </div>
+            </div>
+
+            <Button
+              size="sm"
+              onClick={handleGroundingDinoPrelabel}
+              disabled={runningGroundingDino}
+              className="h-8 px-3 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold gap-1.5 rounded-xl shrink-0 shadow-sm"
+            >
+              {runningGroundingDino ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
+              <span>Grounding DINO</span>
+            </Button>
+
             <Button
               size="sm"
               onClick={handleSamSegment}
               disabled={runningSam}
-              className="h-7 px-2.5 sm:px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0"
+              className="h-7 px-2.5 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-semibold gap-1 rounded-lg shrink-0"
             >
               {runningSam ? <Loader2 size={12} className="animate-spin" /> : <Target size={12} />}
-              <span>SAM <span className="hidden sm:inline">Segment</span></span>
+              <span>SAM Mask</span>
             </Button>
-          )}
+          </div>
+        ) : <div />}
 
-          {/* Active Learning Queue Button */}
+        {/* Right: Auxiliary Tools (Active Learning, Hindi Keyboard) */}
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            size="sm"
+            onClick={() => setShowHindiKb(v => !v)}
+            className={`h-7 px-2.5 text-xs gap-1 transition-colors border shrink-0 ${
+              showHindiKb ? "bg-white text-slate-950 font-bold border-white shadow-sm" : "bg-[#1e2238] border-[#343956] text-slate-200 hover:bg-[#282d4a]"
+            }`}
+          >
+            <span>क/A</span>
+            <span className="hidden xl:inline">Hindi Keyboard</span>
+          </Button>
+
+
           <Button
             size="sm"
             onClick={() => setShowActiveLearningModal(true)}
-            className="h-7 px-2.5 sm:px-3 text-xs bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 gap-1 font-bold shrink-0"
+            className="h-7 px-2.5 text-xs bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 gap-1 font-semibold shrink-0"
           >
             <Cpu size={12} />
-            <span>Active <span className="hidden sm:inline">Learning Queue</span></span>
+            <span className="hidden sm:inline">Active Learning</span>
           </Button>
 
-          {/* Hidden File Inputs for Vision, Audio & Video */}
+          {/* Hidden File Inputs */}
           <input type="file" ref={imageInputRef} accept="image/*" className="hidden" onChange={handleImageFileUpload} />
           <input type="file" ref={audioInputRef} accept="audio/*" className="hidden" onChange={handleAudioFileUpload} />
           <input type="file" ref={videoInputRef} accept="video/*" className="hidden" onChange={handleVideoFileUpload} />
@@ -746,10 +981,10 @@ export default function AnnotationTool() {
             <Button
               size="sm"
               onClick={() => audioInputRef.current?.click()}
-              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5 shrink-0"
+              className="h-7 px-2.5 text-xs bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold gap-1 shrink-0"
             >
               <Upload size={12} />
-              <span>Upload Audio File</span>
+              <span>Upload Audio</span>
             </Button>
           )}
 
@@ -757,86 +992,12 @@ export default function AnnotationTool() {
             <Button
               size="sm"
               onClick={() => videoInputRef.current?.click()}
-              className="h-7 px-3 text-xs bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold gap-1.5 shrink-0"
+              className="h-7 px-2.5 text-xs bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold gap-1 shrink-0"
             >
               <Upload size={12} />
-              <span>Upload Video File</span>
+              <span>Upload Video</span>
             </Button>
           )}
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="sm" className="h-7 px-2.5 sm:px-3 text-xs bg-[#1e2238] border border-[#343956] text-slate-200 hover:bg-[#282d4a] gap-1 font-medium shrink-0">
-                <Download size={13} /> Export
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 bg-[#12142a] border-[#343956] text-slate-200">
-              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-white/40">Dataset formats</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => handleDatasetExport("coco")} className="text-xs focus:bg-white/10 focus:text-white">
-                COCO JSON <span className="ml-auto text-white/30">.json</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDatasetExport("yolo")} className="text-xs focus:bg-white/10 focus:text-white">
-                YOLO (txt + yaml) <span className="ml-auto text-white/30">.txt</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDatasetExport("geojson")} className="text-xs focus:bg-white/10 focus:text-white">
-                GeoJSON <span className="ml-auto text-white/30">.geojson</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDatasetExport("csv")} className="text-xs focus:bg-white/10 focus:text-white">
-                CSV <span className="ml-auto text-white/30">.csv</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-[#343956]" />
-              <DropdownMenuItem onClick={handleExport} className="text-xs focus:bg-white/10 focus:text-white">
-                Raw session JSON <span className="ml-auto text-white/30">.json</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <span className="text-[10px] text-white/50 shrink-0 hidden sm:inline">
-            {saving ? "Saving…" : dirty ? "Unsaved changes" : lastSaved ? `Saved ${lastSaved.toLocaleTimeString()}` : ""}
-          </span>
-          <Button size="sm" onClick={handleSave} disabled={saving} className="h-7 px-3 text-xs bg-white hover:bg-slate-200 text-slate-950 border-0 gap-1 font-bold shadow-[0_0_12px_rgba(255,255,255,0.3)] shrink-0">
-
-            {saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
-            <span>Save</span>
-          </Button>
-        </div>
-      </header>
-
-      {/* ── Pre-loaded Satellite & SAR Sample Datasets Bar ── */}
-      <div className="shrink-0 bg-[#0c0e1e] border-b border-[#23263d] px-4 py-2 flex items-center justify-between gap-3 overflow-x-auto z-10 no-scrollbar">
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 whitespace-nowrap">
-            <Globe size={13} className="text-indigo-400" /> Demo Datasets:
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 overflow-x-auto py-0.5 no-scrollbar">
-          {PRELOADED_DATASETS.map((ds) => {
-            const isSelected = ds.id === selectedDatasetId;
-            const DsIcon = ds.icon;
-            return (
-              <button
-                key={ds.id}
-                onClick={() => handleSelectPresetDataset(ds.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0 transition-all border flex items-center gap-2 whitespace-nowrap ${
-                  isSelected
-                    ? "bg-white text-slate-950 border-white shadow-[0_0_12px_rgba(255,255,255,0.4)]"
-                    : "bg-[#16182c] text-slate-300 border-[#2b2e4a] hover:bg-[#202340] hover:text-white"
-                }`}
-              >
-                <DsIcon size={14} className={`shrink-0 ${isSelected ? "text-slate-950" : "text-indigo-400"}`} />
-                <span>{ds.name}</span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${isSelected ? "bg-slate-950 text-white" : "bg-white/10 text-slate-400"}`}>
-                  {ds.category}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="hidden lg:flex items-center gap-2 text-slate-400 text-xs shrink-0 font-medium">
-          <Sparkles size={12} className="text-emerald-400" />
-          <span>Interactive BBox & Polygon Demo</span>
         </div>
       </div>
 
@@ -1132,8 +1293,8 @@ export default function AnnotationTool() {
                   />
                 </div>
 
-                {/* Controls */}
-                <div className="flex items-center justify-between bg-[#0b0c16] p-4 rounded-xl border border-[#23263d] mb-6">
+                {/* Controls & Audio AI Action Bar */}
+                <div className="flex flex-wrap items-center justify-between bg-[#0c0d18] p-4 rounded-xl border border-[#1e2238] gap-4 mb-4">
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => {
@@ -1145,25 +1306,71 @@ export default function AnnotationTool() {
                           setIsPlayingAudio(true);
                         }
                       }}
-                      className="p-3.5 rounded-full bg-white text-slate-950 shadow-[0_0_15px_rgba(255,255,255,0.4)] hover:bg-slate-200 transition-all hover:scale-105"
+                      className="p-3 rounded-full bg-white text-slate-950 hover:bg-slate-200 transition-all"
                     >
-                      {isPlayingAudio ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
+                      {isPlayingAudio ? <Pause size={18} /> : <Play size={18} className="ml-0.5" />}
                     </button>
                     <div>
-                      <p className="text-xs text-slate-400 font-medium">Timestamp Scrubber</p>
-                      <p className="text-base font-mono text-white font-bold tracking-wider">
+                      <p className="text-[11px] text-slate-400 font-medium">Scrubber</p>
+                      <p className="text-sm font-mono text-white font-bold tracking-wider">
                         00:{audioCurrentTime.toFixed(1).padStart(4, "0")} <span className="text-slate-600">/</span> 00:{audioDuration.toFixed(1)}
                       </p>
                     </div>
                   </div>
-                  <Button
-                    size="sm"
-                    onClick={() => setShowAddSegmentBox(v => !v)}
-                    className="bg-white hover:bg-slate-200 text-slate-950 font-bold text-xs border-0 shadow-[0_0_15px_rgba(255,255,255,0.4)] px-4 py-2"
-                  >
-                    <Plus size={15} className="mr-1.5" /> Add Segment Here
-                  </Button>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Whisper ASR Button */}
+                    <Button
+                      size="sm"
+                      onClick={handleWhisperAutoTranscribe}
+                      disabled={runningWhisper}
+                      className="bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs gap-1.5 px-3 py-1.5 rounded-lg"
+                    >
+                      {runningWhisper ? <Loader2 size={13} className="animate-spin" /> : <Mic size={13} />}
+                      <span>Whisper Transcribe</span>
+                    </Button>
+
+                    {/* VGGish Event Detection Button */}
+                    <Button
+                      size="sm"
+                      onClick={handleVggishAudioEvents}
+                      disabled={runningVggish}
+                      className="bg-teal-600 hover:bg-teal-500 text-white font-semibold text-xs gap-1.5 px-3 py-1.5 rounded-lg"
+                    >
+                      {runningVggish ? <Loader2 size={13} className="animate-spin" /> : <Radio size={13} />}
+                      <span>VGGish Events</span>
+                    </Button>
+
+                    <Button
+                      size="sm"
+                      onClick={() => setShowAddSegmentBox(v => !v)}
+                      className="bg-white/10 hover:bg-white/20 text-white font-medium text-xs border border-white/10 px-3 py-1.5 rounded-lg"
+                    >
+                      <Plus size={13} className="mr-1" /> Add Segment
+                    </Button>
+                  </div>
                 </div>
+
+                {/* VGGish Detected Sound Events Timeline Display */}
+                {vggishEvents.length > 0 && (
+                  <div className="mb-6 p-3.5 bg-[#0c0d18] border border-teal-500/20 rounded-xl space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-teal-300 flex items-center gap-1.5 font-mono">
+                        <Activity size={13} /> VGGish Sound Events ({vggishEvents.length})
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {vggishEvents.map((evt) => (
+                        <div key={evt.id} className="px-3 py-1.5 rounded-lg bg-[#141629] border border-[#232742] flex items-center gap-2 text-xs">
+                          <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: evt.color || "#3b82f6" }} />
+                          <span className="font-semibold text-white">{evt.event}</span>
+                          <span className="text-[10px] text-slate-400 font-mono">({evt.start_time} - {evt.end_time})</span>
+                          <span className="text-[10px] text-teal-300 font-mono font-bold">{Math.round(evt.confidence * 100)}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Custom Segment Input Drawer */}
                 {showAddSegmentBox && (
@@ -1659,10 +1866,10 @@ export default function AnnotationTool() {
 
         {/* Active Learning Queue Dialog Modal */}
         <Dialog open={showActiveLearningModal} onOpenChange={setShowActiveLearningModal}>
-          <DialogContent className="max-w-3xl bg-[#0c0d18] border-[#25283d] text-white">
+          <DialogContent className="max-w-3xl bg-[#0c0d18] border-[#25283d] text-white p-6 rounded-2xl">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold font-display text-white flex items-center gap-2">
-                <Cpu className="h-5 w-5 text-purple-400" /> Active Learning Priority Queue
+                <Cpu className="h-5 w-5 text-white" /> Active Learning Priority Queue
               </DialogTitle>
             </DialogHeader>
             <ActiveLearningPanel

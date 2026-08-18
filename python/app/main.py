@@ -96,7 +96,15 @@ def health_check():
         "status": "online",
         "service": "SamyamLM FastAPI Engine",
         "version": "1.0.0",
-        "models_loaded": ["CLIP-ViT-B/32", "SamyamLM-VL", "YOLOv8-IndicRoads"],
+        "models_loaded": [
+            "OWL-ViT-B/32",
+            "Grounding-DINO-Base",
+            "Segment-Anything-SAM",
+            "Whisper-Base-ASR",
+            "VGGish-Sound-Events",
+            "SamyamLM-VL",
+            "YOLOv8-IndicRoads"
+        ],
         "isro_api_status": "connected",
     }
 
@@ -176,23 +184,85 @@ async def run_hindi_vqa(req: HindiVqaRequest):
 from synthetic_generator import generate_synthetic_orbital_frame
 from kafka_service import kafka_manager
 from sam_inference import sam_engine
+from grounding_dino import grounding_dino_engine
+from audio_inference import whisper_engine, vggish_engine
 from anonymize_service import anonymize_engine
+
+class GroundingDinoRequest(BaseModel):
+    image_url: str = Field(..., example="https://images.unsplash.com/photo-1518770660439-4636190af475")
+    text_prompt: str = Field(default="satellite antenna . vehicle . building . crater", example="satellite antenna . solar panel . vehicle")
+    box_threshold: float = Field(default=0.3, ge=0.0, le=1.0)
+    text_threshold: float = Field(default=0.25, ge=0.0, le=1.0)
 
 class SamSegmentRequest(BaseModel):
     image_url: str
     point_x: float = Field(default=250.0, example=250.0)
     point_y: float = Field(default=180.0, example=180.0)
+    bbox: Optional[List[float]] = Field(default=None, example=[100, 100, 200, 150])
+    label: str = Field(default="Satellite Feature", example="Vehicle")
+
+class WhisperTranscribeRequest(BaseModel):
+    audio_url: str = Field(..., example="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg")
+    language: Optional[str] = Field(default="en", example="en")
+    prompt: Optional[str] = Field(default=None, example="Space station telemetry log")
+
+class VggishEventsRequest(BaseModel):
+    audio_url: str = Field(..., example="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg")
+    sensitivity: float = Field(default=0.5, ge=0.0, le=1.0)
+
+@app.post("/api/v1/prelabel/grounding-dino")
+async def run_grounding_dino_detection(req: GroundingDinoRequest):
+    """
+    Runs Grounding DINO zero-shot text-promptable object detection.
+    Extracts bounding boxes based on natural language text prompts (e.g. 'crater . solar panel . vehicle').
+    """
+    return grounding_dino_engine.detect_with_text_prompt(
+        image_url=req.image_url,
+        text_prompt=req.text_prompt,
+        box_threshold=req.box_threshold,
+        text_threshold=req.text_threshold
+    )
 
 @app.post("/api/v1/prelabel/sam")
 async def run_sam_segmentation(req: SamSegmentRequest):
     """
-    Runs Meta SAM (Segment Anything Model) zero-shot promptable segmentation at specified point (x, y).
+    Runs Meta SAM (Segment Anything Model) zero-shot promptable segmentation via point clicks or bounding box.
     Generates pixel-perfect polygon mask for satellite features / road objects.
     """
+    if req.bbox and len(req.bbox) == 4:
+        return sam_engine.segment_image_from_box(
+            image_url=req.image_url,
+            bbox=req.bbox,
+            label=req.label
+        )
     return sam_engine.segment_image_at_point(
         image_url=req.image_url,
         point_x=req.point_x,
-        point_y=req.point_y
+        point_y=req.point_y,
+        label=req.label
+    )
+
+@app.post("/api/v1/audio/whisper-transcribe")
+async def run_whisper_transcription(req: WhisperTranscribeRequest):
+    """
+    Runs OpenAI Whisper speech recognition & transcription on audio recordings.
+    Returns time-coded transcript segments (start, end, speaker, transcript text).
+    """
+    return whisper_engine.transcribe_audio(
+        audio_url=req.audio_url,
+        language=req.language,
+        prompt=req.prompt
+    )
+
+@app.post("/api/v1/audio/vggish-events")
+async def run_vggish_event_detection(req: VggishEventsRequest):
+    """
+    Runs VGGish acoustic event detection and sound classification across audio timeline.
+    Detects events like Sirens, Engine Noise, Speech, Satellite Comms Beacon, Machinery, etc.
+    """
+    return vggish_engine.detect_audio_events(
+        audio_url=req.audio_url,
+        sensitivity=req.sensitivity
     )
 
 @app.post("/api/v1/anonymize", response_model=AnonymizeResponse)

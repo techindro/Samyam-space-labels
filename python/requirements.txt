@@ -13,3 +13,6 @@ psycopg2-binary>=2.9.6
 kafka-python-headless>=2.0.2
 segment-anything>=1.0
 deep-translator>=1.11.4
+torchaudio>=2.0.0
+openai-whisper>=20230903
+librosa>=0.10.0

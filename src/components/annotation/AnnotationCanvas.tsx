@@ -70,27 +70,60 @@ function drawAnnotation(
   scale: number,
 ) {
   ctx.save();
+  const strokeWidth = (isSelected ? 2.5 : 1.5) / scale;
+
   if (ann.type === "bbox") {
     const { x, y, w, h } = ann.bbox;
-    ctx.fillStyle   = ann.color + "30";
+
+    // Fill & BBox Stroke
+    ctx.fillStyle   = ann.color + (isSelected ? "40" : "25");
     ctx.strokeStyle = isSelected ? "#ffffff" : ann.color;
-    ctx.lineWidth   = (isSelected ? 2.5 : 1.5) / scale;
+    ctx.lineWidth   = strokeWidth;
+
     ctx.fillRect(x, y, w, h);
     ctx.strokeRect(x, y, w, h);
 
-    // Label tag
-    const tagH = 18 / scale;
-    ctx.font = `bold ${11 / scale}px Inter, sans-serif`;
-    const textW = ctx.measureText(ann.label).width + 8 / scale;
-    ctx.fillStyle = ann.color;
-    ctx.fillRect(x, y - tagH, textW, tagH);
-    ctx.fillStyle = "#fff";
-    ctx.textBaseline = "middle";
-    ctx.fillText(ann.label, x + 4 / scale, y - tagH / 2);
-
-    // Selection handles
+    // Outer glow highlight when selected
     if (isSelected) {
-      const hs = 6 / scale;
+      ctx.save();
+      ctx.strokeStyle = ann.color;
+      ctx.lineWidth   = 1 / scale;
+      ctx.strokeRect(x - 2 / scale, y - 2 / scale, w + 4 / scale, h + 4 / scale);
+      ctx.restore();
+    }
+
+    // Label Tag Badge (Position: Above bbox, or inside if near top edge)
+    const tagH = 20 / scale;
+    const fontPx = Math.max(10, Math.round(12 / scale));
+    ctx.font = `600 ${fontPx}px Inter, system-ui, sans-serif`;
+
+    const textMetrics = ctx.measureText(ann.label);
+    const paddingX = 8 / scale;
+    const tagW = textMetrics.width + paddingX * 2;
+
+    const tagY = (y - tagH < 0) ? y : (y - tagH);
+
+    // Draw Tag Background Badge with subtle shadow
+    ctx.fillStyle = ann.color;
+    ctx.beginPath();
+    const radius = 3 / scale;
+    ctx.roundRect(x, tagY, tagW, tagH, [radius, radius, 0, 0]);
+    ctx.fill();
+
+    // Dark stroke around label tag for crisp contrast
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
+    ctx.lineWidth = 1 / scale;
+    ctx.stroke();
+
+    // Draw Label Text
+    ctx.fillStyle = "#ffffff";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "left";
+    ctx.fillText(ann.label, x + paddingX, tagY + tagH / 2);
+
+    // Selection Control Handles (8 points)
+    if (isSelected) {
+      const hs = 7 / scale;
       const corners: [number, number][] = [
         [x, y], [x + w, y], [x, y + h], [x + w, y + h],
         [x + w / 2, y], [x + w / 2, y + h], [x, y + h / 2], [x + w, y + h / 2],
@@ -98,12 +131,13 @@ function drawAnnotation(
       corners.forEach(([cx, cy]) => {
         ctx.fillStyle   = "#ffffff";
         ctx.strokeStyle = ann.color;
-        ctx.lineWidth   = 1 / scale;
+        ctx.lineWidth   = 1.5 / scale;
         ctx.fillRect(cx - hs / 2, cy - hs / 2, hs, hs);
         ctx.strokeRect(cx - hs / 2, cy - hs / 2, hs, hs);
       });
     }
   } else {
+    // Polygon Annotation
     const pts = ann.points;
     if (pts.length < 2) { ctx.restore(); return; }
 
@@ -111,31 +145,48 @@ function drawAnnotation(
     ctx.moveTo(pts[0][0], pts[0][1]);
     pts.slice(1).forEach(([px, py]) => ctx.lineTo(px, py));
     ctx.closePath();
-    ctx.fillStyle   = ann.color + "30";
+
+    ctx.fillStyle   = ann.color + (isSelected ? "40" : "25");
     ctx.strokeStyle = isSelected ? "#ffffff" : ann.color;
-    ctx.lineWidth   = (isSelected ? 2.5 : 1.5) / scale;
+    ctx.lineWidth   = strokeWidth;
     ctx.fill();
     ctx.stroke();
 
-    // Centroid label
+    // Centroid Label Badge
     const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length;
     const cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
-    ctx.font = `bold ${11 / scale}px Inter, sans-serif`;
-    const textW = ctx.measureText(ann.label).width + 8 / scale;
-    const tagH  = 18 / scale;
+
+    const fontPx = Math.max(10, Math.round(12 / scale));
+    ctx.font = `600 ${fontPx}px Inter, system-ui, sans-serif`;
+
+    const textMetrics = ctx.measureText(ann.label);
+    const paddingX = 8 / scale;
+    const tagW = textMetrics.width + paddingX * 2;
+    const tagH = 20 / scale;
+
     ctx.fillStyle = ann.color;
-    ctx.fillRect(cx - textW / 2, cy - tagH / 2, textW, tagH);
-    ctx.fillStyle    = "#fff";
+    ctx.beginPath();
+    ctx.roundRect(cx - tagW / 2, cy - tagH / 2, tagW, tagH, 4 / scale);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(0,0,0,0.3)";
+    ctx.lineWidth = 1 / scale;
+    ctx.stroke();
+
+    ctx.fillStyle    = "#ffffff";
     ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(ann.label, cx, cy);
 
-    // Vertex dots
+    // Crisp Bordered Vertex Handles
     pts.forEach(([px, py]) => {
       ctx.beginPath();
-      ctx.arc(px, py, 4 / scale, 0, Math.PI * 2);
-      ctx.fillStyle = isSelected ? "#fff" : ann.color;
+      ctx.arc(px, py, 4.5 / scale, 0, Math.PI * 2);
+      ctx.fillStyle = ann.color;
       ctx.fill();
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.5 / scale;
+      ctx.stroke();
     });
   }
   ctx.restore();
@@ -567,15 +618,55 @@ export default function AnnotationCanvas({
         d.bboxCurrent   = null;
         render();
       }
-      // Fit to screen: F key
-      if (e.key === "f" || e.key === "F") {
+      // Fit to screen: F key or 0
+      if (e.key === "f" || e.key === "F" || e.key === "0") {
+        e.preventDefault();
+        const container = containerRef.current;
+        const canvas = canvasRef.current;
         const img = d.image;
-        if (!img || !canvasRef.current) return;
-        const s = Math.min(canvasRef.current.width / img.width, canvasRef.current.height / img.height) * 0.85;
+        if (!container || !canvas || !img) return;
+        const imgW = img.naturalWidth || img.width;
+        const imgH = img.naturalHeight || img.height;
+        if (!imgW || !imgH) return;
+        const cw = container.clientWidth || canvas.width;
+        const ch = container.clientHeight || canvas.height;
+        const s = Math.min(cw / imgW, ch / imgH) * 0.88;
         d.transform = {
           scale: s,
-          tx: (canvasRef.current.width  - img.width  * s) / 2,
-          ty: (canvasRef.current.height - img.height * s) / 2,
+          tx: (cw - imgW * s) / 2,
+          ty: (ch - imgH * s) / 2,
+        };
+        render();
+      }
+
+      // Zoom In (+ or =)
+      if (e.key === "+" || e.key === "=") {
+        e.preventDefault();
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const midX = canvas.width / 2;
+        const midY = canvas.height / 2;
+        const newScale = Math.max(0.05, Math.min(30, d.transform.scale * 1.25));
+        d.transform = {
+          scale: newScale,
+          tx: midX - (midX - d.transform.tx) * (newScale / d.transform.scale),
+          ty: midY - (midY - d.transform.ty) * (newScale / d.transform.scale),
+        };
+        render();
+      }
+
+      // Zoom Out (- or _)
+      if (e.key === "-" || e.key === "_") {
+        e.preventDefault();
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const midX = canvas.width / 2;
+        const midY = canvas.height / 2;
+        const newScale = Math.max(0.05, Math.min(30, d.transform.scale * 0.8));
+        d.transform = {
+          scale: newScale,
+          tx: midX - (midX - d.transform.tx) * (newScale / d.transform.scale),
+          ty: midY - (midY - d.transform.ty) * (newScale / d.transform.scale),
         };
         render();
       }
@@ -629,14 +720,38 @@ export default function AnnotationCanvas({
   };
 
   const handleFit = () => {
+    const container = containerRef.current;
     const canvas = canvasRef.current;
     const img = ds.current.image;
-    if (!canvas || !img) return;
-    const s = Math.min(canvas.width / img.width, canvas.height / img.height) * 0.85;
+    if (!container || !canvas || !img) return;
+    const imgW = img.naturalWidth || img.width;
+    const imgH = img.naturalHeight || img.height;
+    if (!imgW || !imgH) return;
+    const cw = container.clientWidth || canvas.width || 800;
+    const ch = container.clientHeight || canvas.height || 600;
+    const s = Math.min(cw / imgW, ch / imgH) * 0.88;
     ds.current.transform = {
       scale: s,
-      tx: (canvas.width - img.width * s) / 2,
-      ty: (canvas.height - img.height * s) / 2,
+      tx: (cw - imgW * s) / 2,
+      ty: (ch - imgH * s) / 2,
+    };
+    render();
+  };
+
+  const handleReset100 = () => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    const img = ds.current.image;
+    if (!container || !canvas || !img) return;
+    const imgW = img.naturalWidth || img.width;
+    const imgH = img.naturalHeight || img.height;
+    if (!imgW || !imgH) return;
+    const cw = container.clientWidth || canvas.width || 800;
+    const ch = container.clientHeight || canvas.height || 600;
+    ds.current.transform = {
+      scale: 1,
+      tx: (cw - imgW) / 2,
+      ty: (ch - imgH) / 2,
     };
     render();
   };
@@ -672,25 +787,33 @@ export default function AnnotationCanvas({
       <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/80 backdrop-blur-md p-1.5 rounded-xl border border-white/10 shadow-xl z-10 select-none">
         <button
           onClick={() => handleZoom(1.25)}
-          title="Zoom In"
+          title="Zoom In (+ / =)"
           className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-base transition-colors"
         >
           +
         </button>
         <button
           onClick={() => handleZoom(0.8)}
-          title="Zoom Out"
+          title="Zoom Out (- / _)"
           className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-base transition-colors"
         >
           −
         </button>
         <button
           onClick={handleFit}
-          title="Fit to Screen (F)"
+          title="Fit to Screen (F / 0)"
           className="px-2.5 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
         >
           Fit
         </button>
+        <button
+          onClick={handleReset100}
+          title="Reset 100% (1:1 / R)"
+          className="px-2 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
+        >
+          1:1
+        </button>
+
 
         {ds.current.polyPoints.length >= 3 && (
           <button

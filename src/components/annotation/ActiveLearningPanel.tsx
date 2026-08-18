@@ -40,17 +40,17 @@ export const ActiveLearningPanel = ({ onSelectTask }: ActiveLearningPanelProps) 
   };
 
   return (
-    <div className="glass-card rounded-2xl p-6 border border-purple-500/30 bg-purple-500/5 space-y-6">
+    <div className="rounded-2xl p-6 border border-[#23263d] bg-[#0c0d18] text-white space-y-6 shadow-2xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/40 pb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#23263d] pb-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-purple-400 font-semibold text-xs uppercase tracking-wider">
-            <Cpu className="h-4 w-4" /> AI Active Learning Engine
+          <div className="flex items-center gap-2 text-indigo-400 font-bold text-xs uppercase tracking-wider">
+            <Cpu className="h-4 w-4 text-indigo-400" /> AI Active Learning Engine
           </div>
-          <h3 className="text-xl font-bold font-display text-foreground flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-purple-400" /> Automated Uncertainty Queue Sorting
+          <h3 className="text-xl font-bold font-display text-white flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-indigo-400" /> Automated Uncertainty Queue Sorting
           </h3>
-          <p className="text-muted-foreground text-xs">
+          <p className="text-slate-400 text-xs">
             Auto-ranks unlabeled images by AI model prediction entropy. Annotators label ambiguous, high-value samples first.
           </p>
         </div>
@@ -58,7 +58,7 @@ export const ActiveLearningPanel = ({ onSelectTask }: ActiveLearningPanelProps) 
         <Button
           onClick={handleAutoSort}
           disabled={isSorting}
-          className="bg-purple-600 hover:bg-purple-700 text-white shrink-0 gap-2 font-medium text-xs h-9"
+          className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white border-0 shrink-0 gap-2 font-bold text-xs h-9 shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all"
         >
           {isSorting ? (
             <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -71,9 +71,9 @@ export const ActiveLearningPanel = ({ onSelectTask }: ActiveLearningPanelProps) 
 
       {/* Queue Items */}
       <div className="space-y-2.5">
-        <div className="flex items-center justify-between text-xs text-muted-foreground font-semibold px-2">
+        <div className="flex items-center justify-between text-xs text-slate-400 font-bold uppercase tracking-wider px-2">
           <span>Task Image Name</span>
-          <span className="flex gap-6">
+          <span className="flex gap-8">
             <span>Model Conf.</span>
             <span>Uncertainty Score</span>
             <span>Priority</span>
@@ -87,38 +87,40 @@ export const ActiveLearningPanel = ({ onSelectTask }: ActiveLearningPanelProps) 
               onClick={() => onSelectTask && onSelectTask(item.id)}
               className={`p-3.5 rounded-xl border flex items-center justify-between transition-all cursor-pointer ${
                 item.priorityLevel === "High"
-                  ? "bg-purple-500/10 border-purple-500/30 hover:border-purple-500/60"
-                  : "bg-secondary/30 border-border/40 hover:bg-secondary/50"
+                  ? "bg-rose-500/10 border-rose-500/30 hover:border-rose-500/60 shadow-sm"
+                  : item.priorityLevel === "Medium"
+                  ? "bg-amber-500/10 border-amber-500/30 hover:border-amber-500/60 shadow-sm"
+                  : "bg-emerald-500/10 border-emerald-500/30 hover:border-emerald-500/60 shadow-sm"
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className="font-mono text-xs font-bold text-muted-foreground w-6">#{idx + 1}</span>
+                <span className="font-mono text-xs font-bold text-slate-400 w-6">#{idx + 1}</span>
                 <div>
-                  <div className="font-semibold text-sm text-foreground flex items-center gap-2">
+                  <div className="font-bold text-sm text-white flex items-center gap-2">
                     {item.name}
                     {item.priorityLevel === "High" && (
-                      <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 text-[10px] py-0 px-1.5 font-bold">
+                      <Badge className="bg-gradient-to-r from-pink-500/20 to-purple-500/20 text-pink-300 border-pink-500/40 text-[10px] py-0 px-2 font-bold">
                         Top Value
                       </Badge>
                     )}
                   </div>
-                  <span className="text-xs text-muted-foreground">{item.modality}</span>
+                  <span className="text-xs text-slate-400">{item.modality}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-6 text-xs font-mono">
-                <span className="text-muted-foreground">
+                <span className="text-slate-300 font-bold">
                   {(item.confidenceScore * 100).toFixed(0)}%
                 </span>
 
-                <div className="w-20 bg-secondary/60 h-2 rounded-full overflow-hidden shrink-0">
+                <div className="w-20 bg-slate-800 h-2 rounded-full overflow-hidden shrink-0 border border-slate-700">
                   <div
                     className={`h-full rounded-full ${
                       item.priorityLevel === "High"
-                        ? "bg-purple-400"
+                        ? "bg-gradient-to-r from-rose-500 to-pink-500"
                         : item.priorityLevel === "Medium"
-                        ? "bg-blue-400"
-                        : "bg-emerald-400"
+                        ? "bg-gradient-to-r from-amber-500 to-yellow-400"
+                        : "bg-gradient-to-r from-emerald-500 to-teal-400"
                     }`}
                     style={{ width: `${item.uncertaintyScore * 100}%` }}
                   />
@@ -126,12 +128,12 @@ export const ActiveLearningPanel = ({ onSelectTask }: ActiveLearningPanelProps) 
 
                 <Badge
                   variant="outline"
-                  className={`text-[10px] w-16 justify-center ${
+                  className={`text-[10px] w-16 justify-center font-bold ${
                     item.priorityLevel === "High"
-                      ? "bg-purple-500/20 text-purple-400 border-purple-500/40"
+                      ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
                       : item.priorityLevel === "Medium"
-                      ? "bg-blue-500/20 text-blue-400 border-blue-500/40"
-                      : "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
+                      ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                      : "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                   }`}
                 >
                   {item.priorityLevel}
