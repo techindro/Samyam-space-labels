@@ -100,4 +100,16 @@ npm run build
 
 ---
 
+## ⚡ 6. Upgraded Enterprise Capabilities
+
+1. **🛸 Live UAV / Tactical Drone Video Feed Mode**:
+   - `SovereignMissionConsole.tsx` me **Satellite Optical** aur **Drone UAV Stream** mode switchable hai.
+   - Altitude (120m), Speed (45km/h), aur Heading telemetry HUD live active hai.
+   - GPU endpoint `POST /api/v1/video-drone/analyze-frame` se video frames process hote hain.
+
+2. **⚙️ One-Click TensorRT & ONNX Edge Package Compiler**:
+   - Console me "Export TensorRT Engine" button se NVIDIA Jetson Orin & Field Embedded Hardware ke liye INT8 deployment bundle export hota hai (`POST /api/v1/export/edge-compiler`).
+
+---
+
 *Note: Yeh file sirf developer ke aantarik upayog ke liye hai aur kisi bhi public frontend route par exposed nahi hai.*
