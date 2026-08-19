@@ -90,9 +90,22 @@ def evaluate_detections(
 
 def load_real_ground_truth(file_path: str = "sample_data/satellite_ground_truth.json") -> Tuple[List[str], Dict[str, List[Dict[str, Any]]]]:
     """Loads authentic ground truth annotations from COCO dataset file if present."""
-    if os.path.exists(file_path):
+    candidate_paths = [
+        file_path,
+        os.path.join(os.path.dirname(__file__), "../../sample_data/satellite_ground_truth.json"),
+        os.path.join(os.getcwd(), "sample_data/satellite_ground_truth.json"),
+        os.path.join(os.path.dirname(__file__), "../../../sample_data/satellite_ground_truth.json")
+    ]
+    
+    target_path = None
+    for p in candidate_paths:
+        if os.path.exists(p):
+            target_path = p
+            break
+
+    if target_path:
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(target_path, "r", encoding="utf-8") as f:
                 coco_data = json.load(f)
             categories = {cat["id"]: cat["name"] for cat in coco_data.get("categories", [])}
             class_gts = {}
