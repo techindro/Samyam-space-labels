@@ -31,8 +31,16 @@ vite.config.ts.timestamp-*
 
 # Python & Temporary
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.cache
+checkpoints/
 scratch/
 
-
+# Vercel & Cloud
 .vercel

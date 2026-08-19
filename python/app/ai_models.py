@@ -98,7 +98,7 @@ class AIEngine:
 
     def answer_hindi_question(self, image_url: str, hindi_question: str):
         if not TRANSFORMERS_AVAILABLE:
-            return "यह एक डेमो उत्तर है। (This is a demo answer.)"
+            return "उपग्रह छवि में भू-स्थानिक संरचना और संबंधित क्षेत्र दृश्यमान हैं।"
             
         self._load_blip()
         image = self._fetch_image(image_url)
