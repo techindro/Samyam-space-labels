@@ -28,9 +28,22 @@ class AnonymizeService:
         If OpenCV is not installed, it returns a simulated response.
         """
         if not OPENCV_AVAILABLE:
-            # Fallback for demo environments where cv2 is not installed
-            print("Warning: OpenCV not installed. Returning mocked anonymization.")
-            return "data:image/jpeg;base64,mocked_base64_string_for_demo_purposes_only"
+            # High quality Pillow fallback for environments where full OpenCV binary is not bundled
+            try:
+                from PIL import Image, ImageFilter
+                req = urllib.request.Request(image_url, headers={'User-Agent': 'Mozilla/5.0'})
+                response = urllib.request.urlopen(req)
+                pil_img = Image.open(io.BytesIO(response.read())).convert("RGB")
+                
+                # Apply realistic spatial privacy blur filter
+                blurred = pil_img.filter(ImageFilter.GaussianBlur(radius=8))
+                buffered = io.BytesIO()
+                blurred.save(buffered, format="JPEG", quality=85)
+                img_str = base64.b64encode(buffered.getvalue()).decode()
+                return f"data:image/jpeg;base64,{img_str}"
+            except Exception as e:
+                print(f"Fallback blur error: {e}")
+                return ""
 
         try:
             # 1. Download image

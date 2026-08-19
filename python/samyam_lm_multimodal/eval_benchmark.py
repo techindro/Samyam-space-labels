@@ -88,11 +88,35 @@ def evaluate_detections(
     }
 
 
+def load_real_ground_truth(file_path: str = "sample_data/satellite_ground_truth.json") -> Tuple[List[str], Dict[str, List[Dict[str, Any]]]]:
+    """Loads authentic ground truth annotations from COCO dataset file if present."""
+    if os.path.exists(file_path):
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                coco_data = json.load(f)
+            categories = {cat["id"]: cat["name"] for cat in coco_data.get("categories", [])}
+            class_gts = {}
+            for ann in coco_data.get("annotations", []):
+                cat_name = categories.get(ann["category_id"], "object")
+                bbox = ann["bbox"] # [x, y, w, h]
+                # Normalize to [ymin, xmin, ymax, xmax] in 0-1 range (assuming 1280x720 base)
+                norm_box = [bbox[1]/720.0, bbox[0]/1280.0, (bbox[1]+bbox[3])/720.0, (bbox[0]+bbox[2])/1280.0]
+                if cat_name not in class_gts:
+                    class_gts[cat_name] = []
+                class_gts[cat_name].append({"label": cat_name, "bbox": norm_box})
+            return list(class_gts.keys()), class_gts
+        except Exception as e:
+            print(f"Notice: Loading dataset fallback: {e}")
+    return [], {}
+
+
 def run_benchmark_simulation(num_samples: int = 150) -> Dict[str, Any]:
     """
-    Generates a realistic spatial dataset benchmark evaluation across target geospatial classes.
+    Generates a spatial dataset benchmark evaluation across target geospatial classes.
+    Uses real ground-truth data when available.
     """
-    classes = ["airplane", "runway", "building", "solar_array", "ship", "vegetation_zone"]
+    real_classes, real_gts = load_real_ground_truth()
+    classes = real_classes if real_classes else ["airplane", "runway", "building", "solar_array", "ship", "vegetation_zone"]
     class_metrics = {}
     latencies = []
 

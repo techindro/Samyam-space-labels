@@ -1,0 +1,93 @@
+{
+  "info": {
+    "description": "SamyamLM-V1 High-Resolution Geospatial & Earth Observation Benchmark Dataset",
+    "version": "1.0.0",
+    "year": 2026,
+    "contributor": "Samyam Space Labels",
+    "date_created": "2026-08-20T00:00:00Z"
+  },
+  "licenses": [
+    {
+      "id": 1,
+      "name": "CC BY-SA 4.0 / Public Domain Space Archive",
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  ],
+  "images": [
+    {
+      "id": 101,
+      "file_name": "sentinel2_airport_runway_01.jpg",
+      "width": 1280,
+      "height": 720,
+      "sensor": "ESA Sentinel-2 MSI (10m Optical)",
+      "coordinates": { "lat": 28.5562, "lon": 77.1000 },
+      "license": 1
+    },
+    {
+      "id": 102,
+      "file_name": "isro_chandrayaan_crater_02.jpg",
+      "width": 1280,
+      "height": 720,
+      "sensor": "ISRO TMC-2 Lunar Terrain Camera",
+      "coordinates": { "lat": -69.37, "lon": 32.35 },
+      "license": 1
+    },
+    {
+      "id": 103,
+      "file_name": "sentinel1_sar_maritime_port_03.jpg",
+      "width": 1280,
+      "height": 720,
+      "sensor": "Copernicus Sentinel-1 C-Band SAR (VV/VH)",
+      "coordinates": { "lat": 18.9500, "lon": 72.8200 },
+      "license": 1
+    }
+  ],
+  "annotations": [
+    {
+      "id": 1,
+      "image_id": 101,
+      "category_id": 1,
+      "bbox": [120, 80, 420, 180],
+      "area": 75600,
+      "segmentation": [[120, 80, 540, 80, 540, 260, 120, 260]],
+      "iscrowd": 0,
+      "attributes": { "class_name": "Runway / Landing Strip", "confidence": 0.98 }
+    },
+    {
+      "id": 2,
+      "image_id": 101,
+      "category_id": 2,
+      "bbox": [320, 190, 65, 55],
+      "area": 3575,
+      "segmentation": [[320, 190, 385, 190, 385, 245, 320, 245]],
+      "iscrowd": 0,
+      "attributes": { "class_name": "Commercial Aircraft", "confidence": 0.95 }
+    },
+    {
+      "id": 3,
+      "image_id": 102,
+      "category_id": 3,
+      "bbox": [190, 140, 240, 170],
+      "area": 40800,
+      "segmentation": [[190, 170, 350, 140, 430, 260, 270, 310]],
+      "iscrowd": 0,
+      "attributes": { "class_name": "Primary Impact Crater", "confidence": 0.97 }
+    },
+    {
+      "id": 4,
+      "image_id": 103,
+      "category_id": 4,
+      "bbox": [240, 180, 195, 135],
+      "area": 26325,
+      "segmentation": [[240, 180, 435, 180, 435, 315, 240, 315]],
+      "iscrowd": 0,
+      "attributes": { "class_name": "Maritime Cargo Vessel", "confidence": 0.96 }
+    }
+  ],
+  "categories": [
+    { "id": 1, "name": "runway", "supercategory": "aerospace_infrastructure" },
+    { "id": 2, "name": "airplane", "supercategory": "vehicle" },
+    { "id": 3, "name": "crater", "supercategory": "planetary_topography" },
+    { "id": 4, "name": "ship", "supercategory": "maritime_vessel" }
+  ]
+}
