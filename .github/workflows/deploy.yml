@@ -57,6 +57,15 @@ jobs:
     - name: Validate Backend Server Syntax
       run: |
         python -m py_compile python/samyam_lm_multimodal/serve_samyam_lm.py
+        python -m py_compile python/samyam_lm_multimodal/eval_benchmark.py
+
+    - name: Run PyTest & Unit Tests
+      run: |
+        PYTHONPATH=python/app:python pytest python/tests -v
+
+    - name: Run Benchmark Evaluation Smoke Test
+      run: |
+        python python/samyam_lm_multimodal/eval_benchmark.py --demo
 
   # ── Job 3: Build & Push Docker Images ─────────────────────────────────────
   docker-build-push:
