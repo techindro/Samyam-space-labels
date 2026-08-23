@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Sparkles, Download, RefreshCw, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -28,7 +28,7 @@ export default function SyntheticSpaceGenerator() {
   const debrisRef = useRef<SyntheticDebris[]>([]);
 
   // Initialize random debris objects
-  const initDebris = React.useCallback(() => {
+  const initDebris = useCallback(() => {
     const labels = ["Orbital Debris #104", "Satellite Solar Array", "Rocket Stage Fragment", "CubeSat Alpha", "Unidentified Object"];
     debrisRef.current = Array.from({ length: debrisCount }).map((_, i) => ({
       x: 100 + Math.random() * 480,

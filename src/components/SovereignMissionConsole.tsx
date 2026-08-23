@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -115,7 +115,7 @@ export const SovereignMissionConsole: React.FC<{ initialProgram?: string }> = ({
     reader.readAsDataURL(file);
   };
 
-  const runMissionAnalysis = React.useCallback(async () => {
+  const runMissionAnalysis = useCallback(async () => {
     setIsLoading(true);
     toast({
       title: "Executing Real Sovereign AI Inference",
