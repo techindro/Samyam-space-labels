@@ -95,7 +95,7 @@ export const SovereignMissionConsole: React.FC<{ initialProgram?: string }> = ({
     setCustomTargetFocus(activeProgram.targetFocus);
     setCustomImageB64(null);
     setCustomImageUrl(null);
-  }, [activeProgram.id]);
+  }, [activeProgram.id, activeProgram.defaultCoordinates, activeProgram.targetFocus]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -115,7 +115,7 @@ export const SovereignMissionConsole: React.FC<{ initialProgram?: string }> = ({
     reader.readAsDataURL(file);
   };
 
-  const runMissionAnalysis = async () => {
+  const runMissionAnalysis = React.useCallback(async () => {
     setIsLoading(true);
     toast({
       title: "Executing Real Sovereign AI Inference",
@@ -150,11 +150,11 @@ export const SovereignMissionConsole: React.FC<{ initialProgram?: string }> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeProgram.id, activeProgram.missionObjective, activeProgram.satelliteFeed, customTargetFocus, customCoordinates, customImageB64]);
 
   useEffect(() => {
     runMissionAnalysis();
-  }, [activeProgram.id, customImageB64]);
+  }, [runMissionAnalysis]);
 
   const [feedMode, setFeedMode] = useState<"satellite" | "drone">("satellite");
   const [isExportingEdge, setIsExportingEdge] = useState(false);

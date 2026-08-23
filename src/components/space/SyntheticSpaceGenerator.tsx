@@ -28,7 +28,7 @@ export default function SyntheticSpaceGenerator() {
   const debrisRef = useRef<SyntheticDebris[]>([]);
 
   // Initialize random debris objects
-  const initDebris = () => {
+  const initDebris = React.useCallback(() => {
     const labels = ["Orbital Debris #104", "Satellite Solar Array", "Rocket Stage Fragment", "CubeSat Alpha", "Unidentified Object"];
     debrisRef.current = Array.from({ length: debrisCount }).map((_, i) => ({
       x: 100 + Math.random() * 480,
@@ -40,11 +40,11 @@ export default function SyntheticSpaceGenerator() {
       vRot: (Math.random() - 0.5) * 0.05,
       label: labels[i % labels.length],
     }));
-  };
+  }, [debrisCount]);
 
   useEffect(() => {
     initDebris();
-  }, [debrisCount]);
+  }, [initDebris]);
 
   // Render Loop
   useEffect(() => {

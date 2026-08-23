@@ -39,14 +39,14 @@ const AdminTeamRBAC = () => {
       try {
         const { data: profiles, error } = await supabase
           .from("profiles")
-          .select("user_id, username, full_name, role");
+          .select("user_id, username, full_name");
 
         if (profiles && profiles.length > 0) {
           const realMembers: TeamMember[] = profiles.map((p) => ({
             id: p.user_id,
             name: p.full_name || p.username || "Team Member",
             email: `${p.username || "user"}@samyam.space`,
-            role: (p.role as UserRole) || "admin",
+            role: "admin" as UserRole,
             tasksCompleted: 12,
             accuracyScore: 99.4,
             status: "Active",

@@ -14,12 +14,19 @@ class AnonymizeService:
     def __init__(self):
         # In a real production environment, these would be downloaded or bundled.
         # We initialize paths to Haar cascade XML files.
-        self.face_cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml' if OPENCV_AVAILABLE else None
-        self.plate_cascade_path = cv2.data.haarcascades + 'haarcascade_russian_plate_number.xml' if OPENCV_AVAILABLE else None
+        self.face_cascade = None
+        self.plate_cascade = None
+        self.face_cascade_path = None
+        self.plate_cascade_path = None
         
-        if OPENCV_AVAILABLE:
-            self.face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
-            self.plate_cascade = cv2.CascadeClassifier(self.plate_cascade_path)
+        if OPENCV_AVAILABLE and hasattr(cv2, "data") and hasattr(cv2, "CascadeClassifier"):
+            try:
+                self.face_cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+                self.plate_cascade_path = cv2.data.haarcascades + 'haarcascade_russian_plate_number.xml'
+                self.face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
+                self.plate_cascade = cv2.CascadeClassifier(self.plate_cascade_path)
+            except Exception as e:
+                print(f"[AnonymizeService] CascadeClassifier init notice: {e}")
 
     def process_image(self, image_url: str) -> str:
         """

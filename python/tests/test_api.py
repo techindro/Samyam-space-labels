@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 import pytest
 from fastapi.testclient import TestClient
-from main import app
+from app.main import app
 
 
 def test_api_health_endpoint():
@@ -22,7 +22,7 @@ def test_api_health_endpoint():
 
 
 def test_prelabel_clip_endpoint_structure():
-    with patch("main.ai_engine") as mock_ai:
+    with patch("app.main.ai_engine") as mock_ai:
         mock_ai.detect_objects_zero_shot.return_value = [
             {
                 "id": "ann_1",

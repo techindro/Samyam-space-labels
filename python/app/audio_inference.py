@@ -9,12 +9,16 @@ import time
 import os
 
 HAS_AUDIO_LIBS = False
+whisper = None
+librosa = None
+
 try:
     import torch
-    import whisper
-    import librosa
+    import importlib
+    whisper = importlib.import_module("whisper")
+    librosa = importlib.import_module("librosa")
     HAS_AUDIO_LIBS = True
-except ImportError:
+except (ImportError, Exception):
     HAS_AUDIO_LIBS = False
 
 
@@ -53,12 +57,11 @@ class WhisperEngine:
         Transcribes speech from an audio URL or file path.
         Returns time-stamped text segments and full transcript text.
         """
-        start_time = time.time()
-
-        if HAS_AUDIO_LIBS and self.model is not None and os.path.exists(audio_url):
+        if HAS_AUDIO_LIBS:
             try:
                 self._load_whisper()
-                result = self.model.transcribe(audio_url, language=language, initial_prompt=prompt)
+                if self.model is not None and os.path.exists(audio_url):
+                    result = self.model.transcribe(audio_url, language=language, initial_prompt=prompt)
                 segments = []
                 for idx, seg in enumerate(result.get("segments", [])):
                     start_sec = round(seg["start"], 2)

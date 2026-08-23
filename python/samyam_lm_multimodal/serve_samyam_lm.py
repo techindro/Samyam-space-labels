@@ -14,6 +14,7 @@ import httpx
 import time
 from PIL import Image
 from typing import Optional, List, Dict, Any
+import os
 
 # ─── Configuration ───────────────────────────────────────────────────────────
 OLLAMA_BASE_URL = "http://localhost:11434"
@@ -27,11 +28,18 @@ app = FastAPI(
 )
 
 # Enable CORS for React Frontend
+raw_origins = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:8080,http://localhost:5173,http://localhost:3000,http://127.0.0.1:8080,http://127.0.0.1:5173,http://127.0.0.1:3000,https://samyam.space"
+)
+ALLOWED_ORIGINS = [o.strip() for o in raw_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 

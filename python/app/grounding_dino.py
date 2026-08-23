@@ -46,9 +46,12 @@ class GroundingDinoEngine:
 
     def _fetch_image(self, url: str) -> Optional[Image.Image]:
         try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            response = urllib.request.urlopen(req, timeout=5)
-            return Image.open(io.BytesIO(response.read())).convert("RGB")
+            from ai_models import is_safe_url
+            if not is_safe_url(url):
+                return None
+            req = urllib.request.Request(url, headers={'User-Agent': 'Samyam-AI-Engine/1.0'})
+            with urllib.request.urlopen(req, timeout=8) as response:
+                return Image.open(io.BytesIO(response.read())).convert("RGB")
         except Exception:
             return None
 

@@ -9,11 +9,18 @@ import os
 import time
 
 HAS_SAM = False
+sam_model_registry = None
+SamPredictor = None
+
 try:
     import torch
-    from segment_anything import sam_model_registry, SamPredictor
-    HAS_SAM = True
-except ImportError:
+    import importlib
+    _sam_lib = importlib.import_module("segment_anything")
+    sam_model_registry = getattr(_sam_lib, "sam_model_registry", None)
+    SamPredictor = getattr(_sam_lib, "SamPredictor", None)
+    if sam_model_registry and SamPredictor:
+        HAS_SAM = True
+except (ImportError, Exception):
     HAS_SAM = False
 
 

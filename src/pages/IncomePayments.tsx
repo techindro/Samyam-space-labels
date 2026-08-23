@@ -83,8 +83,8 @@ const IncomePayments = () => {
           .select("id, status")
           .then(({ data }) => {
             if (data) {
-              const completed = data.filter(t => t.status === "completed" || t.status === "approved").length;
-              const pending = data.filter(t => t.status === "pending" || t.status === "in_progress" || t.status === "submitted").length;
+              const completed = data.filter(t => t.status === "approved").length;
+              const pending = data.filter(t => t.status === "open" || t.status === "in_progress" || t.status === "submitted").length;
               setRealTasksCount(completed);
               setRealPendingTasksCount(pending);
             }

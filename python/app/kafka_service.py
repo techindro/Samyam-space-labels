@@ -17,10 +17,17 @@ PRELABEL_TOPIC = "samyam-prelabel-tasks"
 ANNOTATION_TOPIC = "samyam-annotation-events"
 
 HAS_KAFKA = False
+KafkaProducer = None
+KafkaConsumer = None
+
 try:
-    from kafka import KafkaProducer, KafkaConsumer
-    HAS_KAFKA = True
-except ImportError:
+    import importlib
+    _kafka_lib = importlib.import_module("kafka")
+    KafkaProducer = getattr(_kafka_lib, "KafkaProducer", None)
+    KafkaConsumer = getattr(_kafka_lib, "KafkaConsumer", None)
+    if KafkaProducer and KafkaConsumer:
+        HAS_KAFKA = True
+except (ImportError, Exception):
     HAS_KAFKA = False
     logger.info("[Kafka] kafka-python library not installed. Running in mock/direct fallback mode.")
 

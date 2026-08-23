@@ -1,8 +1,37 @@
 import torch
 from PIL import Image
 import urllib.request
+import urllib.parse
+import ipaddress
 import io
 import time
+
+
+def is_safe_url(url: str) -> bool:
+    """
+    Validates URL to protect against SSRF (Server-Side Request Forgery).
+    Blocks private IP addresses, cloud metadata services, and local loopbacks.
+    """
+    try:
+        parsed = urllib.parse.urlparse(url)
+        if parsed.scheme not in ("http", "https"):
+            return False
+        hostname = parsed.hostname
+        if not hostname:
+            return False
+        host_lower = hostname.lower()
+        if host_lower in ("localhost", "127.0.0.1", "169.254.169.254", "::1"):
+            return False
+        try:
+            ip = ipaddress.ip_address(hostname)
+            if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved:
+                return False
+        except ValueError:
+            pass
+        return True
+    except Exception:
+        return False
+
 
 try:
     from transformers import OwlViTProcessor, OwlViTForObjectDetection, BlipProcessor, BlipForQuestionAnswering
@@ -41,9 +70,11 @@ class AIEngine:
             self.blip_model = BlipForQuestionAnswering.from_pretrained("Salesforce/blip-vqa-base").to(self.device)
 
     def _fetch_image(self, url: str) -> Image.Image:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        response = urllib.request.urlopen(req)
-        return Image.open(io.BytesIO(response.read())).convert("RGB")
+        if not is_safe_url(url):
+            raise ValueError(f"Blocked unsafe or forbidden URL: {url}")
+        req = urllib.request.Request(url, headers={'User-Agent': 'Samyam-AI-Engine/1.0'})
+        with urllib.request.urlopen(req, timeout=8) as response:
+            return Image.open(io.BytesIO(response.read())).convert("RGB")
 
     def detect_objects_zero_shot(self, image_url: str, candidate_labels: list, threshold: float = 0.1):
         if not TRANSFORMERS_AVAILABLE:

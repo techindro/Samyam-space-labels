@@ -18,22 +18,29 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Enable CORS for local dev and production Vercel frontend
+# Configurable allowed origins for frontend (Localhost, Vercel & Production)
+raw_origins = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:8080,http://localhost:5173,http://localhost:3000,http://127.0.0.1:8080,http://127.0.0.1:5173,http://127.0.0.1:3000,https://samyam.space"
+)
+ALLOWED_ORIGINS = [o.strip() for o in raw_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
 # ── Pydantic Request/Response Models ────────────────────────────────────────
 
 class PrelabelRequest(BaseModel):
-    image_url: str = Field(..., example="https://images.unsplash.com/photo-1518770660439-4636190af475")
+    image_url: str = Field(..., json_schema_extra={"example": "https://images.unsplash.com/photo-1518770660439-4636190af475"})
     candidate_labels: List[str] = Field(
         default=["Satellite", "Building", "Road", "Pothole", "Auto-rickshaw", "Cattle", "Orbital Debris"],
-        example=["Satellite", "Debris", "Terrain"]
+        json_schema_extra={"example": ["Satellite", "Debris", "Terrain"]}
     )
     confidence_threshold: float = Field(default=0.35, ge=0.0, le=1.0)
 
@@ -57,10 +64,10 @@ class PrelabelResponse(BaseModel):
     annotations: List[PrelabelAnnotation]
 
 class IsroFetchRequest(BaseModel):
-    lat: float = Field(..., example=12.9716)
-    lon: float = Field(..., example=77.5946)
-    resolution_meters: int = Field(default=10, example=10)
-    band: str = Field(default="VV", example="VV")
+    lat: float = Field(..., json_schema_extra={"example": 12.9716})
+    lon: float = Field(..., json_schema_extra={"example": 77.5946})
+    resolution_meters: int = Field(default=10, json_schema_extra={"example": 10})
+    band: str = Field(default="VV", json_schema_extra={"example": "VV"})
 
 class IsroFetchResponse(BaseModel):
     tile_id: str
@@ -72,7 +79,7 @@ class IsroFetchResponse(BaseModel):
 
 class HindiVqaRequest(BaseModel):
     image_url: str
-    question_hindi: str = Field(..., example="क्या इस उपग्रह चित्र में कच्ची सड़क दिख रही है?")
+    question_hindi: str = Field(..., json_schema_extra={"example": "क्या इस उपग्रह चित्र में कच्ची सड़क दिख रही है?"})
 
 class HindiVqaResponse(BaseModel):
     question_hindi: str
@@ -81,7 +88,7 @@ class HindiVqaResponse(BaseModel):
     model: str = "SamyamLM-VL-Indic"
 
 class AnonymizeRequest(BaseModel):
-    image_url: str = Field(..., example="https://images.unsplash.com/photo-1518770660439-4636190af475")
+    image_url: str = Field(..., json_schema_extra={"example": "https://images.unsplash.com/photo-1518770660439-4636190af475"})
 
 class AnonymizeResponse(BaseModel):
     original_url: str
@@ -189,25 +196,25 @@ from audio_inference import whisper_engine, vggish_engine
 from anonymize_service import anonymize_engine
 
 class GroundingDinoRequest(BaseModel):
-    image_url: str = Field(..., example="https://images.unsplash.com/photo-1518770660439-4636190af475")
-    text_prompt: str = Field(default="satellite antenna . vehicle . building . crater", example="satellite antenna . solar panel . vehicle")
+    image_url: str = Field(..., json_schema_extra={"example": "https://images.unsplash.com/photo-1518770660439-4636190af475"})
+    text_prompt: str = Field(default="satellite antenna . vehicle . building . crater", json_schema_extra={"example": "satellite antenna . solar panel . vehicle"})
     box_threshold: float = Field(default=0.3, ge=0.0, le=1.0)
     text_threshold: float = Field(default=0.25, ge=0.0, le=1.0)
 
 class SamSegmentRequest(BaseModel):
     image_url: str
-    point_x: float = Field(default=250.0, example=250.0)
-    point_y: float = Field(default=180.0, example=180.0)
-    bbox: Optional[List[float]] = Field(default=None, example=[100, 100, 200, 150])
-    label: str = Field(default="Satellite Feature", example="Vehicle")
+    point_x: float = Field(default=250.0, json_schema_extra={"example": 250.0})
+    point_y: float = Field(default=180.0, json_schema_extra={"example": 180.0})
+    bbox: Optional[List[float]] = Field(default=None, json_schema_extra={"example": [100, 100, 200, 150]})
+    label: str = Field(default="Satellite Feature", json_schema_extra={"example": "Vehicle"})
 
 class WhisperTranscribeRequest(BaseModel):
-    audio_url: str = Field(..., example="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg")
-    language: Optional[str] = Field(default="en", example="en")
-    prompt: Optional[str] = Field(default=None, example="Space station telemetry log")
+    audio_url: str = Field(..., json_schema_extra={"example": "https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg"})
+    language: Optional[str] = Field(default="en", json_schema_extra={"example": "en"})
+    prompt: Optional[str] = Field(default=None, json_schema_extra={"example": "Space station telemetry log"})
 
 class VggishEventsRequest(BaseModel):
-    audio_url: str = Field(..., example="https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg")
+    audio_url: str = Field(..., json_schema_extra={"example": "https://actions.google.com/sounds/v1/ambiences/rain_heavy.ogg"})
     sensitivity: float = Field(default=0.5, ge=0.0, le=1.0)
 
 @app.post("/api/v1/prelabel/grounding-dino")
