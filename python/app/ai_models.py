@@ -1,4 +1,10 @@
-import torch
+try:
+    import torch
+    HAS_TORCH = True
+except ImportError:
+    torch = None
+    HAS_TORCH = False
+
 from PIL import Image
 import urllib.request
 import urllib.parse
@@ -51,7 +57,7 @@ class AIEngine:
         self.owlvit_model = None
         self.blip_processor = None
         self.blip_model = None
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = "cuda" if (HAS_TORCH and torch is not None and torch.cuda.is_available()) else "cpu"
         self.grounding_dino = grounding_dino_engine
         self.sam = sam_engine
         self.whisper = whisper_engine
