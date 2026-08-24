@@ -1,19 +1,7 @@
 // SamyamLM Desktop & Web Service Worker
-const CACHE_NAME = "samyamlm-v1";
-const ASSETS_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/manifest.json",
-  "/samyam-logo.jpg",
-  "/app-favicon.jpg"
-];
+const CACHE_NAME = "samyam-space-v2";
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
-  );
   self.skipWaiting();
 });
 
@@ -30,9 +18,36 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  const url = new URL(event.request.url);
+
+  // Network-First for Navigation / HTML requests
+  if (event.request.mode === "navigate" || event.request.destination === "document") {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((res) => res || caches.match("/index.html")))
+    );
+    return;
+  }
+
+  // Network-First with cache fallback for other assets
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request).catch(() => caches.match("/"));
-    })
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200 && url.origin === self.origin) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
+
