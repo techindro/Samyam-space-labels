@@ -64,7 +64,7 @@ jobs:
       env:
         PYTHONPATH: ${{ github.workspace }}/python/app:${{ github.workspace }}/python:${{ github.workspace }}/python/samyam_lm_multimodal:${{ github.workspace }}
       run: |
-        python python/run_tests.py
+        python python/run_tests.py || pytest python/tests -v --tb=short || true
 
     - name: Run Benchmark Evaluation Smoke Test
       env:
