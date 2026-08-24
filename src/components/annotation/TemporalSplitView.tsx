@@ -43,7 +43,7 @@ const COMPARISON_PAIRS: SatelliteComparisonPair[] = [
     location: "Kaziranga Basin, Assam, India",
     category: "Flood Disaster",
     beforeDate: "May 15, 2026 (Pre-Monsoon Baseline)",
-    afterDate: "Oct 12, 2026 (Post-Monsoon SAR Pass)",
+    afterDate: "Aug 18, 2026 (Peak Monsoon SAR Pass)",
     beforeUrl: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
     afterUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1280&auto=format&fit=crop",
     changeSummary: "+42.8 km² submerged wetlands · 18 breach corridors vectorized · 94.2% ML confidence",
@@ -55,7 +55,7 @@ const COMPARISON_PAIRS: SatelliteComparisonPair[] = [
     location: "Bengaluru North, Karnataka, India",
     category: "Urban Expansion",
     beforeDate: "Jan 12, 2025 (Panchromatic Baseline)",
-    afterDate: "Oct 18, 2026 (Cartosat-3 Sub-Meter Pass)",
+    afterDate: "Aug 14, 2026 (Cartosat-3 Sub-Meter Pass)",
     beforeUrl: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1280&auto=format&fit=crop",
     afterUrl: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1280&auto=format&fit=crop",
     changeSummary: "+164 hectares new impervious asphalt & rooftop infrastructure mapped",
@@ -67,7 +67,7 @@ const COMPARISON_PAIRS: SatelliteComparisonPair[] = [
     location: "Sikkim Eastern Himalayas, India",
     category: "Glacial Lake Outburst",
     beforeDate: "Mar 10, 2026 (Dry Winter Optical Pass)",
-    afterDate: "Sep 28, 2026 (EOS-04 C-Band SAR Penetration)",
+    afterDate: "Aug 20, 2026 (EOS-04 C-Band SAR Penetration)",
     beforeUrl: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=1280&auto=format&fit=crop",
     afterUrl: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
     changeSummary: "+18.7% moraine volume expansion · Active subterranean thermal thaw detected",
@@ -79,13 +79,14 @@ const COMPARISON_PAIRS: SatelliteComparisonPair[] = [
     location: "Sundarbans Delta, West Bengal, India",
     category: "Deforestation",
     beforeDate: "Feb 08, 2026 (Winter Pristine Canopy)",
-    afterDate: "Oct 05, 2026 (Sentinel-2 Multi-Spectral CIR)",
+    afterDate: "Aug 22, 2026 (Sentinel-2 Multi-Spectral CIR)",
     beforeUrl: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
     afterUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1280&auto=format&fit=crop",
     changeSummary: "-8.4% mangrove canopy density along tidal mudflats · Salinity stress mapped",
     riskLevel: "HIGH"
   }
 ];
+
 
 
 export default function TemporalSplitView({ isOpen, onClose }: Props) {

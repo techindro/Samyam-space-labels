@@ -7,33 +7,22 @@ import ParallelWebBg from "@/components/ParallelWebBg";
 
 const changelogEntries = [
   {
-    version: "v2.1.0",
-    date: "October 20, 2026",
+    version: "v2.0.0",
+    date: "August 24, 2026",
     tag: "Latest",
     tagColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
     changes: [
       { type: "feature", icon: Sparkles, text: "NDVI Vegetation & Multispectral Analyzer with Live CIR, SAR Polarimetric, and Thermal Band composites" },
       { type: "feature", icon: Sparkles, text: "Temporal Split-Screen Satellite Change Detection with interactive before/after sliding overlay" },
       { type: "feature", icon: Sparkles, text: "Magic Wand AI parcel and flood-fill waterbody contour auto-vectorization" },
+      { type: "feature", icon: Rocket, text: "ISRO Gaganyaan-1 & EOS-08 live telemetry tracking with real-time SGP4 Kepler orbital ephemeris" },
       { type: "improvement", icon: Zap, text: "SpaceNet 8, GeoJSON (EPSG:4326), YOLOv8, and COCO geospatial export pipelines" },
       { type: "security", icon: Shield, text: "Zero-trust client-side secret fallback resilience for sovereign offline edge nodes" },
     ],
   },
   {
-    version: "v2.0.0",
-    date: "October 5, 2026",
-    tag: "Major Release",
-    tagColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
-    changes: [
-      { type: "feature", icon: Rocket, text: "ISRO Gaganyaan-1 & EOS-08 live telemetry tracking with real-time SGP4 Kepler orbital ephemeris" },
-      { type: "feature", icon: Sparkles, text: "Tri-Service Defense & DRDO Sovereign Mission Command Cockpit HUD" },
-      { type: "improvement", icon: Zap, text: "Offline-first dataset ingestion pipeline with direct client drag-and-drop support" },
-      { type: "fix", icon: Bug, text: "Resolved guest session hydration lock in QA workflow reviews" },
-    ],
-  },
-  {
     version: "v1.5.0",
-    date: "September 14, 2026",
+    date: "August 10, 2026",
     tag: "Stable",
     tagColor: "bg-cosmic-purple/10 text-cosmic-purple border-cosmic-purple/30",
     changes: [
@@ -48,6 +37,7 @@ const changelogEntries = [
     tag: "Stable",
     tagColor: "bg-cosmic-purple/10 text-cosmic-purple border-cosmic-purple/30",
     changes: [
+
 
       { type: "feature", icon: Sparkles, text: "2D Vision modality: Paste Image Link & Upload Image support" },
       { type: "feature", icon: Sparkles, text: "SAR & Radar multi-band annotation workspace (HH/HV/VV/RGB composite)" },

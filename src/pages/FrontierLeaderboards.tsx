@@ -323,7 +323,7 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     price_output: 0.40,
     context_window: "1M",
     license: "Proprietary",
-    release_date: "Feb 2025 (Oct 2026 Verified)",
+    release_date: "Feb 2025 (Aug 2026 Verified)",
     verified_by: "Google DeepMind & LMSYS",
     key_strengths: ["Real-time Multimodal Live API", "1M Context Window", "Fastest TTFT"]
   },
@@ -345,11 +345,12 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     price_output: 0.90,
     context_window: "256k",
     license: "Open-Weight",
-    release_date: "Oct 2026",
+    release_date: "Aug 2026",
     verified_by: "Samyam AI Benchmark Labs & SpaceNet",
     key_strengths: ["SAR Polarimetric & NDVI Native Tokenizer", "Bhuvan & Cartosat-3 Fine-tuned", "Sovereign Air-Gapped Deployment"]
   }
 ];
+
 
 
 const FrontierLeaderboards = () => {
