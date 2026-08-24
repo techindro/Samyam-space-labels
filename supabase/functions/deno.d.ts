@@ -19,8 +19,16 @@ declare module "npm:*" {
   export const z: any;
 }
 
+declare module "node:crypto" {
+  export function createHmac(algorithm: string, secret: string): any;
+  const crypto: any;
+  export default crypto;
+}
+
 declare module "https://*" {
   const content: any;
   export default content;
   export const serve: any;
+  export const createHmac: any;
 }
+
