@@ -42,38 +42,51 @@ const COMPARISON_PAIRS: SatelliteComparisonPair[] = [
     title: "Brahmaputra Flood Inundation & Wildlife Corridor",
     location: "Kaziranga Basin, Assam, India",
     category: "Flood Disaster",
-    beforeDate: "May 12, 2025 (Pre-Monsoon)",
-    afterDate: "Aug 18, 2025 (Peak Flood Pass)",
+    beforeDate: "May 15, 2026 (Pre-Monsoon Baseline)",
+    afterDate: "Oct 12, 2026 (Post-Monsoon SAR Pass)",
     beforeUrl: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
     afterUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1280&auto=format&fit=crop",
-    changeSummary: "+42.8 km² submerged wetlands · 18 breach corridors identified",
+    changeSummary: "+42.8 km² submerged wetlands · 18 breach corridors vectorized · 94.2% ML confidence",
     riskLevel: "CRITICAL"
   },
   {
     id: "bengaluru-urban",
-    title: "Kempegowda Aerotropolis & Transit Corridor Expansion",
+    title: "Kempegowda Aerotropolis & STRR Satellite Transit Corridor",
     location: "Bengaluru North, Karnataka, India",
     category: "Urban Expansion",
-    beforeDate: "Jan 10, 2023 (Baseline)",
-    afterDate: "Feb 14, 2026 (Current Pass)",
+    beforeDate: "Jan 12, 2025 (Panchromatic Baseline)",
+    afterDate: "Oct 18, 2026 (Cartosat-3 Sub-Meter Pass)",
     beforeUrl: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?q=80&w=1280&auto=format&fit=crop",
     afterUrl: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=1280&auto=format&fit=crop",
-    changeSummary: "+148 hectares impervious surface footprint · 3 new interchange links",
+    changeSummary: "+164 hectares new impervious asphalt & rooftop infrastructure mapped",
     riskLevel: "MODERATE"
   },
   {
     id: "himalayan-glacial",
-    title: "South Lhonak Glacial Lake Outburst Risk Monitoring",
+    title: "South Lhonak Glacial Lake & Teesta Basin Moraine Seepage",
     location: "Sikkim Eastern Himalayas, India",
     category: "Glacial Lake Outburst",
-    beforeDate: "Oct 2024 (Optical Reference)",
-    afterDate: "Aug 2026 (Copernicus Sentinel-1 SAR)",
+    beforeDate: "Mar 10, 2026 (Dry Winter Optical Pass)",
+    afterDate: "Sep 28, 2026 (EOS-04 C-Band SAR Penetration)",
     beforeUrl: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?q=80&w=1280&auto=format&fit=crop",
     afterUrl: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
-    changeSummary: "+16.3% moraine dam volume expansion · High moraine seepage detected",
+    changeSummary: "+18.7% moraine volume expansion · Active subterranean thermal thaw detected",
+    riskLevel: "HIGH"
+  },
+  {
+    id: "sundarbans-mangrove",
+    title: "Sundarbans Biosphere Mangrove Canopy Loss & Saline Inundation",
+    location: "Sundarbans Delta, West Bengal, India",
+    category: "Deforestation",
+    beforeDate: "Feb 08, 2026 (Winter Pristine Canopy)",
+    afterDate: "Oct 05, 2026 (Sentinel-2 Multi-Spectral CIR)",
+    beforeUrl: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1280&auto=format&fit=crop",
+    afterUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1280&auto=format&fit=crop",
+    changeSummary: "-8.4% mangrove canopy density along tidal mudflats · Salinity stress mapped",
     riskLevel: "HIGH"
   }
 ];
+
 
 export default function TemporalSplitView({ isOpen, onClose }: Props) {
   const [activePair, setActivePair] = useState<SatelliteComparisonPair>(COMPARISON_PAIRS[0]);

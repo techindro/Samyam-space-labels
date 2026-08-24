@@ -304,8 +304,53 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     release_date: "Nov 2024",
     verified_by: "Sarvam AI Evals & IndicBench",
     key_strengths: ["Native 10+ Indic Languages", "Ultra-Fast 185 t/s Speed", "Sovereign Indian AI Model"]
+  },
+  {
+    id: "gemini-2-0-flash",
+    rank: 12,
+    model_name: "Gemini 2.0 Flash",
+    provider: "Google DeepMind",
+    benchmark: "LMSYS Arena & LiveBench",
+    category: "speed",
+    score: 1368,
+    swe_bench: 52.4,
+    arena_elo: 1368,
+    mmlu_pro: 87.8,
+    frontier_math: 82.5,
+    tokens_per_sec: 140,
+    latency_ttft: "0.25s",
+    price_input: 0.10,
+    price_output: 0.40,
+    context_window: "1M",
+    license: "Proprietary",
+    release_date: "Feb 2025 (Oct 2026 Verified)",
+    verified_by: "Google DeepMind & LMSYS",
+    key_strengths: ["Real-time Multimodal Live API", "1M Context Window", "Fastest TTFT"]
+  },
+  {
+    id: "samyamlm-space-v2",
+    rank: 13,
+    model_name: "SamyamLM-Space v2 Sovereign 34B",
+    provider: "Samyam AI Labs",
+    benchmark: "SpaceNet 8 & ISRO Earth Observation Benchmark",
+    category: "open",
+    score: 94.6,
+    swe_bench: 58.2,
+    arena_elo: 1342,
+    mmlu_pro: 88.5,
+    frontier_math: 86.4,
+    tokens_per_sec: 85,
+    latency_ttft: "0.35s",
+    price_input: 0.30,
+    price_output: 0.90,
+    context_window: "256k",
+    license: "Open-Weight",
+    release_date: "Oct 2026",
+    verified_by: "Samyam AI Benchmark Labs & SpaceNet",
+    key_strengths: ["SAR Polarimetric & NDVI Native Tokenizer", "Bhuvan & Cartosat-3 Fine-tuned", "Sovereign Air-Gapped Deployment"]
   }
 ];
+
 
 const FrontierLeaderboards = () => {
   const [searchQuery, setSearchQuery] = useState("");
