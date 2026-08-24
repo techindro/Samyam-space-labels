@@ -44,6 +44,8 @@ const labelsOf = (t: TaskRow): string[] =>
       ).sort()
     : [];
 
+type TabKey = "queue" | "mine" | "review" | "consensus";
+
 const DEMO_TASKS: TaskRow[] = [
   {
     id: "demo-sar-01",
