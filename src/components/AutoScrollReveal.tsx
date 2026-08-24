@@ -34,7 +34,11 @@ const BUILTIN_EXCLUDE_ANCESTORS = [
   "[data-reveal='off']",
   "[data-no-reveal]",
   ".no-reveal",
+  ".hero-section",
+  "#hero",
+  "section:first-of-type",
 ];
+
 
 const isExcluded = (
   el: HTMLElement,

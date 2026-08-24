@@ -9,7 +9,7 @@ import InstallAppButton from "@/components/InstallAppButton";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[85vh] py-16 sm:py-20 lg:py-24 flex items-center justify-center overflow-hidden star-field">
+    <section data-no-reveal="true" className="no-reveal relative min-h-[85vh] py-16 sm:py-20 lg:py-24 flex items-center justify-center overflow-hidden star-field">
       <ParallelWebBg />
       {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-secondary/20 via-transparent to-background pointer-events-none" />
