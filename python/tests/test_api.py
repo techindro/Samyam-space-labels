@@ -19,7 +19,12 @@ except ImportError:
 
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app, ai_engine
+
+try:
+    from app.main import app, ai_engine
+except ImportError:
+    from main import app, ai_engine
+
 
 
 def test_api_health_endpoint():

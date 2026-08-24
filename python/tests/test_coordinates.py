@@ -3,11 +3,18 @@ import sys
 
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 python_dir = os.path.abspath(os.path.join(curr_dir, ".."))
-if python_dir not in sys.path:
-    sys.path.insert(0, python_dir)
+samyam_lm_dir = os.path.abspath(os.path.join(python_dir, "samyam_lm_multimodal"))
+
+for p in [samyam_lm_dir, python_dir]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 import pytest
-from samyam_lm_multimodal.eval_benchmark import compute_iou, evaluate_detections
+try:
+    from samyam_lm_multimodal.eval_benchmark import compute_iou, evaluate_detections
+except ImportError:
+    from eval_benchmark import compute_iou, evaluate_detections
+
 
 
 def test_compute_iou_identical_boxes():

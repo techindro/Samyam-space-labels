@@ -555,7 +555,7 @@ async def analyze_drone_frame(payload: DroneFramePayload):
     Processes video frame on GPU with SamyamLM-V1.
     """
     start_time = time.time()
-    model_name = get_active_model_name()
+    model_name = await get_available_model()
 
     prompt = (
         f"You are SamyamLM-V1 Tactical Drone AI. Altitude: {payload.altitude_m}m, Speed: {payload.speed_kmh}km/h. "
