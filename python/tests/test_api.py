@@ -6,6 +6,13 @@ from unittest.mock import MagicMock, patch
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../app")))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+# Mock PIL Image before importing app modules
+try:
+    from PIL import Image
+except ImportError:
+    # Fallback mock if Pillow is not installed
+    Image = MagicMock()
+
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
