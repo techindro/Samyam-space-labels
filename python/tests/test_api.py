@@ -40,7 +40,7 @@ def test_api_health_endpoint():
 
     client = TestClient(app)
     response = client.get("/")
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Health check failed with {response.status_code}: {response.text}"
     data = response.json()
     assert data["status"] == "online"
     assert "SamyamLM FastAPI Engine" in data["service"]
@@ -67,7 +67,7 @@ def test_prelabel_clip_endpoint_structure():
         "confidence_threshold": 0.4
     }
     response = client.post("/api/v1/prelabel/clip", json=payload)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Prelabel CLIP endpoint failed with {response.status_code}: {response.text}"
     res_json = response.json()
     assert res_json["image_url"] == payload["image_url"]
     assert len(res_json["annotations"]) >= 1
@@ -84,7 +84,8 @@ def test_isro_fetch_endpoint():
         "band": "VV"
     }
     response = client.post("/api/v1/geospatial/isro", json=payload)
-    assert response.status_code == 200
+    assert response.status_code == 200, f"ISRO endpoint failed with {response.status_code}: {response.text}"
     res_json = response.json()
     assert "ISRO_R2A_" in res_json["tile_id"]
     assert "ISRO Resourcesat-2A" in res_json["satellite"]
+
