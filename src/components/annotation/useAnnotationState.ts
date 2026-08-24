@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type Tool = "select" | "bbox" | "polygon" | "delete";
+export type Tool = "select" | "bbox" | "polygon" | "obb" | "magic_wand" | "delete";
 
 export interface LabelClass {
   id: string;
@@ -26,7 +26,21 @@ export interface PolygonAnnotation {
   points: [number, number][];
 }
 
-export type Annotation = BBoxAnnotation | PolygonAnnotation;
+export interface OBBAnnotation {
+  id: string;
+  type: "obb";
+  label: string;
+  color: string;
+  obb: {
+    cx: number;
+    cy: number;
+    w: number;
+    h: number;
+    angle: number; // degrees
+  };
+}
+
+export type Annotation = BBoxAnnotation | PolygonAnnotation | OBBAnnotation;
 
 // ─── Defaults ────────────────────────────────────────────────────────────────
 

@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback, useState } from "react";
-import type { Annotation, Tool, LabelClass, BBoxAnnotation, PolygonAnnotation } from "./useAnnotationState";
+import type { Annotation, Tool, LabelClass, BBoxAnnotation, PolygonAnnotation, OBBAnnotation } from "./useAnnotationState";
+import { extractMagicWandContour } from "@/lib/magicWand";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -13,6 +14,13 @@ interface DrawState {
   isDrawingBBox: boolean;
   bboxStart: { x: number; y: number } | null;
   bboxCurrent: { x: number; y: number } | null;
+  // OBB
+  isDrawingObb: boolean;
+  obbStart: { x: number; y: number } | null;
+  obbCurrent: { x: number; y: number } | null;
+  isRotatingObb: boolean;
+  rotatingId: string | null;
+  dragOrigObb: { cx: number; cy: number; w: number; h: number; angle: number } | null;
   // Polygon
   polyPoints: [number, number][];
   polyMouse: [number, number] | null;
@@ -49,6 +57,14 @@ function hitTest(imgX: number, imgY: number, anns: Annotation[]): string | null 
     if (ann.type === "bbox") {
       const { x, y, w, h } = ann.bbox;
       if (imgX >= x && imgX <= x + w && imgY >= y && imgY <= y + h) return ann.id;
+    } else if (ann.type === "obb") {
+      const { cx, cy, w, h, angle } = ann.obb;
+      const rad = (-angle * Math.PI) / 180;
+      const dx = imgX - cx;
+      const dy = imgY - cy;
+      const lx = dx * Math.cos(rad) - dy * Math.sin(rad);
+      const ly = dx * Math.sin(rad) + dy * Math.cos(rad);
+      if (Math.abs(lx) <= w / 2 && Math.abs(ly) <= h / 2) return ann.id;
     } else {
       const pts = ann.points;
       let inside = false;
@@ -61,6 +77,16 @@ function hitTest(imgX: number, imgY: number, anns: Annotation[]): string | null 
     }
   }
   return null;
+}
+
+function hitRotateHandle(imgX: number, imgY: number, ann: Annotation, scale: number): boolean {
+  if (ann.type !== "obb") return false;
+  const { cx, cy, h, angle } = ann.obb;
+  const rad = (angle * Math.PI) / 180;
+  const handleDist = h / 2 + 20 / scale;
+  const hx = cx - Math.sin(rad) * handleDist;
+  const hy = cy - Math.cos(rad) * handleDist;
+  return Math.hypot(imgX - hx, imgY - hy) <= 12 / scale;
 }
 
 function drawAnnotation(
@@ -136,6 +162,77 @@ function drawAnnotation(
         ctx.strokeRect(cx - hs / 2, cy - hs / 2, hs, hs);
       });
     }
+  } else if (ann.type === "obb") {
+    const { cx, cy, w, h, angle } = ann.obb;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate((angle * Math.PI) / 180);
+
+    // Box Fill & Stroke
+    ctx.fillStyle   = ann.color + (isSelected ? "40" : "25");
+    ctx.strokeStyle = isSelected ? "#ffffff" : ann.color;
+    ctx.lineWidth   = strokeWidth;
+
+    ctx.fillRect(-w / 2, -h / 2, w, h);
+    ctx.strokeRect(-w / 2, -h / 2, w, h);
+
+    // Orientation Heading Line & Handle (Satellite/Drone vector)
+    ctx.beginPath();
+    ctx.moveTo(0, -h / 2);
+    ctx.lineTo(0, -h / 2 - 20 / scale);
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 2 / scale;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(0, -h / 2 - 20 / scale, 5 / scale, 0, Math.PI * 2);
+    ctx.fillStyle = isSelected ? "#38bdf8" : "#ffffff";
+    ctx.fill();
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 1 / scale;
+    ctx.stroke();
+
+    // Corner Handles when selected
+    if (isSelected) {
+      const hs = 7 / scale;
+      const obbCorners: [number, number][] = [
+        [-w / 2, -h / 2], [w / 2, -h / 2],
+        [w / 2, h / 2], [-w / 2, h / 2]
+      ];
+      obbCorners.forEach(([cxHandle, cyHandle]) => {
+        ctx.fillStyle   = "#ffffff";
+        ctx.strokeStyle = ann.color;
+        ctx.lineWidth   = 1.5 / scale;
+        ctx.fillRect(cxHandle - hs / 2, cyHandle - hs / 2, hs, hs);
+        ctx.strokeRect(cxHandle - hs / 2, cyHandle - hs / 2, hs, hs);
+      });
+    }
+
+    // Label Tag Badge
+    const tagH = 20 / scale;
+    const fontPx = Math.max(10, Math.round(12 / scale));
+    ctx.font = `600 ${fontPx}px Inter, system-ui, sans-serif`;
+
+    const labelStr = `${ann.label} (${Math.round(angle)}°)`;
+    const textMetrics = ctx.measureText(labelStr);
+    const paddingX = 8 / scale;
+    const tagW = textMetrics.width + paddingX * 2;
+
+    ctx.fillStyle = ann.color;
+    ctx.beginPath();
+    ctx.roundRect(-tagW / 2, -h / 2 - tagH - 4 / scale, tagW, tagH, 3 / scale);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
+    ctx.lineWidth = 1 / scale;
+    ctx.stroke();
+
+    ctx.fillStyle    = "#ffffff";
+    ctx.textBaseline = "middle";
+    ctx.textAlign    = "center";
+    ctx.fillText(labelStr, 0, -h / 2 - tagH / 2 - 4 / scale);
+
+    ctx.restore();
   } else {
     // Polygon Annotation
     const pts = ann.points;
@@ -289,6 +386,23 @@ export default function AnnotationCanvas({
       ctx.restore();
     }
 
+    // In-progress OBB
+    if (d.isDrawingObb && d.obbStart && d.obbCurrent) {
+      const cx = (d.obbStart.x + d.obbCurrent.x) / 2;
+      const cy = (d.obbStart.y + d.obbCurrent.y) / 2;
+      const w = Math.abs(d.obbCurrent.x - d.obbStart.x);
+      const h = Math.abs(d.obbCurrent.y - d.obbStart.y);
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.strokeStyle = labelRef.current.color;
+      ctx.fillStyle   = labelRef.current.color + "25";
+      ctx.lineWidth   = 1.5 / scale;
+      ctx.setLineDash([6 / scale, 3 / scale]);
+      ctx.fillRect(-w / 2, -h / 2, w, h);
+      ctx.strokeRect(-w / 2, -h / 2, w, h);
+      ctx.restore();
+    }
+
     // In-progress Polygon
     if (d.polyPoints.length > 0) {
       ctx.save();
@@ -394,6 +508,17 @@ export default function AnnotationCanvas({
       const cur = toolRef.current;
 
       if (cur === "select" || cur === "delete") {
+        // Check if user clicked rotation handle on selected OBB
+        if (cur === "select" && selRef.current) {
+          const selectedAnn = annRef.current.find(a => a.id === selRef.current);
+          if (selectedAnn && selectedAnn.type === "obb" && hitRotateHandle(imgPos.x, imgPos.y, selectedAnn, d.transform.scale)) {
+            d.isRotatingObb = true;
+            d.rotatingId = selectedAnn.id;
+            d.dragOrigObb = { ...selectedAnn.obb };
+            return;
+          }
+        }
+
         const hit = hitTest(imgPos.x, imgPos.y, annRef.current);
         cb.current.onSelect(hit);
 
@@ -406,14 +531,35 @@ export default function AnnotationCanvas({
           d.isDragging   = true;
           d.dragId       = hit;
           d.dragStart    = imgPos;
-          if (ann.type === "bbox")    d.dragOrigBBox  = { ...ann.bbox };
-          else                        d.dragOrigPoly  = ann.points.map(p => [p[0], p[1]] as [number, number]);
+          if (ann.type === "bbox")         d.dragOrigBBox  = { ...ann.bbox };
+          else if (ann.type === "obb")     d.dragOrigObb   = { ...ann.obb };
+          else                             d.dragOrigPoly  = ann.points.map(p => [p[0], p[1]] as [number, number]);
         }
 
       } else if (cur === "bbox") {
         d.isDrawingBBox = true;
         d.bboxStart     = imgPos;
         d.bboxCurrent   = imgPos;
+
+      } else if (cur === "obb") {
+        d.isDrawingObb  = true;
+        d.obbStart      = imgPos;
+        d.obbCurrent    = imgPos;
+
+      } else if (cur === "magic_wand") {
+        if (d.image && d.imageLoaded) {
+          const pts = extractMagicWandContour(d.image, imgPos.x, imgPos.y);
+          if (pts && pts.length >= 3) {
+            const ann: PolygonAnnotation = {
+              id: crypto.randomUUID(),
+              type: "polygon",
+              label: labelRef.current.name,
+              color: labelRef.current.color,
+              points: pts,
+            };
+            cb.current.onAddAnnotation(ann);
+          }
+        }
 
       } else if (cur === "polygon") {
         // Check proximity to first point (close polygon)
@@ -450,6 +596,27 @@ export default function AnnotationCanvas({
         return;
       }
 
+      if (d.isDrawingObb) {
+        d.obbCurrent = imgPos;
+        render();
+        return;
+      }
+
+      if (d.isRotatingObb && d.rotatingId && d.dragOrigObb) {
+        const ann = annRef.current.find(a => a.id === d.rotatingId);
+        if (ann && ann.type === "obb") {
+          // Angle in degrees from center
+          const angleRad = Math.atan2(imgPos.x - d.dragOrigObb.cx, -(imgPos.y - d.dragOrigObb.cy));
+          let angleDeg = (angleRad * 180) / Math.PI;
+          if (angleDeg < 0) angleDeg += 360;
+          cb.current.onUpdateAnnotation(ann.id, {
+            obb: { ...d.dragOrigObb, angle: Math.round(angleDeg) },
+          });
+          render();
+        }
+        return;
+      }
+
       if (d.isDragging && d.dragId && d.dragStart) {
         const dx  = imgPos.x - d.dragStart.x;
         const dy  = imgPos.y - d.dragStart.y;
@@ -458,6 +625,10 @@ export default function AnnotationCanvas({
         if (ann.type === "bbox" && d.dragOrigBBox) {
           cb.current.onUpdateAnnotation(ann.id, {
             bbox: { ...d.dragOrigBBox, x: d.dragOrigBBox.x + dx, y: d.dragOrigBBox.y + dy },
+          });
+        } else if (ann.type === "obb" && d.dragOrigObb) {
+          cb.current.onUpdateAnnotation(ann.id, {
+            obb: { ...d.dragOrigObb, cx: d.dragOrigObb.cx + dx, cy: d.dragOrigObb.cy + dy },
           });
         } else if (ann.type === "polygon" && d.dragOrigPoly) {
           cb.current.onUpdateAnnotation(ann.id, {
@@ -476,9 +647,10 @@ export default function AnnotationCanvas({
       // Cursor feedback
       if (!d.spaceDown) {
         const hit = hitTest(imgPos.x, imgPos.y, annRef.current);
-        if      (toolRef.current === "select")  canvas.style.cursor = hit ? "move" : "default";
-        else if (toolRef.current === "delete")  canvas.style.cursor = hit ? "not-allowed" : "default";
-        else if (toolRef.current === "bbox" || toolRef.current === "polygon") canvas.style.cursor = "crosshair";
+        if      (toolRef.current === "select")      canvas.style.cursor = hit ? "move" : "default";
+        else if (toolRef.current === "delete")      canvas.style.cursor = hit ? "not-allowed" : "default";
+        else if (toolRef.current === "magic_wand")  canvas.style.cursor = "pointer";
+        else if (toolRef.current === "bbox" || toolRef.current === "obb" || toolRef.current === "polygon") canvas.style.cursor = "crosshair";
       }
     };
 
@@ -488,6 +660,14 @@ export default function AnnotationCanvas({
         d.panStart  = null;
         d.panOrigin = null;
         canvas.style.cursor = d.spaceDown ? "grab" : "default";
+        return;
+      }
+
+      if (d.isRotatingObb) {
+        d.isRotatingObb = false;
+        d.rotatingId = null;
+        d.dragOrigObb = null;
+        cb.current.onCommitMove();
         return;
       }
 
@@ -511,11 +691,34 @@ export default function AnnotationCanvas({
         return;
       }
 
+      if (d.isDrawingObb && d.obbStart && d.obbCurrent) {
+        const cx = (d.obbStart.x + d.obbCurrent.x) / 2;
+        const cy = (d.obbStart.y + d.obbCurrent.y) / 2;
+        const w = Math.abs(d.obbCurrent.x - d.obbStart.x);
+        const h = Math.abs(d.obbCurrent.y - d.obbStart.y);
+        if (w > 6 && h > 6) {
+          const ann: OBBAnnotation = {
+            id: crypto.randomUUID(),
+            type: "obb",
+            label: labelRef.current.name,
+            color: labelRef.current.color,
+            obb: { cx, cy, w, h, angle: 0 },
+          };
+          cb.current.onAddAnnotation(ann);
+        }
+        d.isDrawingObb = false;
+        d.obbStart = null;
+        d.obbCurrent = null;
+        render();
+        return;
+      }
+
       if (d.isDragging) {
         d.isDragging    = false;
         d.dragId        = null;
         d.dragStart     = null;
         d.dragOrigBBox  = null;
+        d.dragOrigObb   = null;
         d.dragOrigPoly  = null;
         cb.current.onCommitMove();
         return;
@@ -776,6 +979,9 @@ export default function AnnotationCanvas({
     ds.current.isDrawingBBox = false;
     ds.current.bboxStart = null;
     ds.current.bboxCurrent = null;
+    ds.current.isDrawingObb = false;
+    ds.current.obbStart = null;
+    ds.current.obbCurrent = null;
     render();
   };
 
@@ -825,7 +1031,7 @@ export default function AnnotationCanvas({
           </button>
         )}
 
-        {(ds.current.polyPoints.length > 0 || ds.current.isDrawingBBox) && (
+        {(ds.current.polyPoints.length > 0 || ds.current.isDrawingBBox || ds.current.isDrawingObb) && (
           <button
             onClick={handleCancelDraw}
             title="Cancel (Esc)"

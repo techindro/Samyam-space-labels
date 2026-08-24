@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Square, Hexagon, Tag, Trash2, ChevronDown } from "lucide-react";
+import { Plus, Square, Hexagon, Tag, Trash2, ChevronDown, RotateCw } from "lucide-react";
 import type { Annotation, LabelClass } from "./useAnnotationState";
 import { PRESET_COLORS } from "./useAnnotationState";
 
@@ -142,7 +142,13 @@ export default function LabelPanel({
                     className="shrink-0 p-0.5 rounded"
                     style={{ color: ann.color }}
                   >
-                    {ann.type === "bbox" ? <Square size={13} /> : <Hexagon size={13} />}
+                    {ann.type === "bbox" ? (
+                      <Square size={13} />
+                    ) : ann.type === "obb" ? (
+                      <RotateCw size={13} />
+                    ) : (
+                      <Hexagon size={13} />
+                    )}
                   </span>
                   <span className="truncate text-xs flex-1">
                     <span className="text-slate-500 font-mono text-[10px] mr-1.5">#{i + 1}</span>

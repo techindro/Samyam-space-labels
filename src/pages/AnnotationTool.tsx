@@ -15,7 +15,9 @@ import ActiveLearningPanel from "@/components/annotation/ActiveLearningPanel";
 import {
   DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { toCoco, toYolo, toGeoJson, toCsv, downloadFile } from "@/lib/annotationExport";
+import { toCoco, toYolo, toYoloObb, toDota, toGeoJson, toCsv, downloadFile } from "@/lib/annotationExport";
+import MultispectralViewer from "@/components/annotation/MultispectralViewer";
+import TemporalSplitView from "@/components/annotation/TemporalSplitView";
 import IndicVoiceAnnotator from "@/components/IndicVoiceAnnotator";
 import MonopolyExportSuite from "@/components/MonopolyExportSuite";
 import { 
@@ -23,7 +25,7 @@ import {
   Mic, Video as VideoIcon, FileText, Radar, Play, Pause, Plus, Trash2,
   Sparkles, ThumbsUp, ThumbsDown, Layers, Activity, Sliders, CheckCircle,
   Target, Keyboard, X, Globe, Car, Building2, Radio, CheckCircle2, Cpu,
-  Upload, PlusCircle, Music, Film, Satellite, Moon
+  Upload, PlusCircle, Music, Film, Satellite, Moon, TreeDeciduous, Columns
 } from "lucide-react";
 
 // ─── Status badge ────────────────────────────────────────────────────────────
@@ -135,6 +137,8 @@ export default function AnnotationTool() {
   const [showHindiKb, setShowHindiKb] = useState(false);
   const [showMobileLabels, setShowMobileLabels] = useState(false);
   const [showActiveLearningModal, setShowActiveLearningModal] = useState(false);
+  const [showMultispectralModal, setShowMultispectralModal] = useState(false);
+  const [showTemporalModal, setShowTemporalModal] = useState(false);
 
   // Task data
   const [task,       setTask]       = useState<Record<string, any> | null>(null);
@@ -697,9 +701,9 @@ export default function AnnotationTool() {
     title: task?.title ?? "samyam annotation export",
   }), [state.annotations, state.labels, imageDims, imageUrl, task]);
 
-  const handleDatasetExport = useCallback((fmt: "coco" | "yolo" | "geojson" | "csv") => {
+  const handleDatasetExport = useCallback((fmt: "coco" | "yolo" | "yolo_obb" | "dota" | "geojson" | "csv") => {
     if (activeModality !== "vision") {
-      toast({ title: "Vision only", description: "COCO / YOLO / GeoJSON exports need image annotations.", variant: "destructive" });
+      toast({ title: "Vision only", description: "Exports need image annotations.", variant: "destructive" });
       return;
     }
     if (!state.annotations.length) {
@@ -714,6 +718,12 @@ export default function AnnotationTool() {
       const { labelsTxt, dataYaml } = toYolo(ctx);
       downloadFile(`${base}_yolo.txt`, labelsTxt, "text/plain");
       setTimeout(() => downloadFile(`${base}_data.yaml`, dataYaml, "text/yaml"), 250);
+    } else if (fmt === "yolo_obb") {
+      const { labelsTxt, dataYaml } = toYoloObb(ctx);
+      downloadFile(`${base}_yolo_obb.txt`, labelsTxt, "text/plain");
+      setTimeout(() => downloadFile(`${base}_data_obb.yaml`, dataYaml, "text/yaml"), 250);
+    } else if (fmt === "dota") {
+      downloadFile(`${base}_dota.txt`, toDota(ctx), "text/plain");
     } else if (fmt === "geojson") {
       downloadFile(`${base}.geojson`, JSON.stringify(toGeoJson(ctx), null, 2), "application/geo+json");
     } else {
@@ -862,8 +872,16 @@ export default function AnnotationTool() {
                 <span className="text-[10px] font-mono opacity-50">.json</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDatasetExport("yolo")} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
-                <span>YOLOv8 PyTorch</span>
+                <span>YOLOv8 PyTorch (AABB)</span>
                 <span className="text-[10px] font-mono opacity-50">.txt</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDatasetExport("yolo_obb")} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
+                <span>YOLO-OBB (Rotated Box)</span>
+                <span className="text-[10px] font-mono text-cyan-400">.txt</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDatasetExport("dota")} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
+                <span>DOTA Satellite 1.0</span>
+                <span className="text-[10px] font-mono text-indigo-400">.txt</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDatasetExport("geojson")} className="text-xs font-semibold p-2 focus:bg-white/10 focus:text-white cursor-pointer rounded-lg flex items-center justify-between">
                 <span>ISRO GeoJSON</span>
@@ -966,6 +984,26 @@ export default function AnnotationTool() {
             <span className="hidden xl:inline">Hindi Keyboard</span>
           </Button>
 
+
+          <Button
+            size="sm"
+            onClick={() => setShowMultispectralModal(true)}
+            className="h-7 px-2.5 text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 gap-1 font-semibold shrink-0"
+            title="Open Multispectral & NDVI Band Inspector"
+          >
+            <TreeDeciduous size={12} className="text-emerald-400" />
+            <span className="hidden sm:inline">NDVI / Bands</span>
+          </Button>
+
+          <Button
+            size="sm"
+            onClick={() => setShowTemporalModal(true)}
+            className="h-7 px-2.5 text-xs bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/40 gap-1 font-semibold shrink-0"
+            title="Open Temporal Change Detection & Comparison Studio"
+          >
+            <Columns size={12} className="text-indigo-400" />
+            <span className="hidden sm:inline">Temporal Split</span>
+          </Button>
 
           <Button
             size="sm"
@@ -1884,6 +1922,20 @@ export default function AnnotationTool() {
             />
           </DialogContent>
         </Dialog>
+
+        {/* Multispectral & NDVI Band Inspector Modal */}
+        <MultispectralViewer
+          isOpen={showMultispectralModal}
+          onClose={() => setShowMultispectralModal(false)}
+          imageUrl={imageUrl}
+          imageName={(imageUrl.split("/").pop() || "satellite_layer.tif").split("?")[0]}
+        />
+
+        {/* Temporal Change Detection Split Studio Modal */}
+        <TemporalSplitView
+          isOpen={showTemporalModal}
+          onClose={() => setShowTemporalModal(false)}
+        />
 
       </div>
     </div>

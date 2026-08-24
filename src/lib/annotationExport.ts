@@ -1,6 +1,6 @@
-import type { Annotation, LabelClass } from "@/components/annotation/useAnnotationState";
+import type { Annotation, LabelClass, OBBAnnotation } from "@/components/annotation/useAnnotationState";
 
-export type ExportFormat = "json" | "coco" | "yolo" | "geojson" | "csv";
+export type ExportFormat = "json" | "coco" | "yolo" | "yolo_obb" | "dota" | "geojson" | "csv";
 
 export interface ExportCtx {
   annotations: Annotation[];
@@ -13,10 +13,44 @@ export interface ExportCtx {
 
 const bboxOf = (a: Annotation) => {
   if (a.type === "bbox") return a.bbox;
+  if (a.type === "obb") {
+    // AABB envelope for OBB
+    const rad = (a.obb.angle * Math.PI) / 180;
+    const cos = Math.abs(Math.cos(rad));
+    const sin = Math.abs(Math.sin(rad));
+    const boundW = a.obb.w * cos + a.obb.h * sin;
+    const boundH = a.obb.w * sin + a.obb.h * cos;
+    return {
+      x: a.obb.cx - boundW / 2,
+      y: a.obb.cy - boundH / 2,
+      w: boundW,
+      h: boundH,
+    };
+  }
   const xs = a.points.map(p => p[0]);
   const ys = a.points.map(p => p[1]);
   const x = Math.min(...xs), y = Math.min(...ys);
   return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
+};
+
+export const getObbCorners = (obb: OBBAnnotation["obb"]): [number, number][] => {
+  const rad = (obb.angle * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  const hw = obb.w / 2;
+  const hh = obb.h / 2;
+
+  const offsets: [number, number][] = [
+    [-hw, -hh],
+    [hw, -hh],
+    [hw, hh],
+    [-hw, hh],
+  ];
+
+  return offsets.map(([ox, oy]) => [
+    obb.cx + ox * cos - oy * sin,
+    obb.cy + ox * sin + oy * cos,
+  ]);
 };
 
 const polyArea = (pts: [number, number][]) => {
@@ -69,6 +103,52 @@ export function toYolo(ctx: ExportCtx) {
     labelsTxt: lines.join("\n") + (lines.length ? "\n" : ""),
     dataYaml: `# samyam YOLO export\nnames:\n${names}\nnc: ${ctx.labels.length}\n`,
   };
+}
+
+export function toYoloObb(ctx: ExportCtx) {
+  const idx = (name: string) => Math.max(0, ctx.labels.findIndex(l => l.name === name));
+  const lines = ctx.annotations.map(a => {
+    if (a.type === "obb") {
+      const corners = getObbCorners(a.obb);
+      const coords = corners.flatMap(([x, y]) => [
+        f(x / ctx.imageWidth),
+        f(y / ctx.imageHeight)
+      ]).join(" ");
+      return `${idx(a.label)} ${coords}`;
+    }
+    const b = bboxOf(a);
+    const x1 = f(b.x / ctx.imageWidth), y1 = f(b.y / ctx.imageHeight);
+    const x2 = f((b.x + b.w) / ctx.imageWidth), y2 = y1;
+    const x3 = x2, y3 = f((b.y + b.h) / ctx.imageHeight);
+    const x4 = x1, y4 = y3;
+    return `${idx(a.label)} ${x1} ${y1} ${x2} ${y2} ${x3} ${y3} ${x4} ${y4}`;
+  });
+  const names = ctx.labels.map((l, i) => `  ${i}: ${l.name}`).join("\n");
+  return {
+    labelsTxt: lines.join("\n") + (lines.length ? "\n" : ""),
+    dataYaml: `# samyam YOLO-OBB (Oriented Bounding Box) export\nnames:\n${names}\nnc: ${ctx.labels.length}\n`,
+  };
+}
+
+export function toDota(ctx: ExportCtx) {
+  const lines = [
+    `imagesource:samyam_satellite_vlm`,
+    `gsd:0.15`,
+    ...ctx.annotations.map(a => {
+      if (a.type === "obb") {
+        const corners = getObbCorners(a.obb);
+        const coords = corners.flatMap(([x, y]) => [round(x), round(y)]).join(" ");
+        return `${coords} ${a.label.replace(/\s+/g, "_")} 0`;
+      }
+      const b = bboxOf(a);
+      const x1 = round(b.x), y1 = round(b.y);
+      const x2 = round(b.x + b.w), y2 = y1;
+      const x3 = x2, y3 = round(b.y + b.h);
+      const x4 = x1, y4 = y3;
+      return `${x1} ${y1} ${x2} ${y2} ${x3} ${y3} ${x4} ${y4} ${a.label.replace(/\s+/g, "_")} 0`;
+    })
+  ];
+  return lines.join("\n") + "\n";
 }
 
 export function toGeoJson(ctx: ExportCtx) {

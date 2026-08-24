@@ -1,5 +1,5 @@
 import type { Tool } from "./useAnnotationState";
-import { MousePointer2, Square, Hexagon, Trash2, Undo2, Redo2, Upload, Globe } from "lucide-react";
+import { MousePointer2, Square, Hexagon, Trash2, Undo2, Redo2, Upload, Globe, RotateCw, Wand2 } from "lucide-react";
 
 interface Props {
   tool: Tool;
@@ -20,10 +20,12 @@ interface ToolBtn {
 }
 
 const tools: ToolBtn[] = [
-  { id: "select",  icon: <MousePointer2 size={18} />, label: "Select / Move", shortcut: "V" },
-  { id: "bbox",    icon: <Square        size={18} />, label: "Bounding Box",  shortcut: "B" },
-  { id: "polygon", icon: <Hexagon       size={18} />, label: "Polygon",       shortcut: "P" },
-  { id: "delete",  icon: <Trash2        size={18} />, label: "Delete",        shortcut: "D" },
+  { id: "select",     icon: <MousePointer2 size={18} />, label: "Select / Move",       shortcut: "V" },
+  { id: "bbox",       icon: <Square        size={18} />, label: "Bounding Box",        shortcut: "B" },
+  { id: "obb",        icon: <RotateCw      size={18} />, label: "Oriented BBox (OBB)",  shortcut: "O" },
+  { id: "polygon",    icon: <Hexagon       size={18} />, label: "Polygon",             shortcut: "P" },
+  { id: "magic_wand", icon: <Wand2         size={18} />, label: "Magic Wand Auto-Seg", shortcut: "W" },
+  { id: "delete",     icon: <Trash2        size={18} />, label: "Delete",              shortcut: "D" },
 ];
 
 export default function AnnotationToolbar({
