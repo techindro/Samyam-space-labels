@@ -21,11 +21,11 @@ import pytest
 from fastapi.testclient import TestClient
 
 try:
-    from app.main import app
+    import app.main as app_module
 except ImportError:
-    from main import app
+    import main as app_module
 
-
+app = app_module.app
 
 
 def test_api_health_endpoint():
@@ -39,8 +39,8 @@ def test_api_health_endpoint():
 
 
 def test_prelabel_clip_endpoint_structure():
-    with patch("app.main.ai_engine") as mock_ai:
-        mock_ai.detect_objects_zero_shot.return_value = [
+    with patch.object(app_module.ai_engine, "detect_objects_zero_shot") as mock_detect:
+        mock_detect.return_value = [
             {
                 "id": "ann_1",
                 "label": "airplane",
