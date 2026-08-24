@@ -65,7 +65,7 @@ jobs:
       env:
         PYTHONPATH: ${{ github.workspace }}/python/app:${{ github.workspace }}/python:${{ github.workspace }}/python/samyam_lm_multimodal:${{ github.workspace }}
       run: |
-        pytest python/tests -v --tb=short || python -m pytest python/tests -v --tb=short || python -c "import sys, pytest; sys.path.extend(['python/app', 'python', 'python/samyam_lm_multimodal', '.']); sys.exit(pytest.main(['python/tests', '-v', '--tb=short']))"
+        python python/run_tests.py
 
     - name: Run Benchmark Evaluation Smoke Test
       env:
