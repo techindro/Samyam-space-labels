@@ -386,8 +386,6 @@ const QaWorkflow = () => {
 
   const list = tab === "queue" ? unassigned : tab === "mine" ? mine : reviewQueue;
 
-  if (!userId) return null;
-
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <ParallelWebBg />

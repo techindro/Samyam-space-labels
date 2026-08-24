@@ -255,9 +255,6 @@ const DataUpload = () => {
     toast({ title: "File removed" });
   };
 
-
-  if (!userId) return null;
-
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <ParallelWebBg />
