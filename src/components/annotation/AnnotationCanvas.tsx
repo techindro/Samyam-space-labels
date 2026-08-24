@@ -317,10 +317,13 @@ export default function AnnotationCanvas({
     transform: { scale: 1, tx: 0, ty: 0 },
     image: null, imageLoaded: false,
     isDrawingBBox: false, bboxStart: null, bboxCurrent: null,
+    isDrawingObb: false, obbStart: null, obbCurrent: null,
+    isRotatingObb: false, rotatingId: null, dragOrigObb: null,
     polyPoints: [], polyMouse: null,
     isPanning: false, spaceDown: false, panStart: null, panOrigin: null,
     isDragging: false, dragId: null, dragStart: null, dragOrigBBox: null, dragOrigPoly: null,
   });
+
 
   // ── Coordinate helpers ──
 

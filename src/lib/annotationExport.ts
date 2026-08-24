@@ -168,7 +168,7 @@ export function toGeoJson(ctx: ExportCtx) {
         if (ring.length) ring.push(ring[0]);
         return { type: "Feature", properties: props, geometry: { type: "Polygon", coordinates: [ring] } };
       }
-      const b = a.bbox;
+      const b = bboxOf(a);
       const ring = [
         toLngLat(b.x, b.y), toLngLat(b.x + b.w, b.y),
         toLngLat(b.x + b.w, b.y + b.h), toLngLat(b.x, b.y + b.h), toLngLat(b.x, b.y),
@@ -177,6 +177,7 @@ export function toGeoJson(ctx: ExportCtx) {
     }),
   };
 }
+
 
 export function toCsv(ctx: ExportCtx) {
   const rows = [["index", "id", "label", "type", "x", "y", "width", "height", "points"]];

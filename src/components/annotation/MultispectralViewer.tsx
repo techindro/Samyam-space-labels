@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -47,18 +47,7 @@ export default function MultispectralViewer({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const originalImgRef = useRef<HTMLImageElement | null>(null);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      originalImgRef.current = img;
-      processBands();
-    };
-    img.src = imageUrl;
-  }, [isOpen, imageUrl, bandMode, contrast, ndviThreshold, gamma]);
-
-  const processBands = () => {
+  const processBands = useCallback(() => {
     const img = originalImgRef.current;
     const canvas = canvasRef.current;
     if (!img || !canvas) return;
@@ -142,6 +131,7 @@ export default function MultispectralViewer({
         data[i + 1] = Math.min(255, Math.round(Math.sin(heat * Math.PI) * 230));
         data[i + 2] = Math.min(255, Math.round((1 - heat) * 255));
       }
+
     }
 
     ctx.putImageData(imgData, 0, 0);
@@ -155,7 +145,19 @@ export default function MultispectralViewer({
         urbanBareIndex: `${(Math.max(0, 100 - (vegPixels / totalSampled) * 100 - (waterPixels / totalSampled) * 100)).toFixed(1)}%`,
       });
     }
-  };
+  }, [bandMode, contrast, ndviThreshold, gamma]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      originalImgRef.current = img;
+      processBands();
+    };
+    img.src = imageUrl;
+  }, [isOpen, imageUrl, processBands]);
+
 
   const handleDownloadFiltered = () => {
     const canvas = canvasRef.current;
