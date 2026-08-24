@@ -6,15 +6,17 @@ Executes PyTest suite or directly runs unit tests with detailed diagnostic repor
 
 import os
 import sys
+import math
 import traceback
 
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 app_dir = os.path.join(curr_dir, "app")
 samyam_lm_dir = os.path.join(curr_dir, "samyam_lm_multimodal")
+tests_dir = os.path.join(curr_dir, "tests")
 root_dir = os.path.abspath(os.path.join(curr_dir, ".."))
 
-for p in [app_dir, samyam_lm_dir, curr_dir, root_dir]:
-    if p not in sys.path:
+for p in [app_dir, samyam_lm_dir, tests_dir, curr_dir, root_dir]:
+    if os.path.exists(p) and p not in sys.path:
         sys.path.insert(0, p)
 
 def run():
@@ -26,7 +28,11 @@ def run():
     total_failed = 0
 
     try:
-        from tests import test_coordinates
+        try:
+            from tests import test_coordinates
+        except ImportError:
+            import test_coordinates
+
         coord_tests = [
             test_coordinates.test_compute_iou_identical_boxes,
             test_coordinates.test_compute_iou_disjoint_boxes,
@@ -49,7 +55,11 @@ def run():
         total_failed += 1
 
     try:
-        from tests import test_api
+        try:
+            from tests import test_api
+        except ImportError:
+            import test_api
+
         api_tests = [
             test_api.test_api_health_endpoint,
             test_api.test_prelabel_clip_endpoint_structure,

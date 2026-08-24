@@ -20,7 +20,7 @@ except ImportError:
 def test_compute_iou_identical_boxes():
     box = [0.1, 0.1, 0.5, 0.5]
     iou = compute_iou(box, box)
-    assert pytest.approx(iou, 0.001) == 1.0
+    assert abs(iou - 1.0) < 0.001
 
 
 def test_compute_iou_disjoint_boxes():
@@ -34,7 +34,8 @@ def test_compute_iou_partial_overlap():
     box1 = [0.0, 0.0, 0.4, 0.4]
     box2 = [0.2, 0.2, 0.4, 0.4]
     iou = compute_iou(box1, box2)
-    assert pytest.approx(iou, 0.001) == 0.25
+    assert abs(iou - 0.25) < 0.001
+
 
 
 def test_evaluate_detections_perfect_match():
