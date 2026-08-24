@@ -1,7 +1,10 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+curr_dir = os.path.dirname(os.path.abspath(__file__))
+python_dir = os.path.abspath(os.path.join(curr_dir, ".."))
+if python_dir not in sys.path:
+    sys.path.insert(0, python_dir)
 
 import pytest
 from samyam_lm_multimodal.eval_benchmark import compute_iou, evaluate_detections

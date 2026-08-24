@@ -3,8 +3,13 @@ import sys
 from unittest.mock import MagicMock, patch
 
 # Ensure python/app and python are in sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../app")))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+curr_dir = os.path.dirname(os.path.abspath(__file__))
+python_dir = os.path.abspath(os.path.join(curr_dir, ".."))
+app_dir = os.path.abspath(os.path.join(python_dir, "app"))
+
+for p in [app_dir, python_dir]:
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 # Ensure PIL Image is loaded into namespace before app modules are imported
 try:
@@ -14,7 +19,11 @@ except ImportError:
 
 import pytest
 from fastapi.testclient import TestClient
-from app.main import app
+
+try:
+    from app.main import app
+except ImportError:
+    from main import app
 
 
 
