@@ -57,6 +57,7 @@ class WhisperEngine:
         Transcribes speech from an audio URL or file path.
         Returns time-stamped text segments and full transcript text.
         """
+        start_time = time.time()
         if HAS_AUDIO_LIBS:
             try:
                 self._load_whisper()

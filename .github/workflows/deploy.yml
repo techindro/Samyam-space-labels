@@ -8,6 +8,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  FRONTEND_IMAGE: samyam-frontend
+  AI_ENGINE_IMAGE: samyam-ai-engine
 
 jobs:
   # ── Job 1: Test & Lint Frontend ──────────────────────────────────────────
