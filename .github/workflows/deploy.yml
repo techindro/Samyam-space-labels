@@ -8,13 +8,11 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  FRONTEND_IMAGE_NAME: ${{ github.repository }}/samyam-frontend
-  AI_ENGINE_IMAGE_NAME: ${{ github.repository }}/samyam-ai-engine
 
 jobs:
   # ── Job 1: Test & Lint Frontend ──────────────────────────────────────────
   frontend-ci:
-    name: Frontend CI (Lint, Test & Build)
+    name: Frontend CI (Test & Build)
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +27,9 @@ jobs:
 
     - name: Install Dependencies
       run: npm install --legacy-peer-deps
+
+    - name: Run Tests
+      run: npm test
 
     - name: Run Build Test
       run: npm run build
@@ -73,7 +74,7 @@ jobs:
   docker-build-push:
     name: Build & Push Docker Images
     needs: [frontend-ci, ai-engine-ci]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -82,6 +83,12 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
+
+    - name: Set Lowercase Image Names (Docker standard requirement)
+      run: |
+        REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+        echo "FRONTEND_IMAGE=${{ env.REGISTRY }}/${REPO_LOWER}/samyam-frontend" >> $GITHUB_ENV
+        echo "AI_ENGINE_IMAGE=${{ env.REGISTRY }}/${REPO_LOWER}/samyam-ai-engine" >> $GITHUB_ENV
 
     - name: Log in to GitHub Container Registry (GHCR)
       uses: docker/login-action@v3
@@ -94,7 +101,7 @@ jobs:
       id: meta-frontend
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}
+        images: ${{ env.FRONTEND_IMAGE }}
         tags: |
           type=raw,value=latest
           type=sha
@@ -112,7 +119,7 @@ jobs:
       id: meta-ai
       uses: docker/metadata-action@v5
       with:
-        images: ${{ env.REGISTRY }}/${{ env.AI_ENGINE_IMAGE_NAME }}
+        images: ${{ env.AI_ENGINE_IMAGE }}
         tags: |
           type=raw,value=latest
           type=sha
