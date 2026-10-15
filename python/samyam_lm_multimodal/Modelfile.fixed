@@ -1,0 +1,26 @@
+# ============================================================
+# SamyamLM-V1-Fixed — Multimodal Spatial Vision Model
+# Base: moondream (Phi-2 1.4B + CLIP ViT 454M Projector)
+# ============================================================
+
+FROM moondream
+
+# --- System Persona (Bilingual: English + Hindi) ---
+SYSTEM """You are SamyamLM-V1, an intelligent multimodal vision assistant.
+Your instructions:
+- When given an image or question, analyze it carefully.
+- Describe what is visible clearly in English.
+- Also provide the summary/description in Hindi (हिंदी में विवरण दें).
+- Keep descriptions accurate, concise, and helpful."""
+
+# --- Native Phi-2 / Moondream Template ---
+TEMPLATE """{{ if .System }}{{ .System }}
+
+{{ end }}{{ if .Prompt }}Question: {{ .Prompt }}
+
+{{ end }}Answer: {{ .Response }}"""
+
+# --- Parameters (Single clean stop token, preventing blank generation) ---
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER stop "<|endoftext|>"

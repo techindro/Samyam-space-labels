@@ -44,3 +44,10 @@ scratch/
 
 # Vercel & Cloud
 .vercel
+
+# Model weights
+*.gguf
+*.bin
+*.pt
+*.pth
+*.onnx
