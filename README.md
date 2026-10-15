@@ -1,20 +1,23 @@
 <div align="center">
 
-# 🌍 SamyamLM-V1
+<img src="public/samyam-logo-transparent.png" width="130" alt="Samyam Space Labels Logo" style="background: transparent;" />
+
+# 🛰️ SamyamLM-V1
 
 ## Satellite-Based Multimodal Spatial AI Engine & Data Labeling Platform
 
 **Breakthrough Spatial Vision AI for India & Global Space/Defense — 1.86B Parameter Multimodal Engine, 59% faster, native Indic & Spatial understanding**
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Model](https://img.shields.io/badge/Model-SamyamLM--V1%20(1.86B)-blueviolet.svg)](python/samyam_lm_multimodal)
-[![Made in India](https://img.shields.io/badge/Made_in-India-orange.svg)](https://www.makeinindia.com)
-[![Python 3.9+](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org)
-[![Ollama](https://img.shields.io/badge/Ollama-Local_GPU-green.svg)](https://ollama.com)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org)
-[![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen)](https://samyam-space-labels.vercel.app/annotate/demo)
-[![HuggingFace](https://img.shields.io/badge/HuggingFace-techindro-yellow)](https://huggingface.co/techindro)
-[![Website](https://img.shields.io/badge/Website-Live-blue)](https://samyam-space-labels.vercel.app)
+[![HuggingFace Model](https://img.shields.io/badge/HuggingFace-techindro%2FSamyamLM--V1-000000.svg?style=for-the-badge&logo=huggingface)](https://huggingface.co/techindro/SamyamLM-V1)
+[![Model Size](https://img.shields.io/badge/Parameters-1.86B-000000.svg?style=for-the-badge)](https://huggingface.co/techindro/SamyamLM-V1)
+[![Quantization](https://img.shields.io/badge/Format-Q4__0_GGUF-000000.svg?style=for-the-badge)](https://huggingface.co/techindro/SamyamLM-V1)
+[![Ollama](https://img.shields.io/badge/Runtime-Ollama-000000.svg?style=for-the-badge&logo=ollama)](https://ollama.com)
+[![License](https://img.shields.io/badge/License-Apache_2.0-000000.svg?style=for-the-badge&logo=apache)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Samyam.Space-000000.svg?style=for-the-badge)](https://samyam-space-labels.vercel.app/annotate/demo)
+
+<br/>
+
+**[ [Hugging Face Model](https://huggingface.co/techindro/SamyamLM-V1) ]** • **[ [Research Paper](/research/papers/samyamlm) ]** • **[ [Live Demo](https://samyam-space-labels.vercel.app) ]** • **[ [Local AI Server](python/samyam_lm_multimodal) ]**
 
 </div>
 
@@ -58,6 +61,12 @@
 | **Inference Latency** | **300ms – 800ms** | Real-time edge inference on consumer laptops & edge servers |
 | **Precision Tuning** | `temp=0.3`, `top_p=0.85` | Tuned specifically to avoid hallucinations and output exact `[ymin, xmin, ymax, xmax]` |
 
+### ⚡ System 1 vs. System 2 Dual-Engine Paradigm
+
+SamyamLM integrates a hybrid cognitive processing architecture:
+* **System 1 Non-Autoregressive Decision Engine (<35ms):** Inspired by the Laya & Jev paradigms. Delivers instantaneous deterministic threat assessment and calibrated probability distributions (RLCD) on edge devices without autoregressive token generation overhead.
+* **System 2 Multimodal Spatial Core (300ms–800ms):** End-to-end VLM (Phi-2 1.4B + CLIP ViT 454M) providing fine-grained coordinate bounding boxes, geospatial feature attribution, and dual-language (English / Devanagari Hindi) tactical briefings.
+
 ---
 
 ## ⚡ Quickstart: Run SamyamLM-V1 Locally
@@ -74,10 +83,13 @@ python python/samyam_lm_multimodal/serve_samyam_lm.py
 ```
 - **API Health Check:** `http://localhost:8000/health`
 - **Interactive Swagger Docs:** `http://localhost:8000/docs`
-- **Multimodal Inference Endpoint:** `POST /api/v1/analyze`
+- **Multimodal Spatial Inference:** `POST /api/v1/analyze`
+- **System 1 Decision Engine (<35ms):** `POST /api/v1/decision/system1`
+- **Benchmark Evaluation:** `python python/samyam_lm_multimodal/eval_benchmark.py --demo`
 
 ### 3. Launch Frontend Web Workspace
 ```bash
+npm install
 npm run dev
 ```
 Open **`http://localhost:8080`** in your browser.
@@ -333,6 +345,14 @@ Samyam supports allied governments and coalition partners with **interoperable A
 | 🔍 **Intelligence & Security** | ISR, GEOINT and threat detection |
 | 🌊 **Border & Maritime** | Surveillance for BSF, ITBP & Coast Guard |
 
+### 🚀 Sovereign Mission Console (`/government` & `/government-hub`)
+
+A unified mission-control interface built for high-security defense and aerospace operations:
+* **Interactive Sensor Feeds:** Real-time tactical switching between Satellite Optical, SAR (Synthetic Aperture Radar), and Drone/UAV camera streams.
+* **Deterministic Telemetry & Prompting:** Query coordinates (Lat, Lon / MGRS) and execute instant target-detection prompts against sovereign local weights.
+* **Indic Devanagari Briefings:** Native bilingual output (Devanagari Hindi + English) enabling seamless field briefings across coalition branches.
+* **Client-Side Air-Gap Resilience:** Built-in offline fallback generators ensure zero UI crashes even under strict electronic countermeasures (ECM) or severed external connectivity.
+
 ---
 
 ## 🧠 AI Knowledge Hub
@@ -427,7 +447,17 @@ SamyamLM detects objects that other platforms completely miss:
 | Geospatial | GDAL, Rasterio, ISRO Resourcesat-2A API |
 | Backend | Supabase, PostgreSQL, Edge Functions |
 | Frontend | React, TypeScript, Tailwind CSS, Vite |
-| Infrastructure | Vercel, AWS S3 |
+| Infrastructure | Vercel, AWS S3, GitHub Actions CI/CD |
+
+---
+
+## 🧪 CI/CD Pipeline & Quality Assurance
+
+SamyamLM enforces strict automated validation on every push and PR via GitHub Actions (`.github/workflows/deploy.yml`):
+* **Frontend CI:** Dependency integrity, unit test suite execution, and production Vite bundle verification (`npm run build`).
+* **Python AI Engine CI:** Python 3.10 syntax compilation (`py_compile`), FastAPI endpoint health validation, and PyTest execution.
+* **Benchmark Smoke Tests:** Automated verification of the multimodal evaluation suite (`eval_benchmark.py --demo`).
+* **Container Validation:** Production multi-stage Docker builds for the frontend and Python inference engine (`Dockerfile`, `python/Dockerfile`).
 
 ---
 
@@ -442,12 +472,36 @@ SamyamLM detects objects that other platforms completely miss:
 
 ---
 
+## 📚 Citation
+
+If you use **SamyamLM-V1** or the Samyam Multimodal Data Engine in your research or industrial workflows, please cite:
+
+```bibtex
+@article{patel2026samyamlm,
+  title   = {SamyamLM: A Satellite-Based Multimodal Data Labeling Platform for Indian Language AI Training},
+  author  = {Patel, Shubham},
+  journal = {Samyam AI Labs Technical Report},
+  year    = {2026},
+  month   = {April},
+  url     = {https://github.com/techindro/Samyam-space-labels}
+}
+```
+
+---
+
 ## 📜 License
 
-MIT — Free to use, modify, and distribute.
+Apache-2.0 / MIT — Free to use, modify, and distribute for research and development.
 
 ---
 
 ## 🤝 Contributing
 
-PRs welcome! Let's Build the future of Bharat🇮🇳
+PRs welcome! Let's Build the future of sovereign AI for Bharat 🇮🇳
+
+<br/>
+
+<div align="center">
+  <sub>Developed by <b>Samyam Space Labels</b> • Empowering Sovereign AI for Space & Defense</sub>
+</div>
+

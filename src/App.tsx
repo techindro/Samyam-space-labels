@@ -89,6 +89,7 @@ const App = () => (
             <Route path="/developers/speech-to-text" element={<DeveloperSpeechToText />} />
             <Route path="/developers/document-digitisation" element={<DeveloperDocumentDigitisation />} />
             <Route path="/government" element={<GovernmentHub />} />
+            <Route path="/government-hub" element={<GovernmentHub />} />
             <Route path="/government/:slug" element={<GovernmentPage />} />
             <Route path="/products/:slug" element={<ProductPage />} />
             <Route path="/oauth/consent" element={<OAuthConsent />} />
