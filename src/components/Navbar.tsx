@@ -53,6 +53,7 @@ import { governmentPages } from "@/data/governmentPages";
 import { productPages } from "@/data/productPages";
 
 const navLinks: { label: string; href: string }[] = [
+  { label: "Autonomous Driving", href: "/autonomous-driving" },
   { label: "Space Tech", href: "/space-tech" },
   { label: "Enterprise", href: "/enterprise" },
 ];

@@ -51,6 +51,7 @@ import Security from "./pages/Security";
 import Integrations from "./pages/Integrations";
 import Status from "./pages/Status";
 import Resources from "./pages/Resources";
+import AutonomousDriving from "./pages/AutonomousDriving";
 import { FloatingAiWidget } from "./components/FloatingAiWidget";
 
 
@@ -66,6 +67,9 @@ const App = () => (
           <AutoScrollReveal />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/autonomous-driving" element={<AutonomousDriving />} />
+            <Route path="/self-driving" element={<AutonomousDriving />} />
+            <Route path="/autonomous-vehicle" element={<AutonomousDriving />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/book-demo" element={<BookDemo />} />
             <Route path="/build-ai" element={<BuildAI />} />
