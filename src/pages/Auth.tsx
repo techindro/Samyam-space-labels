@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
-import { Lock, Mail, User, KeyRound, ArrowLeft } from "lucide-react";
+import { Lock, Mail, User, KeyRound, ArrowLeft, ShieldCheck, Send } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
+import { sendOtpViaResend, verifyOtpViaResend } from "@/lib/resendAuth";
 
 // Google SVG Icon
 const GoogleIcon = () => (
@@ -42,6 +42,8 @@ const Auth = () => {
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
   const [otpToken, setOtpToken] = useState("");
+  const [otpDeliveryNote, setOtpDeliveryNote] = useState<string | null>(null);
+  const [devOtpCode, setDevOtpCode] = useState<string | null>(null);
   const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [captcha, setCaptcha] = useState(generateCaptcha());
   const [loading, setLoading] = useState(false);
@@ -129,12 +131,29 @@ const Auth = () => {
     e.preventDefault();
     if (!validateCaptcha()) return;
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({ email });
+    setOtpDeliveryNote(null);
+    setDevOtpCode(null);
+
+    const result = await sendOtpViaResend(email);
     setLoading(false);
-    if (error) {
-      toast({ title: "Failed to send OTP", description: error.message, variant: "destructive" });
+
+    if (!result.success) {
+      toast({ title: "Failed to send OTP", description: result.message, variant: "destructive" });
     } else {
-      toast({ title: "OTP sent!", description: "Check your email for the one-time code." });
+      if (result.devCode) {
+        setDevOtpCode(result.devCode);
+        setOtpDeliveryNote(`Dev Code: ${result.devCode}`);
+        toast({
+          title: "OTP Dispatched (Resend Engine)",
+          description: `Code: ${result.devCode} · Enter below to sign in.`,
+        });
+      } else {
+        setOtpDeliveryNote("Dispatched via Resend high-deliverability email service");
+        toast({
+          title: "OTP Sent via Resend!",
+          description: "Check your inbox for your 6-digit login verification code.",
+        });
+      }
       setMode("otp-verify");
     }
   };
@@ -142,12 +161,13 @@ const Auth = () => {
   const handleOtpVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.verifyOtp({ email, token: otpToken, type: "email" });
+    const result = await verifyOtpViaResend(email, otpToken);
     setLoading(false);
-    if (error) {
-      toast({ title: "Verification failed", description: error.message, variant: "destructive" });
+
+    if (!result.verified) {
+      toast({ title: "Verification failed", description: result.message, variant: "destructive" });
     } else {
-      toast({ title: "Welcome!" });
+      toast({ title: "Welcome to Samyam Space AI!", description: "Successfully verified with Resend OTP." });
       goNext();
     }
   };
@@ -240,12 +260,19 @@ const Auth = () => {
 
           {mode === "otp-request" && (
             <form onSubmit={handleOtpRequest} className="space-y-4">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 w-full justify-center">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Powered by Resend High-Deliverability Email API</span>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="otpEmail" className="flex items-center gap-2"><Mail className="w-4 h-4" /> Email</Label>
                 <Input id="otpEmail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@example.com" />
               </div>
               <CaptchaField captcha={captcha} captchaAnswer={captchaAnswer} setCaptchaAnswer={setCaptchaAnswer} refreshCaptcha={refreshCaptcha} />
-              <Button type="submit" className="w-full" disabled={loading}>{loading ? "Sending..." : "Send OTP Code"}</Button>
+              <Button type="submit" className="w-full gap-2" disabled={loading}>
+                <Send className="w-4 h-4" />
+                {loading ? "Sending via Resend..." : "Send OTP via Resend"}
+              </Button>
               <p className="text-center text-sm text-muted-foreground pt-2">
                 <button type="button" onClick={() => { setMode("login"); refreshCaptcha(); setCaptchaAnswer(""); }} className="text-foreground font-medium underline underline-offset-4 hover:opacity-80 flex items-center gap-1 mx-auto"><ArrowLeft className="w-3 h-3" /> Back to Sign In</button>
               </p>
@@ -254,14 +281,37 @@ const Auth = () => {
 
           {mode === "otp-verify" && (
             <form onSubmit={handleOtpVerify} className="space-y-4">
+              {devOtpCode && (
+                <div className="p-3 rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-center">
+                  <p className="text-xs text-muted-foreground">Local Dev OTP Detected:</p>
+                  <p className="font-mono text-xl font-bold tracking-widest text-cyan-400 my-1">{devOtpCode}</p>
+                  <button
+                    type="button"
+                    onClick={() => setOtpToken(devOtpCode)}
+                    className="text-[11px] text-cyan-300 underline hover:text-cyan-200"
+                  >
+                    Click to auto-fill code
+                  </button>
+                </div>
+              )}
+              {otpDeliveryNote && !devOtpCode && (
+                <p className="text-xs text-center text-emerald-400 font-medium">
+                  ✓ {otpDeliveryNote}
+                </p>
+              )}
               <div className="space-y-2">
-                <Label htmlFor="otpCode" className="flex items-center gap-2"><KeyRound className="w-4 h-4" /> OTP Code</Label>
-                <Input id="otpCode" value={otpToken} onChange={(e) => setOtpToken(e.target.value)} required placeholder="123456" maxLength={6} className="text-center text-2xl tracking-[0.5em]" />
+                <Label htmlFor="otpCode" className="flex items-center gap-2"><KeyRound className="w-4 h-4" /> 6-Digit OTP Code</Label>
+                <Input id="otpCode" value={otpToken} onChange={(e) => setOtpToken(e.target.value)} required placeholder="123456" maxLength={6} className="text-center text-2xl tracking-[0.5em] font-mono" />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>{loading ? "Verifying..." : "Verify & Sign In"}</Button>
-              <p className="text-center text-sm text-muted-foreground pt-2">
-                <button type="button" onClick={() => { setMode("otp-request"); refreshCaptcha(); setCaptchaAnswer(""); }} className="text-foreground font-medium underline underline-offset-4 hover:opacity-80">Resend code</button>
-              </p>
+              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2">
+                <button type="button" onClick={() => { setMode("otp-request"); refreshCaptcha(); setCaptchaAnswer(""); }} className="text-foreground font-medium underline underline-offset-4 hover:opacity-80">
+                  Resend code
+                </button>
+                <button type="button" onClick={() => { setMode("login"); refreshCaptcha(); setCaptchaAnswer(""); }} className="text-muted-foreground hover:text-foreground">
+                  Cancel
+                </button>
+              </div>
             </form>
           )}
         </div>
