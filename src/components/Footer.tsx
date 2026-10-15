@@ -7,6 +7,7 @@ import InstallAppButton from "@/components/InstallAppButton";
 
 const footerLinks: Record<string, { label: string; href: string }[]> = {
   Products: [
+    { label: "Autonomous Vehicle Vision", href: "/autonomous-driving" },
     { label: "Orbital Data Labeling", href: "/products/geospatial-labeling" },
     { label: "Space Debris Tracking", href: "/products/space-debris-tracking" },
     { label: "Mission Simulation", href: "/products/mission-simulation" },

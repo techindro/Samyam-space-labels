@@ -48,12 +48,12 @@ import {
   HelpCircle,
   Handshake,
   Rss,
+  Car,
 } from "lucide-react";
 import { governmentPages } from "@/data/governmentPages";
 import { productPages } from "@/data/productPages";
 
 const navLinks: { label: string; href: string }[] = [
-  { label: "Autonomous Driving", href: "/autonomous-driving" },
   { label: "Space Tech", href: "/space-tech" },
   { label: "Enterprise", href: "/enterprise" },
 ];
@@ -84,6 +84,7 @@ const researchLinks = [
 ];
 
 const developerApis = [
+  { label: "Autonomous Vehicle Vision", subtitle: "Indian Road Perception & ADAS", icon: Car, href: "/autonomous-driving" },
   { label: "Text to Speech", subtitle: "Samyam Voice V1", icon: Mic, href: "/developers/text-to-speech" },
   { label: "Speech to Text", subtitle: "Samyam Scribe V1", icon: MessageSquareText, href: "/developers/speech-to-text" },
   { label: "Document Digitisation", subtitle: "Samyam Vision", icon: ScanText, href: "/developers/document-digitisation" },
@@ -298,6 +299,30 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                       </div>
                       <ArrowRight size={14} className="text-foreground opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
                     </a>
+
+                    <a
+                      href="/autonomous-driving"
+                      onClick={(e) => { e.preventDefault(); setProductsOpen(false); navigate("/autonomous-driving"); }}
+                      className={`mt-2 flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
+                        isDark
+                          ? 'bg-white/10 hover:bg-white/20 text-white border border-white/10'
+                          : 'bg-secondary/60 hover:bg-secondary text-foreground border border-border/40'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1 text-foreground shrink-0">
+                        <Car size={15} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-semibold">Autonomous Driving AI</span>
+                          <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-secondary text-foreground font-bold">1.86B MODEL</span>
+                        </div>
+                        <span className={`text-xs ${isDark ? 'text-white/40' : 'text-muted-foreground/70'}`}>
+                          Indian Road Perception · Potholes, Rickshaws & Stray Cattle Detection
+                        </span>
+                      </div>
+                      <ArrowRight size={14} className="text-foreground opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0" />
+                    </a>
                   </div>
 
                 </div>
@@ -386,7 +411,7 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
                           <a
                             key={label}
                             href={href}
-                            onClick={(e) => { e.preventDefault(); setDevelopersOpen(false); }}
+                            onClick={(e) => { e.preventDefault(); setDevelopersOpen(false); navigate(href); }}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isDark ? 'text-white/70 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
                           >
                             <div className={`p-1.5 rounded-lg ${isDark ? 'bg-white/5' : 'bg-muted'}`}>
