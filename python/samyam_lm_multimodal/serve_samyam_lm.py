@@ -17,9 +17,21 @@ import re
 from PIL import Image
 from typing import Optional, List, Dict, Any
 import os
+from pathlib import Path
+
+try:
+    from dotenv import load_dotenv
+    # Load .env from current directory and project root
+    env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+    if env_path.exists():
+        load_dotenv(dotenv_path=env_path)
+    else:
+        load_dotenv()
+except Exception as e:
+    print(f"[Dotenv Notice] {e}")
 
 # ─── Configuration ───────────────────────────────────────────────────────────
-OLLAMA_BASE_URL = "http://localhost:11434"
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 SAMYAM_MODEL_NAME = "samyamlm-v1"
 FALLBACK_MODEL_NAME = "samyam-lm"  # Fallback if samyamlm-v1 not found
 
