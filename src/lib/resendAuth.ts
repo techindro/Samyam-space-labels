@@ -23,26 +23,34 @@ export interface VerifyOtpResult {
 export async function sendOtpViaResend(email: string): Promise<SendOtpResult> {
   const cleanEmail = email.trim().toLowerCase();
 
-  // 1. Try FastAPI Backend Resend Service
-  try {
-    const res = await fetch(`${FASTAPI_URL}/api/v1/auth/resend-otp/send`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: cleanEmail }),
-    });
+  // Candidate API base URLs: current origin (Vite dev server / production proxy) + FASTAPI_URL
+  const candidateUrls = [
+    "", // Relative to current domain (handled by Vite dev middleware or production ingress)
+    FASTAPI_URL,
+  ].filter((url, idx, arr) => url !== undefined && (idx === 0 || url !== arr[0]));
 
-    if (res.ok) {
-      const data = await res.json();
-      return {
-        success: true,
-        message: data.message || "OTP code dispatched via Resend.",
-        delivery: data.delivery,
-        devCode: data.dev_code,
-      };
+  // 1. Try Resend OTP API endpoints
+  for (const baseUrl of candidateUrls) {
+    try {
+      const endpoint = `${baseUrl}/api/v1/auth/resend-otp/send`;
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        return {
+          success: true,
+          message: data.message || "OTP code dispatched via Resend.",
+          delivery: data.delivery,
+          devCode: data.dev_code,
+        };
+      }
+    } catch (err) {
+      // Endpoint unreachable, continue to next candidate
     }
-  } catch (err) {
-    // Backend unreachable, proceed to Supabase fallback
-    console.warn("[ResendAuth] Backend endpoint unreachable, checking Supabase...");
   }
 
   // 2. Try Supabase Edge Function (send-resend-otp)
@@ -87,47 +95,55 @@ export async function sendOtpViaResend(email: string): Promise<SendOtpResult> {
 }
 
 /**
- * Verifies an OTP code (checks FastAPI Resend store first, then Supabase verifyOtp)
+ * Verifies an OTP code (checks Resend store first, then Supabase verifyOtp)
  */
 export async function verifyOtpViaResend(email: string, otp: string): Promise<VerifyOtpResult> {
   const cleanEmail = email.trim().toLowerCase();
   const cleanOtp = otp.trim();
 
-  // 1. Try FastAPI Resend verification
-  try {
-    const res = await fetch(`${FASTAPI_URL}/api/v1/auth/resend-otp/verify`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: cleanEmail, otp: cleanOtp }),
-    });
+  // Candidate API base URLs
+  const candidateUrls = [
+    "",
+    FASTAPI_URL,
+  ].filter((url, idx, arr) => url !== undefined && (idx === 0 || url !== arr[0]));
 
-    if (res.ok) {
-      const data = await res.json();
-      if (data.verified) {
-        // Create local user session fallback if needed
-        const sessionPayload = {
-          user: {
-            id: `usr_${cleanEmail.replace(/[^a-zA-Z0-9]/g, "_")}`,
-            email: cleanEmail,
-            user_metadata: { username: cleanEmail.split("@")[0] },
-          },
-          provider: "resend_otp",
-        };
-        localStorage.setItem("samyam_resend_session", JSON.stringify(sessionPayload));
+  // 1. Try Resend verification endpoints
+  for (const baseUrl of candidateUrls) {
+    try {
+      const endpoint = `${baseUrl}/api/v1/auth/resend-otp/verify`;
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail, otp: cleanOtp }),
+      });
 
-        return {
-          success: true,
-          verified: true,
-          message: data.message || "OTP verified successfully via Resend.",
-        };
+      if (res.ok) {
+        const data = await res.json();
+        if (data.verified) {
+          // Create local user session fallback if needed
+          const sessionPayload = {
+            user: {
+              id: `usr_${cleanEmail.replace(/[^a-zA-Z0-9]/g, "_")}`,
+              email: cleanEmail,
+              user_metadata: { username: cleanEmail.split("@")[0] },
+            },
+            provider: "resend_otp",
+          };
+          localStorage.setItem("samyam_resend_session", JSON.stringify(sessionPayload));
+
+          return {
+            success: true,
+            verified: true,
+            message: data.message || "OTP verified successfully via Resend.",
+          };
+        }
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        console.warn("[ResendAuth] Verify response:", errData.detail || errData.message);
       }
-    } else {
-      const errData = await res.json().catch(() => ({}));
-      // If FastAPI reported invalid or expired OTP, check Supabase next before returning error
-      console.warn("[ResendAuth] Backend verify:", errData.detail);
+    } catch (err) {
+      // Continue to next candidate
     }
-  } catch (err) {
-    // Proceed to Supabase check
   }
 
   // 2. Try Supabase native verifyOtp

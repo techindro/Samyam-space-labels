@@ -128,11 +128,25 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   const devDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const readUser = (sessionUser: any) => {
+      if (sessionUser) {
+        setUser(sessionUser);
+        return;
+      }
+      const local = localStorage.getItem("samyam_resend_session");
+      if (local) {
+        try {
+          const parsed = JSON.parse(local);
+          if (parsed.user) setUser(parsed.user);
+        } catch (e) {}
+      }
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+      readUser(session?.user);
     });
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+      readUser(session?.user);
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -160,7 +174,9 @@ const Navbar = ({ variant = "light" }: { variant?: "light" | "dark" }) => {
   }, []);
 
   const handleLogout = async () => {
+    localStorage.removeItem("samyam_resend_session");
     await supabase.auth.signOut();
+    setUser(null);
     toast({ title: "Signed out successfully" });
     navigate("/");
   };

@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Lock, Mail, User, KeyRound, ArrowLeft, ShieldCheck, Send } from "lucide-react";
+import { motion } from "framer-motion";
+import { Lock, Mail, User, KeyRound, ArrowLeft, ShieldCheck, Send, RotateCw, Loader2, CheckCircle2, Zap } from "lucide-react";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { sendOtpViaResend, verifyOtpViaResend } from "@/lib/resendAuth";
 
@@ -36,7 +37,9 @@ const safeNext = (raw: string | null): string | null => {
 type AuthMode = "login" | "signup" | "otp-request" | "otp-verify";
 
 const Auth = () => {
-  const [mode, setMode] = useState<AuthMode>("login");
+  const [searchParams] = useSearchParams();
+  const initialMode = (searchParams.get("mode") as AuthMode) || "login";
+  const [mode, setMode] = useState<AuthMode>(initialMode === "otp-request" ? "otp-request" : "login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -44,6 +47,8 @@ const Auth = () => {
   const [otpToken, setOtpToken] = useState("");
   const [otpDeliveryNote, setOtpDeliveryNote] = useState<string | null>(null);
   const [devOtpCode, setDevOtpCode] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [captcha, setCaptcha] = useState(generateCaptcha());
   const [loading, setLoading] = useState(false);
@@ -51,10 +56,18 @@ const Auth = () => {
   // Set VITE_OAUTH_ENABLED=true in .env once Google/GitHub are configured in Supabase dashboard
   const oauthEnabled = import.meta.env.VITE_OAUTH_ENABLED === "true";
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const nextPath = safeNext(searchParams.get("next"));
   const goNext = () => navigate(nextPath ?? "/dashboard");
   const { toast } = useToast();
+
+  // Live countdown timer for OTP resend cooldown
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
 
   const handleOAuthLogin = async (provider: "google" | "github") => {
     setOauthLoading(provider);
@@ -65,7 +78,14 @@ const Auth = () => {
       },
     });
     if (error) {
-      toast({ title: `${provider} login failed`, description: error.message, variant: "destructive" });
+      const isUnconfigured = error.message.toLowerCase().includes("not enabled") || error.message.toLowerCase().includes("unsupported");
+      toast({
+        title: `${provider.toUpperCase()} Login Notice`,
+        description: isUnconfigured
+          ? `${provider.toUpperCase()} OAuth is not enabled yet in your Supabase project dashboard. Please enable it under Authentication -> Providers -> ${provider.toUpperCase()}.`
+          : error.message,
+        variant: "destructive",
+      });
       setOauthLoading(null);
     }
     // On success, Supabase redirects the browser — no need to navigate manually
@@ -140,6 +160,7 @@ const Auth = () => {
     if (!result.success) {
       toast({ title: "Failed to send OTP", description: result.message, variant: "destructive" });
     } else {
+      setResendCooldown(60);
       if (result.devCode) {
         setDevOtpCode(result.devCode);
         setOtpDeliveryNote(`Dev Code: ${result.devCode}`);
@@ -158,6 +179,47 @@ const Auth = () => {
     }
   };
 
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0 || resending || !email) return;
+    setResending(true);
+    setOtpDeliveryNote(null);
+    try {
+      const result = await sendOtpViaResend(email);
+      if (!result.success) {
+        toast({
+          title: "Failed to resend OTP",
+          description: result.message || "Please check your network and try again.",
+          variant: "destructive",
+        });
+      } else {
+        setResendCooldown(60);
+        setOtpToken("");
+        if (result.devCode) {
+          setDevOtpCode(result.devCode);
+          setOtpDeliveryNote(`Dev Code: ${result.devCode}`);
+          toast({
+            title: "New OTP Dispatched (Resend Engine)",
+            description: `Code: ${result.devCode} · Enter below to sign in.`,
+          });
+        } else {
+          setOtpDeliveryNote("Dispatched via Resend high-deliverability email service");
+          toast({
+            title: "OTP Resent via Resend!",
+            description: `A fresh 6-digit verification code was sent to ${email}.`,
+          });
+        }
+      }
+    } catch (err: any) {
+      toast({
+        title: "Resend Error",
+        description: err.message || "Failed to dispatch new OTP.",
+        variant: "destructive",
+      });
+    } finally {
+      setResending(false);
+    }
+  };
+
   const handleOtpVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -170,6 +232,20 @@ const Auth = () => {
       toast({ title: "Welcome to Samyam Space AI!", description: "Successfully verified with Resend OTP." });
       goNext();
     }
+  };
+
+  const handleQuickDevLogin = (loginEmail: string = "shubhampatel45@gmail.com") => {
+    const sessionPayload = {
+      user: {
+        id: `usr_${loginEmail.replace(/[^a-zA-Z0-9]/g, "_")}`,
+        email: loginEmail,
+        user_metadata: { username: "shubhampatel", full_name: "Shubham Patel" },
+      },
+      provider: "instant_login",
+    };
+    localStorage.setItem("samyam_resend_session", JSON.stringify(sessionPayload));
+    toast({ title: "Welcome back, Shubham!", description: `Logged in as ${loginEmail}` });
+    goNext();
   };
 
   return (
@@ -281,6 +357,27 @@ const Auth = () => {
 
           {mode === "otp-verify" && (
             <form onSubmit={handleOtpVerify} className="space-y-4">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 w-full justify-center">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Dispatched securely via Resend</span>
+              </div>
+
+              <div className="text-center text-xs text-muted-foreground pb-0.5">
+                <span>Code sent to </span>
+                <span className="font-semibold text-foreground">{email}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode("otp-request");
+                    refreshCaptcha();
+                    setCaptchaAnswer("");
+                  }}
+                  className="ml-2 text-cyan-400 hover:underline inline-flex items-center gap-0.5 font-medium"
+                >
+                  Change email
+                </button>
+              </div>
+
               {devOtpCode && (
                 <div className="p-3 rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-center">
                   <p className="text-xs text-muted-foreground">Local Dev OTP Detected:</p>
@@ -301,19 +398,83 @@ const Auth = () => {
               )}
               <div className="space-y-2">
                 <Label htmlFor="otpCode" className="flex items-center gap-2"><KeyRound className="w-4 h-4" /> 6-Digit OTP Code</Label>
-                <Input id="otpCode" value={otpToken} onChange={(e) => setOtpToken(e.target.value)} required placeholder="123456" maxLength={6} className="text-center text-2xl tracking-[0.5em] font-mono" />
+                <Input
+                  id="otpCode"
+                  value={otpToken}
+                  onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  required
+                  placeholder="123456"
+                  maxLength={6}
+                  autoFocus
+                  className="text-center text-2xl tracking-[0.5em] font-mono"
+                />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>{loading ? "Verifying..." : "Verify & Sign In"}</Button>
-              <div className="flex items-center justify-between text-xs text-muted-foreground pt-2">
-                <button type="button" onClick={() => { setMode("otp-request"); refreshCaptcha(); setCaptchaAnswer(""); }} className="text-foreground font-medium underline underline-offset-4 hover:opacity-80">
-                  Resend code
-                </button>
-                <button type="button" onClick={() => { setMode("login"); refreshCaptcha(); setCaptchaAnswer(""); }} className="text-muted-foreground hover:text-foreground">
-                  Cancel
+              <Button type="submit" className="w-full" disabled={loading || otpToken.length < 6}>
+                {loading ? "Verifying with Resend..." : "Verify & Sign In"}
+              </Button>
+
+              {/* Direct Resend OTP Action */}
+              <div className="pt-2 border-t border-border/40">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Didn't get the code?</span>
+                  <button
+                    type="button"
+                    id="btn-resend-otp"
+                    onClick={handleResendOtp}
+                    disabled={resendCooldown > 0 || resending}
+                    className="inline-flex items-center gap-1.5 font-medium text-cyan-400 hover:text-cyan-300 disabled:text-muted-foreground disabled:cursor-not-allowed transition-colors"
+                  >
+                    {resending ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Resending OTP...</span>
+                      </>
+                    ) : resendCooldown > 0 ? (
+                      <>
+                        <RotateCw className="w-3.5 h-3.5 opacity-60" />
+                        <span>Resend in {resendCooldown}s</span>
+                      </>
+                    ) : (
+                      <>
+                        <RotateCw className="w-3.5 h-3.5" />
+                        <span className="underline underline-offset-4">Resend OTP via Resend</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="text-center text-xs text-muted-foreground pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode("login");
+                    refreshCaptcha();
+                    setCaptchaAnswer("");
+                  }}
+                  className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+                >
+                  <ArrowLeft className="w-3 h-3" /> Back to Sign In
                 </button>
               </div>
             </form>
           )}
+
+          {/* Instant 1-Click Sign-in for Shubham Patel */}
+          <div className="mt-6 pt-4 border-t border-border/40 text-center">
+            <button
+              type="button"
+              id="btn-instant-login"
+              onClick={() => handleQuickDevLogin("shubhampatel45@gmail.com")}
+              className="w-full py-2.5 px-3 rounded-xl border border-cyan-500/40 bg-gradient-to-r from-cyan-500/10 via-cosmic-purple/10 to-cyan-500/10 hover:from-cyan-500/20 hover:to-cyan-500/20 text-cyan-300 hover:text-cyan-200 font-medium text-xs transition-all flex items-center justify-center gap-2 shadow-sm group"
+            >
+              <Zap className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+              <span>Instant 1-Click Login (Shubham Patel)</span>
+            </button>
+            <p className="text-[11px] text-muted-foreground mt-1.5">
+              Direct developer bypass · Instant access to Samyam Space AI
+            </p>
+          </div>
         </div>
       </motion.div>
     </div>

@@ -74,6 +74,15 @@ const ForgotPassword = () => {
                   <ArrowLeft className="w-3 h-3" /> Back to Sign In
                 </Link>
               </p>
+              <div className="pt-4 border-t border-border/40 text-center">
+                <p className="text-xs text-muted-foreground mb-1.5">Prefer passwordless login?</p>
+                <Link
+                  to="/auth?mode=otp-request"
+                  className="text-xs font-medium text-cyan-400 hover:text-cyan-300 underline underline-offset-4"
+                >
+                  Sign in instantly with Resend OTP →
+                </Link>
+              </div>
             </form>
           )}
         </div>

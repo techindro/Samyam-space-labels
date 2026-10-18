@@ -7,14 +7,20 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const resendSession = localStorage.getItem("samyam_resend_session");
+      setAuthenticated(!!session || !!resendSession);
+      setLoading(false);
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAuthenticated(!!session);
+      const resendSession = localStorage.getItem("samyam_resend_session");
+      setAuthenticated(!!session || !!resendSession);
       setLoading(false);
     });
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setAuthenticated(!!session);
-      setLoading(false);
-    });
+
+    checkAuth();
     return () => subscription.unsubscribe();
   }, []);
 
