@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import {
   Send,
   Paperclip,
+  Mic,
+  MicOff,
   X,
   Radio,
   Layers,
@@ -120,9 +122,41 @@ const OpenClawChat = () => {
   const [input, setInput] = useState("");
   const [pending, setPending] = useState<Attachment[]>([]);
   const [busy, setBusy] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      alert("Speech recognition is supported in Chrome, Edge, and modern browsers.");
+      return;
+    }
+
+    const recognition = new SR();
+    recognition.lang = "en-IN";
+    recognition.interimResults = true;
+    recognition.continuous = true;
+    recognitionRef.current = recognition;
+
+    recognition.onresult = (e: any) => {
+      const text = Array.from(e.results).map((r: any) => r[0].transcript).join("");
+      setInput(text);
+    };
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+
+    recognition.start();
+    setIsListening(true);
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -340,8 +374,20 @@ const OpenClawChat = () => {
                   size="icon"
                   aria-label="Attach files"
                   onClick={() => fileRef.current?.click()}
+                  title="Attach imagery, audio, or datasets"
                 >
                   <Paperclip className="h-4 w-4" />
+                </Button>
+                <Button
+                  type="button"
+                  variant={isListening ? "destructive" : "outline"}
+                  size="icon"
+                  aria-label={isListening ? "Stop listening" : "Speak voice prompt"}
+                  onClick={toggleListening}
+                  className={isListening ? "animate-pulse border-red-500" : ""}
+                  title={isListening ? "Listening... Click to stop" : "Speak your query with voice"}
+                >
+                  {isListening ? <MicOff className="h-4 w-4 text-white" /> : <Mic className="h-4 w-4" />}
                 </Button>
                 <Textarea
                   ref={textRef}
