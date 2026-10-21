@@ -1,3 +1,4 @@
+
 # Project Memory & Architecture Decision Records (ADRs)
 
 > **Persistent Engineering Log & Genuine Historical Context**  
