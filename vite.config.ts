@@ -73,14 +73,14 @@ function resendOtpDevPlugin(env: Record<string, string>) {
                       html,
                     }),
                   });
-                  const emailData = await emailRes.json().catch(() => ({}));
+                  const emailData: any = await emailRes.json().catch(() => ({}));
                   if (emailRes.ok) {
                     delivery = "resend_api";
                     devCode = undefined;
                     message = "OTP dispatched successfully via Resend.";
                   } else {
                     console.warn("[Resend Dev Server] Status:", emailRes.status, emailData);
-                    message = `OTP generated (Resend API response: ${emailData.message || emailRes.status}). Dev code available.`;
+                    message = `OTP generated (Resend API response: ${emailData?.message || emailRes.status}). Dev code available.`;
                   }
                 } catch (e: any) {
                   console.warn("[Resend Dev Server] Dispatch error:", e.message);

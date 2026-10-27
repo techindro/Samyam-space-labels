@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Rocket, Users, Globe2, ShieldCheck, Zap, Heart, ArrowRight, Linkedin, Twitter } from "lucide-react";
+import { Rocket, Users, Globe2, ShieldCheck, Zap, Heart, ArrowRight, Linkedin, Twitter, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -49,7 +49,9 @@ const team = [
     photo: shubhamPhoto,
     initials: "SP",
     linkedin: "https://www.linkedin.com/in/shubham-patel-techindro/",
-    twitter: "https://x.com/tech_indro",
+    twitter: "https://x.com/tryShubham",
+    instagram: "https://www.instagram.com/hallucination_101",
+    substack: "https://substack.com/@tryshubham",
   },
 ];
 
@@ -220,13 +222,23 @@ const About = () => {
                   <p className="text-cosmic-teal text-sm font-medium mb-3">{member.role}</p>
                   <p className="text-muted-foreground text-sm leading-relaxed mb-4">{member.bio}</p>
                   <div className="flex gap-2">
-                    <a href={member.linkedin} target="_blank" rel="noopener noreferrer"
+                    <a href={member.linkedin} target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn"
                       className="p-2 rounded-full border border-border/50 text-muted-foreground hover:text-foreground transition-colors">
                       <Linkedin className="h-4 w-4" />
                     </a>
-                    <a href={member.twitter} target="_blank" rel="noopener noreferrer"
+                    <a href={member.twitter} target="_blank" rel="noopener noreferrer" title="Twitter / X" aria-label="Twitter / X"
                       className="p-2 rounded-full border border-border/50 text-muted-foreground hover:text-foreground transition-colors">
                       <Twitter className="h-4 w-4" />
+                    </a>
+                    <a href={member.instagram} target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram"
+                      className="p-2 rounded-full border border-border/50 text-muted-foreground hover:text-foreground transition-colors">
+                      <Instagram className="h-4 w-4" />
+                    </a>
+                    <a href={member.substack} target="_blank" rel="noopener noreferrer" title="Substack" aria-label="Substack"
+                      className="p-2 rounded-full border border-border/50 text-muted-foreground hover:text-foreground transition-colors">
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
+                      </svg>
                     </a>
                   </div>
                 </div>
