@@ -10,22 +10,22 @@ const FALLBACK_LABS = [
     id: "fl-1",
     name: "Orbital Vision & Multispectral Lab",
     focus_area: "Satellite Perception & SAR Analysis",
-    lead_researcher: "Dr. Kavita Nair",
+    lead_researcher: "Earth Observation Working Group",
     description: "Specialized in sub-meter object detection, terrain classification, and polarimetric SAR image decomposition for defense and climate monitoring.",
   },
   {
     id: "fl-2",
     name: "Edge Perception & Autonomous Spacecraft Lab",
     focus_area: "Onboard Micro-Inference",
-    lead_researcher: "Shubham Patel",
-    description: "Developing ultra-lightweight neural architectures for real-time optical and sensor telemetry processing on solar-powered CubeSat hardware.",
+    lead_researcher: "Edge Compute & Quantization Core",
+    description: "Developing ultra-lightweight neural architectures for real-time optical and sensor telemetry processing on consumer edge and embedded hardware.",
   },
   {
     id: "fl-3",
     name: "Sovereign Intelligence & Security Lab",
     focus_area: "Audit-Grade Data Pipelines",
-    lead_researcher: "Ananya Rao",
-    description: "Pioneering privacy-preserving synthetic data generation, automated RLHF feedback loops, and ITAR-compliant dataset curation for national space assets.",
+    lead_researcher: "Sovereign AI & Data Governance Team",
+    description: "Pioneering privacy-preserving synthetic data generation, automated RLHF feedback loops, and sovereign dataset curation for national space assets.",
   },
 ];
 

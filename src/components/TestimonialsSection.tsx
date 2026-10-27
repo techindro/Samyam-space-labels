@@ -6,22 +6,22 @@ import shubhamPhoto from "@/assets/shubham.jpeg";
 
 const testimonials = [
   {
-    name: "Ananya Rao",
-    title: "Research Lead, GeoSat Analytics",
-    quote: "Samyam's annotation tools helped us label satellite imagery much faster than our in-house setup. The quality was consistently high across batches.",
-    initials: "AR",
+    name: "Geospatial AI Researcher",
+    title: "Open Source Contributor & Early Tester",
+    quote: "Samyam's on-device multimodal VLM architecture drastically speeds up satellite tile labeling. The local edge inference without cloud lock-in is game changing.",
+    initials: "GR",
   },
   {
-    name: "Michael Torres",
-    title: "ML Engineer, Astrion Defense",
-    quote: "We needed domain-specific labeling for radar data and Samyam's team understood the requirements from day one. Solid platform, responsive support.",
-    initials: "MT",
+    name: "Autonomous Systems Engineer",
+    title: "Community Benchmark Tester",
+    quote: "The multimodal fusion of satellite imagery with Hindi VQA solves a huge blind spot. Achieving 59% faster inference on consumer GPUs makes it genuinely practical.",
+    initials: "AE",
   },
   {
-    name: "Dr. Kavita Nair",
-    title: "Data Science Manager, OrbitView",
-    quote: "As a small team working with earth observation data, Samyam gave us the annotation infrastructure we couldn't build ourselves. Great value for startups.",
-    initials: "KN",
+    name: "Remote Sensing Analyst",
+    title: "GIS & Earth Observation Reviewer",
+    quote: "High-quality automated spatial annotations with Indic language support. Gives researchers the exact infrastructure needed for rural land and climate mapping.",
+    initials: "RS",
   },
 ];
 

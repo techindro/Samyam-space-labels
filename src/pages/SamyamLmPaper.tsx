@@ -22,7 +22,7 @@ import Footer from "@/components/Footer";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import { Button } from "@/components/ui/button";
 
-const PDF_URL = "/__l5e/assets-v1/59eb94ea-30fe-4c57-97e9-ef916d404115/Samyalm_Paper.pdf";
+const PDF_URL = "/SamyamLM_Research_Paper.pdf";
 
 const contributions = [
   {

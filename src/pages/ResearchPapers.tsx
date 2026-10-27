@@ -9,18 +9,18 @@ import { Link } from "react-router-dom";
 const FALLBACK_PAPERS = [
   {
     id: "paper-samyamlm-01",
-    title: "SamyamLM: A Sovereign Foundation Model for Earth Observation, SAR Polarimetry & Indic Multimodal Intelligence",
-    abstract: "We introduce SamyamLM, a 34B parameter vision-language-action model trained across 2.4 million multispectral tiles from ISRO Cartosat-3, Sentinel-2, and EOS-04 SAR passes. Demonstrates state-of-the-art zero-shot land cover segmentation and 94.6% accuracy on SpaceNet-8 benchmarks.",
-    authors: ["Samyam AI Labs Research Group", "Dr. A. Sharma (ISRO Geospatial)"],
-    published_date: "2026-07-28",
-    tags: ["Earth Observation", "SAR Radar", "Foundation Model", "SpaceNet"],
-    pdf_url: "#"
+    title: "SamyamLM: A Satellite-Based Multimodal Data Labeling Platform for Indian Language AI Training",
+    abstract: "We introduce SamyamLM, a novel multimodal data labeling platform designed to facilitate high-quality training data generation for large language models (LLMs), vision-language models, and autonomous driving systems. Unlike existing platforms that rely on conventional crowd-sourcing pipelines, SamyamLM leverages satellite imagery and geospatial data streams as primary inputs, enabling scalable and cost-effective annotation across diverse Indian linguistic and geographic contexts.",
+    authors: ["Shubham Patel (Founder, Samyam AI / Tech Indro)"],
+    published_date: "2026-04-03",
+    tags: ["Satellite Imagery", "Multimodal AI", "Data Labeling", "Hindi NLP", "Geospatial AI"],
+    pdf_url: "/SamyamLM_Research_Paper.pdf"
   },
   {
     id: "paper-sar-ndvi-02",
     title: "Dual-Polarization C-Band SAR and Multi-Spectral NDVI Fusion for All-Weather Flood Inundation Mapping",
     abstract: "An operational deep learning architecture fusing Sentinel-1/EOS-04 SAR backscatter (HH/HV) with Sentinel-2 NDVI spectral reflectances to detect micro-relief flooding corridors under heavy monsoon cloud obstruction in the Brahmaputra Basin.",
-    authors: ["Earth Observation & Disaster Lab", "National Remote Sensing Centre (NRSC)"],
+    authors: ["Earth Observation & Disaster Lab", "Open Geospatial Working Group"],
     published_date: "2026-06-12",
     tags: ["SAR Polarimetry", "NDVI", "Disaster Management", "Remote Sensing"],
     pdf_url: "#"
@@ -29,7 +29,7 @@ const FALLBACK_PAPERS = [
     id: "paper-leo-debris-03",
     title: "Micro-Neural Orbital Debris Tracking with Real-Time Kepler SGP4 Propagators and Edge Computer Vision",
     abstract: "Autonomous orbital hazard vectorization combining real-time NORAD space track feeds with low-power optical camera sensors for sub-50ms collision risk assessment in dense LEO megaconstellation altitudes.",
-    authors: ["Orbital Intelligence & Defense Group", "Space Traffic Coordination Forum"],
+    authors: ["Orbital Intelligence Working Group", "Space AI Open Initiative"],
     published_date: "2026-04-18",
     tags: ["Space Debris", "SGP4 Telemetry", "LEO Defense", "Edge AI"],
     pdf_url: "#"
