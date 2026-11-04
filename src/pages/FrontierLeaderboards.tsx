@@ -63,6 +63,7 @@ export interface ModelEntry {
 }
 
 const REAL_FRONTIER_MODELS: ModelEntry[] = [
+  // \u2500\u2500 Rank 1 \u2500\u2500 OpenAI o3 (Apr 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "o3",
     rank: 1,
@@ -81,13 +82,83 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     price_output: 60.00,
     context_window: "200k",
     license: "Proprietary",
-    release_date: "Dec 2024",
+    release_date: "Apr 2025",
     verified_by: "Epoch AI & OpenAI Eval",
     key_strengths: ["Ph.D Level Reasoning", "Complex Code Synthesis", "Autonomous Problem Solving"]
   },
+  // \u2500\u2500 Rank 2 \u2500\u2500 Gemini 2.5 Pro (May 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "gemini-2-5-pro",
+    rank: 2,
+    model_name: "Gemini 2.5 Pro",
+    provider: "Google DeepMind",
+    benchmark: "SWE-bench & MMLU-Pro",
+    category: "reasoning",
+    score: 63.8,
+    swe_bench: 63.8,
+    arena_elo: 1380,
+    mmlu_pro: 91.2,
+    frontier_math: 83.9,
+    tokens_per_sec: 90,
+    latency_ttft: "0.5s",
+    price_input: 1.25,
+    price_output: 10.00,
+    context_window: "1M",
+    license: "Proprietary",
+    release_date: "May 2025",
+    verified_by: "Google DeepMind & Artificial Analysis",
+    key_strengths: ["1M Token Context Window", "Hybrid Reasoning Mode", "Top SWE-bench 2025 Score"]
+  },
+  // \u2500\u2500 Rank 3 \u2500\u2500 Claude 3.7 Sonnet (Feb 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "claude-3-7-sonnet",
+    rank: 3,
+    model_name: "Claude 3.7 Sonnet",
+    provider: "Anthropic",
+    benchmark: "SWE-bench Verified",
+    category: "coding",
+    score: 62.3,
+    swe_bench: 62.3,
+    arena_elo: 1375,
+    mmlu_pro: 90.5,
+    frontier_math: 80.1,
+    tokens_per_sec: 75,
+    latency_ttft: "0.5s",
+    price_input: 3.00,
+    price_output: 15.00,
+    context_window: "200k",
+    license: "Proprietary",
+    release_date: "Feb 2025",
+    verified_by: "SWE-bench Sandbox & LMSYS",
+    key_strengths: ["Hybrid Thinking Mode", "Best Coding Accuracy", "Extended Tool-Use Loops"]
+  },
+  // \u2500\u2500 Rank 4 \u2500\u2500 GPT-4.1 (Apr 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "gpt-4-1",
+    rank: 4,
+    model_name: "GPT-4.1",
+    provider: "OpenAI",
+    benchmark: "SWE-bench & Long-Context Recall",
+    category: "coding",
+    score: 54.6,
+    swe_bench: 54.6,
+    arena_elo: 1370,
+    mmlu_pro: 90.2,
+    frontier_math: 79.8,
+    tokens_per_sec: 100,
+    latency_ttft: "0.4s",
+    price_input: 2.00,
+    price_output: 8.00,
+    context_window: "1M",
+    license: "Proprietary",
+    release_date: "Apr 2025",
+    verified_by: "OpenAI Evals & Scale SEAL",
+    key_strengths: ["1M Token Context Window", "Stronger Coding vs GPT-4o", "Instruction Following"]
+  },
+  // \u2500\u2500 Rank 5 \u2500\u2500 DeepSeek R1 (Jan 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "deepseek-r1",
-    rank: 2,
+    rank: 5,
     model_name: "DeepSeek R1",
     provider: "DeepSeek",
     benchmark: "AIME 2024 & MATH-500",
@@ -107,9 +178,79 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     verified_by: "Community Verified & LMSYS",
     key_strengths: ["Open Weights (MIT License)", "Chain-of-Thought Reasoning", "Ultra Low Inference Cost"]
   },
+  // \u2500\u2500 Rank 6 \u2500\u2500 o4-mini (Apr 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "o4-mini",
+    rank: 6,
+    model_name: "o4-mini",
+    provider: "OpenAI",
+    benchmark: "AIME 2025 & GPQA-Diamond",
+    category: "reasoning",
+    score: 93.4,
+    swe_bench: 68.1,
+    arena_elo: 1365,
+    mmlu_pro: 88.0,
+    frontier_math: 93.4,
+    tokens_per_sec: 130,
+    latency_ttft: "0.8s",
+    price_input: 1.10,
+    price_output: 4.40,
+    context_window: "200k",
+    license: "Proprietary",
+    release_date: "Apr 2025",
+    verified_by: "OpenAI Evals & Artificial Analysis",
+    key_strengths: ["Fast Reasoning at Low Cost", "AIME 2025 Top Score", "200k Context Window"]
+  },
+  // \u2500\u2500 Rank 7 \u2500\u2500 Llama 4 Maverick (Apr 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "llama-4-maverick",
+    rank: 7,
+    model_name: "Llama 4 Maverick",
+    provider: "Meta",
+    benchmark: "MMLU-Pro & MT-Bench",
+    category: "open",
+    score: 88.6,
+    swe_bench: 50.3,
+    arena_elo: 1358,
+    mmlu_pro: 88.6,
+    frontier_math: 78.2,
+    tokens_per_sec: 80,
+    latency_ttft: "0.4s",
+    price_input: 0.19,
+    price_output: 0.65,
+    context_window: "1M",
+    license: "Open-Weight",
+    release_date: "Apr 2025",
+    verified_by: "Meta AI & Artificial Analysis",
+    key_strengths: ["400B MoE Open-Weight", "1M Context Window", "Frontier-Class Open Model"]
+  },
+  // \u2500\u2500 Rank 8 \u2500\u2500 Llama 4 Scout (Apr 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "llama-4-scout",
+    rank: 8,
+    model_name: "Llama 4 Scout",
+    provider: "Meta",
+    benchmark: "Long-Context & Speed",
+    category: "open",
+    score: 1340,
+    swe_bench: 44.7,
+    arena_elo: 1340,
+    mmlu_pro: 85.1,
+    frontier_math: 74.0,
+    tokens_per_sec: 200,
+    latency_ttft: "0.3s",
+    price_input: 0.08,
+    price_output: 0.30,
+    context_window: "10M",
+    license: "Open-Weight",
+    release_date: "Apr 2025",
+    verified_by: "Meta AI & Community",
+    key_strengths: ["10M Token World Record Context", "17B Active / 109B MoE Params", "200 t/s Ultra-Fast Inference"]
+  },
+  // \u2500\u2500 Rank 9 \u2500\u2500 Claude 3.5 Sonnet v2 (Oct 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "claude-3-5-sonnet",
-    rank: 3,
+    rank: 9,
     model_name: "Claude 3.5 Sonnet (v2)",
     provider: "Anthropic",
     benchmark: "SWE-bench Verified",
@@ -127,11 +268,35 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     license: "Proprietary",
     release_date: "Oct 2024",
     verified_by: "SWE-bench Sandbox & LMSYS",
-    key_strengths: ["Production Code Generation", "Artifact rendering", "Nuanced Instruction Following"]
+    key_strengths: ["Production Code Generation", "Artifact Rendering", "Nuanced Instruction Following"]
   },
+  // \u2500\u2500 Rank 10 \u2500\u2500 Gemini 2.0 Flash (Feb 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "gemini-2-0-flash",
+    rank: 10,
+    model_name: "Gemini 2.0 Flash",
+    provider: "Google DeepMind",
+    benchmark: "LMSYS Arena & LiveBench",
+    category: "speed",
+    score: 1368,
+    swe_bench: 52.4,
+    arena_elo: 1368,
+    mmlu_pro: 87.8,
+    frontier_math: 82.5,
+    tokens_per_sec: 140,
+    latency_ttft: "0.25s",
+    price_input: 0.10,
+    price_output: 0.40,
+    context_window: "1M",
+    license: "Proprietary",
+    release_date: "Feb 2025",
+    verified_by: "Google DeepMind & LMSYS",
+    key_strengths: ["Real-time Multimodal Live API", "1M Context Window", "Fastest TTFT at Scale"]
+  },
+  // \u2500\u2500 Rank 11 \u2500\u2500 OpenAI o1 (Sep 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "o1",
-    rank: 4,
+    rank: 11,
     model_name: "OpenAI o1",
     provider: "OpenAI",
     benchmark: "AIME 2024",
@@ -151,9 +316,33 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     verified_by: "OpenAI & Blind Evaluation",
     key_strengths: ["Deliberative Thinking", "Scientific Reasoning", "Complex Logic"]
   },
+  // \u2500\u2500 Rank 12 \u2500\u2500 Mistral Large 2 (Jul 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "mistral-large-2",
+    rank: 12,
+    model_name: "Mistral Large 2",
+    provider: "Mistral AI",
+    benchmark: "MMLU & LiveCodeBench",
+    category: "coding",
+    score: 1330,
+    swe_bench: 41.8,
+    arena_elo: 1330,
+    mmlu_pro: 86.0,
+    frontier_math: 71.4,
+    tokens_per_sec: 95,
+    latency_ttft: "0.4s",
+    price_input: 2.00,
+    price_output: 6.00,
+    context_window: "128k",
+    license: "Open-Weight",
+    release_date: "Jul 2024",
+    verified_by: "Mistral AI & Artificial Analysis",
+    key_strengths: ["123B Dense Open-Weight", "European AI Sovereignty", "Strong Multilingual & Code"]
+  },
+  // \u2500\u2500 Rank 13 \u2500\u2500 DeepSeek V3 (Dec 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "deepseek-v3",
-    rank: 5,
+    rank: 13,
     model_name: "DeepSeek V3",
     provider: "DeepSeek",
     benchmark: "LMSYS Chatbot Arena",
@@ -173,31 +362,10 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     verified_by: "LMSYS & Artificial Analysis",
     key_strengths: ["Multi-head Latent Attention", "Unmatched Cost-to-Performance", "Fast Token Generation"]
   },
-  {
-    id: "gemini-1-5-pro",
-    rank: 6,
-    model_name: "Gemini 1.5 Pro",
-    provider: "Google DeepMind",
-    benchmark: "MMLU-Pro & Video-Needle",
-    category: "reasoning",
-    score: 85.9,
-    swe_bench: 35.8,
-    arena_elo: 1320,
-    mmlu_pro: 85.9,
-    frontier_math: 71.0,
-    tokens_per_sec: 80,
-    latency_ttft: "0.7s",
-    price_input: 1.25,
-    price_output: 5.00,
-    context_window: "2,000,000",
-    license: "Proprietary",
-    release_date: "Sep 2024",
-    verified_by: "Google DeepMind & HELM",
-    key_strengths: ["2M Token Context Window", "Native Audio/Video Multimodal", "Document Retrieval"]
-  },
+  // \u2500\u2500 Rank 14 \u2500\u2500 Qwen 2.5 Max (Jan 2025) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "qwen-2-5-max",
-    rank: 7,
+    rank: 14,
     model_name: "Qwen 2.5 Max",
     provider: "Alibaba Cloud",
     benchmark: "LMSYS Chatbot Arena",
@@ -217,31 +385,10 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     verified_by: "Alibaba & LMSYS Blind Arena",
     key_strengths: ["Multilingual Capabilities", "Math & Algorithmic Problem Solving", "Enterprise Reliability"]
   },
-  {
-    id: "llama-3-3-70b",
-    rank: 8,
-    model_name: "Llama 3.3 70B Instruct",
-    provider: "Meta",
-    benchmark: "MMLU & LiveBench",
-    category: "open",
-    score: 1312,
-    swe_bench: 38.4,
-    arena_elo: 1312,
-    mmlu_pro: 83.5,
-    frontier_math: 68.9,
-    tokens_per_sec: 95,
-    latency_ttft: "0.4s",
-    price_input: 0.60,
-    price_output: 0.60,
-    context_window: "128k",
-    license: "Open-Weight",
-    release_date: "Dec 2024",
-    verified_by: "Meta AI & Scale SEAL",
-    key_strengths: ["Open Community Weights", "Ultra-High Throughput", "Self-Hostable"]
-  },
+  // \u2500\u2500 Rank 15 \u2500\u2500 GPT-4o (Nov 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "gpt-4o",
-    rank: 9,
+    rank: 15,
     model_name: "GPT-4o (2024-11-20)",
     provider: "OpenAI",
     benchmark: "LMSYS Chatbot Arena",
@@ -261,9 +408,33 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     verified_by: "LMSYS & OpenAI Evals",
     key_strengths: ["Omni-modal Speed", "Vision & Voice Processing", "General Knowledge"]
   },
+  // \u2500\u2500 Rank 16 \u2500\u2500 Llama 3.3 70B (Dec 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "llama-3-3-70b",
+    rank: 16,
+    model_name: "Llama 3.3 70B Instruct",
+    provider: "Meta",
+    benchmark: "MMLU & LiveBench",
+    category: "open",
+    score: 1312,
+    swe_bench: 38.4,
+    arena_elo: 1312,
+    mmlu_pro: 83.5,
+    frontier_math: 68.9,
+    tokens_per_sec: 95,
+    latency_ttft: "0.4s",
+    price_input: 0.60,
+    price_output: 0.60,
+    context_window: "128k",
+    license: "Open-Weight",
+    release_date: "Dec 2024",
+    verified_by: "Meta AI & Scale SEAL",
+    key_strengths: ["Open Community Weights", "Ultra-High Throughput", "Self-Hostable"]
+  },
+  // \u2500\u2500 Rank 17 \u2500\u2500 Qwen 2.5 Coder 32B (Nov 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "qwen-2-5-coder-32b",
-    rank: 10,
+    rank: 17,
     model_name: "Qwen 2.5 Coder 32B",
     provider: "Alibaba Cloud",
     benchmark: "SWE-bench & LiveCodeBench",
@@ -283,9 +454,33 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     verified_by: "SWE-bench & LiveCodeBench",
     key_strengths: ["Best-in-Class Open Code Model", "Low Resource Footprint", "Local Dev Friendly"]
   },
+  // \u2500\u2500 Rank 18 \u2500\u2500 Gemini 1.5 Pro (Sep 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  {
+    id: "gemini-1-5-pro",
+    rank: 18,
+    model_name: "Gemini 1.5 Pro",
+    provider: "Google DeepMind",
+    benchmark: "MMLU-Pro & Video-Needle",
+    category: "reasoning",
+    score: 85.9,
+    swe_bench: 35.8,
+    arena_elo: 1320,
+    mmlu_pro: 85.9,
+    frontier_math: 71.0,
+    tokens_per_sec: 80,
+    latency_ttft: "0.7s",
+    price_input: 1.25,
+    price_output: 5.00,
+    context_window: "2,000,000",
+    license: "Proprietary",
+    release_date: "Sep 2024",
+    verified_by: "Google DeepMind & HELM",
+    key_strengths: ["2M Token Context Window", "Native Audio/Video Multimodal", "Document Retrieval"]
+  },
+  // \u2500\u2500 Rank 19 \u2500\u2500 Sarvam-1 2B Indic (Nov 2024) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "sarvam-1",
-    rank: 11,
+    rank: 19,
     model_name: "Sarvam-1 2B Indic",
     provider: "Sarvam AI",
     benchmark: "IndicMMLU & IndicBench",
@@ -305,31 +500,10 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
     verified_by: "Sarvam AI Evals & IndicBench",
     key_strengths: ["Native 10+ Indic Languages", "Ultra-Fast 185 t/s Speed", "Sovereign Indian AI Model"]
   },
-  {
-    id: "gemini-2-0-flash",
-    rank: 12,
-    model_name: "Gemini 2.0 Flash",
-    provider: "Google DeepMind",
-    benchmark: "LMSYS Arena & LiveBench",
-    category: "speed",
-    score: 1368,
-    swe_bench: 52.4,
-    arena_elo: 1368,
-    mmlu_pro: 87.8,
-    frontier_math: 82.5,
-    tokens_per_sec: 140,
-    latency_ttft: "0.25s",
-    price_input: 0.10,
-    price_output: 0.40,
-    context_window: "1M",
-    license: "Proprietary",
-    release_date: "Feb 2025 (Aug 2026 Verified)",
-    verified_by: "Google DeepMind & LMSYS",
-    key_strengths: ["Real-time Multimodal Live API", "1M Context Window", "Fastest TTFT"]
-  },
+  // \u2500\u2500 Rank 20 \u2500\u2500 SamyamLM-Space v2 (Aug 2026 Internal) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   {
     id: "samyamlm-space-v2",
-    rank: 13,
+    rank: 20,
     model_name: "SamyamLM-Space v2 Sovereign 34B",
     provider: "Samyam AI Labs",
     benchmark: "SpaceNet 8 & ISRO Earth Observation Benchmark",
@@ -352,7 +526,6 @@ const REAL_FRONTIER_MODELS: ModelEntry[] = [
 ];
 
 
-
 const FrontierLeaderboards = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -360,7 +533,7 @@ const FrontierLeaderboards = () => {
 
   // Detect fake placeholder models (e.g. GPT-5, Gemini 2.5, Claude 4, Llama 4)
   const isFakeModel = (name: string) => {
-    const fakeKeywords = ["gpt-5", "gemini 2.5", "claude 4", "llama 4"];
+    const fakeKeywords = ["gpt-5", "gpt-6", "placeholder-ai"];
     return fakeKeywords.some(keyword => name.toLowerCase().includes(keyword));
   };
 

@@ -1,47 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sparkles, Bot, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const FloatingAiWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isInHero, setIsInHero] = useState(true);
-  const [isVisibleCycle, setIsVisibleCycle] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 1. Detect if current page is Home ("/") and user is scrolled within the Hero section
-  useEffect(() => {
-    const handleScroll = () => {
-      const isHomePage = location.pathname === "/";
-      // Hero section is typically within top 750px / window height
-      const inHeroBounds = window.scrollY < (window.innerHeight * 0.85 || 700);
-      setIsInHero(isHomePage && inHeroBounds);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [location.pathname]);
-
-  // 2. 10-second show / 10-second hide alternating timer cycle
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIsVisibleCycle((prev) => !prev);
-    }, 10000); // 10 seconds
-
-    return () => clearInterval(timer);
-  }, []);
-
-  // Show ONLY if in Hero section AND (popover is open OR 10-second visible cycle is active)
-  const shouldDisplay = isInHero && (isOpen || isVisibleCycle);
-
-  if (!shouldDisplay) {
+  // Hide widget if already on the full OpenClaw chat workspace
+  if (location.pathname === "/openclaw-chat") {
     return null;
   }
 
   return (
-    <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-3 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4">
+    <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-3 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4">
       {/* Quick AI Preview Popover */}
       {isOpen && (
         <div className="w-[calc(100vw-24px)] max-w-sm sm:w-96 rounded-2xl border border-cosmic-purple/30 bg-background/95 backdrop-blur-xl p-4 sm:p-5 shadow-2xl animate-in fade-in slide-in-from-bottom-5 duration-200">
@@ -58,6 +31,7 @@ export const FloatingAiWidget = () => {
             <button
               onClick={() => setIsOpen(false)}
               className="text-muted-foreground hover:text-foreground p-1 rounded-lg hover:bg-muted transition-colors"
+              aria-label="Close popover"
             >
               <X className="h-4 w-4" />
             </button>
@@ -87,6 +61,7 @@ export const FloatingAiWidget = () => {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle OpenClaw AI Copilot"
         className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-cosmic-purple to-cosmic-teal text-white font-semibold text-sm shadow-[0_0_20px_rgba(147,51,234,0.4)] hover:shadow-[0_0_30px_rgba(147,51,234,0.6)] hover:scale-105 transition-all duration-300 active:scale-95"
       >
         <div className="relative flex items-center justify-center">

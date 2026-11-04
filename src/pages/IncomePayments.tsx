@@ -40,20 +40,27 @@ const IncomePayments = () => {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [realTasksCount, setRealTasksCount] = useState<number>(0);
   const [realPendingTasksCount, setRealPendingTasksCount] = useState<number>(0);
+  // Credits stored in localStorage (client-side cache only).
+  // NOTE: These are for UI display. Any real credit deduction/allocation MUST
+  // be validated server-side (Supabase or FastAPI) before affecting billing.
   const [availableCredits, setAvailableCredits] = useState<number>(() => {
     try {
       const saved = localStorage.getItem("samyam_compute_credits");
-      return saved ? Number(saved) : 5000; // 5,000 free starting credits
+      const parsed = saved ? Number(saved) : 5000;
+      // Guard: clamp to a sane max so localStorage manipulation is capped
+      return Math.min(Math.max(0, parsed), 999_999);
     } catch {
       return 5000;
     }
   });
 
-  // Real persistent transactions state (defaults to empty when user has no transactions yet)
+  // Transactions cached in localStorage for offline display only.
+  // Server is the source of truth — never rely on this for financial decisions.
   const [transactions, setTransactions] = useState<TransactionRecord[]>(() => {
     try {
       const saved = localStorage.getItem("samyam_transactions_ledger");
-      return saved ? JSON.parse(saved) : [];
+      const parsed: unknown = saved ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? (parsed as TransactionRecord[]) : [];
     } catch {
       return [];
     }

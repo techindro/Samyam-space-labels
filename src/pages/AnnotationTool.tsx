@@ -642,8 +642,13 @@ export default function AnnotationTool() {
 
   const handleSave = useCallback(() => persist(false), [persist]);
 
-  // Mark dirty whenever annotations/labels change
+  // Mark dirty whenever annotations/labels change (ignoring initial mount)
+  const isInitialMountRef = useRef(true);
   useEffect(() => {
+    if (isInitialMountRef.current) {
+      isInitialMountRef.current = false;
+      return;
+    }
     setDirty(true);
   }, [state.annotations, state.labels]);
 

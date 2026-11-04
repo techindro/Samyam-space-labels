@@ -1,8 +1,7 @@
-import { Linkedin, Twitter, Instagram, Facebook, Youtube } from "lucide-react";
+import { Linkedin, Twitter, Instagram, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 import ParallelWebBg from "@/components/ParallelWebBg";
 import SamyamLogo from "@/components/SamyamLogo";
-
 import InstallAppButton from "@/components/InstallAppButton";
 
 const footerLinks: Record<string, { label: string; href: string }[]> = {
@@ -38,6 +37,13 @@ const footerLinks: Record<string, { label: string; href: string }[]> = {
   ],
 };
 
+const socialLinks = [
+  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/tech-indro" },
+  { icon: Twitter, label: "X / Twitter", href: "https://x.com/techindro" },
+  { icon: Instagram, label: "Instagram", href: "https://instagram.com" },
+  { icon: Youtube, label: "YouTube", href: "https://youtube.com" },
+];
+
 const Footer = () => {
   return (
     <footer className="py-16 bg-card/50 relative overflow-hidden border-t border-border/30">
@@ -61,16 +67,17 @@ const Footer = () => {
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.label}>
-                    {link.href === "#" ? (
-                      <span className="text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-                        {link.label}
-                      </span>
-                    ) : link.href.startsWith("/") ? (
+                    {link.href.startsWith("/") ? (
                       <Link to={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                         {link.label}
                       </Link>
                     ) : (
-                      <a href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                      <a
+                        href={link.href}
+                        target={link.href.startsWith("http") ? "_blank" : undefined}
+                        rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
                         {link.label}
                       </a>
                     )}
@@ -87,14 +94,15 @@ const Footer = () => {
             © 2026 Samyam. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            {[
-              { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/tech-indro" },
-              { icon: Twitter, label: "X / Twitter", href: "https://x.com/techindro" },
-              { icon: Instagram, label: "Instagram", href: "#" },
-              { icon: Facebook, label: "Facebook", href: "#" },
-              { icon: Youtube, label: "YouTube", href: "#" },
-            ].map(({ icon: Icon, label, href }) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="text-muted-foreground hover:text-foreground transition-colors">
+            {socialLinks.map(({ icon: Icon, label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                aria-label={label}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 <Icon size={20} />
               </a>
             ))}
