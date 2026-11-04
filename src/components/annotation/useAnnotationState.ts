@@ -16,6 +16,8 @@ export interface BBoxAnnotation {
   label: string;
   color: string;
   bbox: { x: number; y: number; w: number; h: number };
+  hidden?: boolean;
+  locked?: boolean;
 }
 
 export interface PolygonAnnotation {
@@ -24,6 +26,8 @@ export interface PolygonAnnotation {
   label: string;
   color: string;
   points: [number, number][];
+  hidden?: boolean;
+  locked?: boolean;
 }
 
 export interface OBBAnnotation {
@@ -38,6 +42,8 @@ export interface OBBAnnotation {
     h: number;
     angle: number; // degrees
   };
+  hidden?: boolean;
+  locked?: boolean;
 }
 
 export type Annotation = BBoxAnnotation | PolygonAnnotation | OBBAnnotation;
@@ -163,6 +169,37 @@ export function useAnnotationState(
     setActiveLabel(newLabel);
   }, []);
 
+  const toggleHideAnnotation = useCallback((id: string) => {
+    setAnnotationsRaw(prev => {
+      const next = prev.map(a => a.id === id ? { ...a, hidden: !a.hidden } as Annotation : a);
+      pushHistory(next);
+      return next;
+    });
+  }, [pushHistory]);
+
+  const toggleLockAnnotation = useCallback((id: string) => {
+    setAnnotationsRaw(prev => {
+      const next = prev.map(a => a.id === id ? { ...a, locked: !a.locked } as Annotation : a);
+      pushHistory(next);
+      return next;
+    });
+  }, [pushHistory]);
+
+  const toggleHideClass = useCallback((className: string) => {
+    setAnnotationsRaw(prev => {
+      const classAnns = prev.filter(a => a.label === className);
+      const allHidden = classAnns.length > 0 && classAnns.every(a => a.hidden);
+      const next = prev.map(a => a.label === className ? { ...a, hidden: !allHidden } as Annotation : a);
+      pushHistory(next);
+      return next;
+    });
+  }, [pushHistory]);
+
+  const clearAllAnnotations = useCallback(() => {
+    pushHistory([]);
+    setSelectedId(null);
+  }, [pushHistory]);
+
   return {
     annotations,
     setAnnotations: pushHistory,
@@ -177,6 +214,10 @@ export function useAnnotationState(
     commitAnnotationMove,
     undo, redo,
     addLabel,
+    toggleHideAnnotation,
+    toggleLockAnnotation,
+    toggleHideClass,
+    clearAllAnnotations,
     canUndo: historyIdx > 0,
     canRedo: historyIdx < history.length - 1,
   };

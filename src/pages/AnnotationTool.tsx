@@ -1188,6 +1188,10 @@ export default function AnnotationTool() {
                 onAddLabel={state.addLabel}
                 onSelectAnnotation={state.setSelectedId}
                 onDeleteAnnotation={state.deleteAnnotation}
+                onToggleHideAnnotation={state.toggleHideAnnotation}
+                onToggleLockAnnotation={state.toggleLockAnnotation}
+                onToggleHideClass={state.toggleHideClass}
+                onClearAllAnnotations={state.clearAllAnnotations}
               />
             </div>
 
@@ -1213,6 +1217,10 @@ export default function AnnotationTool() {
                       onAddLabel={state.addLabel}
                       onSelectAnnotation={state.setSelectedId}
                       onDeleteAnnotation={state.deleteAnnotation}
+                      onToggleHideAnnotation={state.toggleHideAnnotation}
+                      onToggleLockAnnotation={state.toggleLockAnnotation}
+                      onToggleHideClass={state.toggleHideClass}
+                      onClearAllAnnotations={state.clearAllAnnotations}
                     />
                   </div>
                 </div>
@@ -1913,16 +1921,34 @@ export default function AnnotationTool() {
 
         {/* Active Learning Queue Dialog Modal */}
         <Dialog open={showActiveLearningModal} onOpenChange={setShowActiveLearningModal}>
-          <DialogContent className="max-w-3xl bg-[#0c0d18] border-[#25283d] text-white p-6 rounded-2xl">
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[#0c0d18] border-[#25283d] text-white p-6 rounded-2xl">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold font-display text-white flex items-center gap-2">
-                <Cpu className="h-5 w-5 text-white" /> Active Learning Priority Queue
+                <Cpu className="h-5 w-5 text-indigo-400" /> Active Learning Priority Queue
               </DialogTitle>
             </DialogHeader>
             <ActiveLearningPanel
-              onSelectTask={(taskId) => {
+              onSelectTask={(taskId, task) => {
                 setShowActiveLearningModal(false);
-                toast({ title: `Loaded Task ${taskId}`, description: "Prioritized by AI model uncertainty" });
+                const matchedDataset = PRELOADED_DATASETS.find(d => 
+                  d.id === taskId || 
+                  (taskId === "sat-108" && d.id === "sat-iss") ||
+                  (taskId === "sat-109" && d.id === "lunar-terrain") ||
+                  (taskId === "sat-110" && d.id === "drone-topo")
+                );
+                if (matchedDataset) {
+                  setImageUrl(matchedDataset.url);
+                  state.setAnnotations(matchedDataset.annotations as any);
+                  toast({
+                    title: `Loaded High-Entropy Frame: ${task?.name || taskId}`,
+                    description: `Modality: ${task?.modality || matchedDataset.category} · Prioritized for manual verification`,
+                  });
+                } else {
+                  toast({ 
+                    title: `Loaded Task ${task?.name || taskId}`, 
+                    description: `Prioritized by AI model uncertainty (Entropy: ${task?.uncertaintyScore ? (task.uncertaintyScore * 100).toFixed(0) + "%" : "High"})` 
+                  });
+                }
               }}
             />
           </DialogContent>

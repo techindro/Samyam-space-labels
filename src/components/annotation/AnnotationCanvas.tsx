@@ -54,6 +54,7 @@ interface Props {
 function hitTest(imgX: number, imgY: number, anns: Annotation[]): string | null {
   for (let i = anns.length - 1; i >= 0; i--) {
     const ann = anns[i];
+    if (ann.hidden || ann.locked) continue;
     if (ann.type === "bbox") {
       const { x, y, w, h } = ann.bbox;
       if (imgX >= x && imgX <= x + w && imgY >= y && imgY <= y + h) return ann.id;
@@ -369,9 +370,11 @@ export default function AnnotationCanvas({
     }
 
     // Completed annotations
-    annRef.current.forEach(ann =>
-      drawAnnotation(ctx, ann, ann.id === selRef.current, scale),
-    );
+    annRef.current.forEach(ann => {
+      if (!ann.hidden) {
+        drawAnnotation(ctx, ann, ann.id === selRef.current, scale);
+      }
+    });
 
     // In-progress BBox
     if (d.isDrawingBBox && d.bboxStart && d.bboxCurrent) {
